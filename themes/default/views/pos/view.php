@@ -79,7 +79,7 @@
 
                     echo "<br>";
                     if ($pos_settings->cf_title1 != "" && $pos_settings->cf_value1 != "") {
-                        echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . "<br>";
+                        echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . "; &nbsp;&nbsp;&nbsp;";
                     }
                     if ($pos_settings->cf_title2 != "" && $pos_settings->cf_value2 != "") {
                         echo $pos_settings->cf_title2 . ": " . $pos_settings->cf_value2 . "<br>";
@@ -95,50 +95,60 @@
                     </div>
                     <?php 
                 }
-                echo "<p>" .lang("date") . ": " . $this->sma->hrld($inv->date) . "<br>";
-                echo lang("sale_no_ref") . ": " . $inv->reference_no . "<br>";
+                echo "<div class=\"col-sm-6\"><span class='pull-left'>" .lang("date") . ": " . $this->sma->hrld($inv->date).'</span>';
+                echo '<span class="pull-left">'. lang("Inv No") . ": " . $inv->reference_no . "</span>";
                 if (!empty($inv->return_sale_ref)) {
-                    echo '<p>'.lang("return_ref").': '.$inv->return_sale_ref;
+                    echo '<span class="pull-left">'.lang("return_ref").': '.$inv->return_sale_ref;
                     if ($inv->return_id) {
                         echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('sales/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i></a><br>';
                     } else {
-                        echo '</p>';
+                        echo '</span>';
                     }
                 }
-                echo lang("sales_person") . ": " . $created_by->first_name." ".$created_by->last_name . "</p>";
-                echo "<p>";
-                echo lang("customer") . ": " . ($customer->company && $customer->company != '-' ? $customer->company : $customer->name) . "<br>";
+                echo  '<span class="pull-left">'.lang("sales_person") . ": " . $created_by->first_name." ".$created_by->last_name . "</span>";
+                echo "</div><div class=\"col-sm-6\"><span class=\"pull-right\">";
+                echo lang("customer") . ": " . ($customer->company && $customer->company != '-' ? $customer->company : $customer->name) . "</span>";
                 if ($pos_settings->customer_details) {
                     if ($customer->vat_no != "-" && $customer->vat_no != "") {
                         echo "<br>" . lang("vat_no") . ": " . $customer->vat_no;
                     }
-                    echo lang("tel") . ": " . $customer->phone . "<br>";
-                    echo lang("address") . ": " . $customer->address . "<br>";
-                    echo $customer->city ." ".$customer->state." ".$customer->country ."<br>";
-                    if (!empty($customer->cf1) && $customer->cf1 != "-") {
-                        echo "<br>" . lang("ccf1") . ": " . $customer->cf1;
-                    }
-                    if (!empty($customer->cf2) && $customer->cf2 != "-") {
-                        echo "<br>" . lang("ccf2") . ": " . $customer->cf2;
-                    }
-                    if (!empty($customer->cf3) && $customer->cf3 != "-") {
-                        echo "<br>" . lang("ccf3") . ": " . $customer->cf3;
-                    }
-                    if (!empty($customer->cf4) && $customer->cf4 != "-") {
-                        echo "<br>" . lang("ccf4") . ": " . $customer->cf4;
-                    }
-                    if (!empty($customer->cf5) && $customer->cf5 != "-") {
-                        echo "<br>" . lang("ccf5") . ": " . $customer->cf5;
-                    }
-                    if (!empty($customer->cf6) && $customer->cf6 != "-") {
-                        echo "<br>" . lang("ccf6") . ": " . $customer->cf6;
-                    }
+//                    echo '<span class="pull-right">'. lang("tel") . ": " . $customer->phone . "</span>";
+                    echo '<span class="pull-right">'. lang("address") . ": " . $customer->address . "</span>";
+                    echo '<span class="pull-right">'.  $customer->city ." ".$customer->state." ".$customer->country ."</span>";
+//                    if (!empty($customer->cf1) && $customer->cf1 != "-") {
+//                        echo "<br>" . lang("ccf1") . ": " . $customer->cf1;
+//                    }
+//                    if (!empty($customer->cf2) && $customer->cf2 != "-") {
+//                        echo "<br>" . lang("ccf2") . ": " . $customer->cf2;
+//                    }
+//                    if (!empty($customer->cf3) && $customer->cf3 != "-") {
+//                        echo "<br>" . lang("ccf3") . ": " . $customer->cf3;
+//                    }
+//                    if (!empty($customer->cf4) && $customer->cf4 != "-") {
+//                        echo "<br>" . lang("ccf4") . ": " . $customer->cf4;
+//                    }
+//                    if (!empty($customer->cf5) && $customer->cf5 != "-") {
+//                        echo "<br>" . lang("ccf5") . ": " . $customer->cf5;
+//                    }
+//                    if (!empty($customer->cf6) && $customer->cf6 != "-") {
+//                        echo "<br>" . lang("ccf6") . ": " . $customer->cf6;
+//                    }
                 }
-                echo "</p>";
+                echo "</div>";
                 ?>
 
                 <div style="clear:both;"></div>
-                <table class="table table-striped table-condensed">
+
+                <table class="table table-condensed" cellspacing="0"  border-spacing="0" border="0">
+                    <thead>
+                    <tr>
+                    <th style="text-align:left; width:5px;" ><?php echo lang("sl") ?></th>
+                    <th style="text-align:left; width:180px;" ><?php echo lang("product") ?></th>
+                    <th style="text-align:left; width:60px;" ><?php echo lang("rate") ?></th>
+                    <th style="text-align:left; width:60px;" ><?php echo lang("tax") ?></th>
+                    <th style="text-align:left; width:60px;" ><?php echo lang("total") ?></th>
+                    </tr>
+                    </thead>
                     <tbody>
                         <?php
                         $r = 1; $category = 0;
@@ -162,8 +172,10 @@
                                     $tax_summary[$row->tax_code]['rate'] = $row->tax_rate;
                                 }
                             }
-                            echo '<tr><td colspan="2" class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-right">' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td></tr>';
-                            echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
+//                            echo '<tr><td class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-left"></td><td>' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td>';
+                            echo '<tr><td style="text-align:left;  width:5px;"> #' . $r . '</td><td style="text-align:left; width:180px;">' . product_name($row->product_name). '(' . $this->sma->formatQuantity($row->quantity)  . ')</td>';
+                                echo '<td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->net_unit_price).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->item_tax).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
+//                            echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
 
                             // echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x ';
                             // if ($row->item_discount != 0) {
@@ -194,7 +206,7 @@
                                     }
                                 }
                                 echo '<tr><td colspan="2" class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-right">' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td></tr>';
-                                echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
+//                                echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
 
                                 // echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x ';
                                 // if ($row->item_discount != 0) {
@@ -208,25 +220,31 @@
                         ?>
                     </tbody>
                     <tfoot>
+                    <tr>
+                        <th><?=lang("Total");?></th>
+                        <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($inv->total);?></th>
+                    </tr>
                         <tr>
-                            <th><?=lang("total");?></th>
-                            <th class="text-right"><?=$this->sma->formatMoney($return_sale ? (($inv->total + $inv->product_tax)+($return_sale->total + $return_sale->product_tax)) : ($inv->total + $inv->product_tax));?></th>
+                            <th style="width: 100px;"><?=lang("Product Tax");?></th>
+                            <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($inv->product_tax);?></th>
                         </tr>
                         <?php
+                        echo '<tr><th>' . lang("tax") . '</th><th colspan="100%" class="text-right">' . $this->sma->formatMoney($return_sale ? ($inv->order_tax+$return_sale->order_tax) : $inv->order_tax) . '</th></tr>';
+
                         if ($inv->order_tax != 0) {
-                            echo '<tr><th>' . lang("tax") . '</th><th class="text-right">' . $this->sma->formatMoney($return_sale ? ($inv->order_tax+$return_sale->order_tax) : $inv->order_tax) . '</th></tr>';
+                            echo '<tr><th  colspan="100%" class="text-right">' . lang("tax") . '</th><th class="text-right">' . $this->sma->formatMoney($return_sale ? ($inv->order_tax+$return_sale->order_tax) : $inv->order_tax) . '</th></tr>';
                         }
                         if ($inv->order_discount != 0) {
-                            echo '<tr><th>' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->order_discount) . '</th></tr>';
+                            echo '<tr><th  style="width: 100px;" colspan="100%" class="text-right">' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->order_discount) . '</th></tr>';
                         }
 
                         if ($inv->shipping != 0) {
-                            echo '<tr><th>' . lang("shipping") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->shipping) . '</th></tr>';
+                            echo '<tr><th style="width: 100px;" colspan="100%" class="text-right">' . lang("shipping") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->shipping) . '</th></tr>';
                         }
 
                         if ($return_sale) {
                             if ($return_sale->surcharge != 0) {
-                                echo '<tr><th>' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($return_sale->surcharge) . '</th></tr>';
+                                echo '<tr><th style="width: 100px;"  colspan="100%" class="text-right">' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($return_sale->surcharge) . '</th></tr>';
                             }
                         }
 
@@ -237,15 +255,15 @@
                                 <th class="text-right"><?= $this->sma->formatMoney($inv->rounding);?></th>
                             </tr>
                             <tr>
-                                <th><?=lang("grand_total");?></th>
-                                <th class="text-right"><?=$this->sma->formatMoney($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total) : ($inv->grand_total + $inv->rounding));?></th>
+                                <th style="width: 100px;"><?=lang("grand_total");?></th>
+                                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total) : ($inv->grand_total + $inv->rounding));?></th>
                             </tr>
                             <?php 
                         } else {
                             ?>
                             <tr>
                                 <th><?=lang("grand_total");?></th>
-                                <th class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total) : $inv->grand_total);?></th>
+                                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total) : $inv->grand_total);?></th>
                             </tr>
                             <?php 
                         } 
