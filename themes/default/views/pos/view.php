@@ -20,14 +20,22 @@
             body { color: #000; }
             #wrapper { max-width: 480px; margin: 0 auto; padding-top: 20px; }
             .btn { border-radius: 0; margin-bottom: 5px; }
+            .left { width:50%; float:left; text-align:left; margin-bottom: 3px; }
+            .right { width:50%; float:right; text-align:right; margin-bottom: 3px; }
             .bootbox .modal-footer { border-top: 0; text-align: center; }
             h3 { margin: 5px 0; }
             .order_barcodes img { float: none !important; margin-top: 5px; }
+            /*@media print {*/
+                /*.no-print { display: none; }*/
+                /*#wrapper { max-width: 480px; width: 100%; min-width: 350px; margin: 0 auto; }*/
+                /*.no-border { border: none !important; }*/
+                /*.border-bottom { border-bottom: 1px solid #ddd !important; }*/
+            /*}*/
+
             @media print {
-                .no-print { display: none; }
-                #wrapper { max-width: 480px; width: 100%; min-width: 250px; margin: 0 auto; }
-                .no-border { border: none !important; }
-                .border-bottom { border-bottom: 1px solid #ddd !important; }
+                #buttons { display: none; }
+                #wrapper { max-width: 600px; width: 100%; margin: 0 auto; font-size:9px; margin-top::-100px; }
+                #wrapper img { max-width:250px; width: 80%; }
             }
         </style>
     </head>
@@ -93,28 +101,28 @@
                     <div class="col-sm-12 text-center">
                         <h4 style="font-weight:bold;"><?=lang('tax_invoice');?></h4>
                     </div>
-                    <?php 
+                    <?php
                 }
-                echo "<div class=\"col-sm-6\"><span class='pull-left'>" .lang("date") . ": " . $this->sma->hrld($inv->date).'</span>';
-                echo '<span class="pull-left">'. lang("Inv No") . ": " . $inv->reference_no . "</span>";
+                echo "<p><span class='left'>" .lang("date") . ": " . $this->sma->hrld($inv->date) . "</span><span class='right'>";
+                echo lang("sale_no_ref") . ": " . $inv->reference_no . "</span>";
                 if (!empty($inv->return_sale_ref)) {
-                    echo '<span class="pull-left">'.lang("return_ref").': '.$inv->return_sale_ref;
+                    echo '<span class="left">'.lang("return_ref").': '.$inv->return_sale_ref;
                     if ($inv->return_id) {
                         echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('sales/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i></a><br>';
                     } else {
                         echo '</span>';
                     }
                 }
-                echo  '<span class="pull-left">'.lang("sales_person") . ": " . $created_by->first_name." ".$created_by->last_name . "</span>";
-                echo "</div><div class=\"col-sm-6\"><span class=\"pull-right\">";
-                echo lang("customer") . ": " . ($customer->company && $customer->company != '-' ? $customer->company : $customer->name) . "</span>";
+                echo "<span class='left'>" .lang("sales_person") . ": " . $created_by->first_name." ".$created_by->last_name . "</span>";
+                echo "<span class='right'>" .lang("customer") . ": " . ($customer->company && $customer->company != '-' ? $customer->company : $customer->name) . "</span>";
                 if ($pos_settings->customer_details) {
-                    if ($customer->vat_no != "-" && $customer->vat_no != "") {
-                        echo "<br>" . lang("vat_no") . ": " . $customer->vat_no;
-                    }
-//                    echo '<span class="pull-right">'. lang("tel") . ": " . $customer->phone . "</span>";
-                    echo '<span class="pull-right">'. lang("address") . ": " . $customer->address . "</span>";
-                    echo '<span class="pull-right">'.  $customer->city ." ".$customer->state." ".$customer->country ."</span>";
+//                    if ($customer->vat_no != "-" && $customer->vat_no != "") {
+//                        echo "<span class='left'>" . lang("vat_no") . ": " . $customer->vat_no . "</span>";
+//                    }
+//                    echo lang("tel") . ": " . $customer->phone . "<br>";
+                    echo '<span class="left">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+                    echo "<span class='right'>" . lang("address") . ": " . $customer->address . ",";
+                    echo $customer->city ." ".$customer->state." ".$customer->country ."</span>";
 //                    if (!empty($customer->cf1) && $customer->cf1 != "-") {
 //                        echo "<br>" . lang("ccf1") . ": " . $customer->cf1;
 //                    }
@@ -134,7 +142,7 @@
 //                        echo "<br>" . lang("ccf6") . ": " . $customer->cf6;
 //                    }
                 }
-                echo "</div>";
+                echo "</p>";
                 ?>
 
                 <div style="clear:both;"></div>
