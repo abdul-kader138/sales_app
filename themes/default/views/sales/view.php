@@ -285,10 +285,10 @@
                                     echo '<td>' . $row->serial_no . '</td>';
                                 }
                                 ?>
-                                <td style="text-align:right; width:120px; padding-right:10px;"><?= $this->sma->formatMoney($row->unit_price); ?></td>
+                                <td style="text-align:right; width:120px; padding-right:10px;"><?= $this->sma->formatMoney($row->real_unit_price); ?></td>
                                 <?php
                                 if ($Settings->tax1 && $inv->product_tax > 0) {
-                                    echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->item_tax != 0 && $row->tax_code ? '<small>('.$row->tax_code.')</small>' : '') . ' ' . $this->sma->formatMoney($row->item_tax) . '</td>';
+                                    echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->item_tax != 0 && $row->tax_code ? '<small>('.$row->tax_code.')</small>' : '') . ' ' . $this->sma->formatMoney(($row->item_tax)/$row->quantity) . '</td>';
                                 }
                                 if ($Settings->product_discount && $inv->product_discount != 0) {
                                     echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->discount != 0 ? '<small>(' . $row->discount . ')</small> ' : '') . $this->sma->formatMoney($row->item_discount) . '</td>';
@@ -327,10 +327,10 @@
                                         echo '<td>' . $row->serial_no . '</td>';
                                     }
                                     ?>
-                                    <td style="text-align:right; width:120px; padding-right:10px;"><?= $this->sma->formatMoney($row->unit_price); ?></td>
+                                    <td style="text-align:right; width:120px; padding-right:10px;"><?= $this->sma->formatMoney($row->real_unit_price); ?></td>
                                     <?php
                                     if ($Settings->tax1 && $inv->product_tax > 0) {
-                                        echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->item_tax != 0 && $row->tax_code ? '<small>('.$row->tax_code.')</small>' : '') . ' ' . $this->sma->formatMoney($row->item_tax) . '</td>';
+                                        echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->item_tax != 0 && $row->tax_code ? '<small>('.$row->tax_code.')</small>' : '') . ' ' . $this->sma->formatMoney(($row->item_tax)/$row->quantity) . '</td>';
                                     }
                                     if ($Settings->product_discount && $inv->product_discount != 0) {
                                         echo '<td style="width: 120px; text-align:right; vertical-align:middle;">' . ($row->discount != 0 ? '<small>(' . $row->discount . ')</small> ' : '') . $this->sma->formatMoney($row->item_discount) . '</td>';

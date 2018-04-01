@@ -1068,4 +1068,7 @@ class Site extends CI_Model
         return FALSE;
     }
 
+    public function getInterCompanyPriceGroup($ref) {
+        return $this->Settings->internal_price_group;
+    }
 }

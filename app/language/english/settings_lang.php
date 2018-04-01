@@ -362,4 +362,5 @@ $lang['categories_import_tip']           = "If your csv file has subcategories (
 $lang['update_cost_with_purchase']       = "Update cost with purchase";
 $lang['edit_price_on_sale']              = "Edit Price on Sale";
 $lang['login_logo']                      = "Login Logo";
-$lang['code_prefix']                    = "Product Code Prefix";
+$lang['code_prefix']                     = "Product Code Prefix";
+$lang['inter_company_sale_price']        = "Price Group(Inter Company)";

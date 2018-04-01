@@ -269,6 +269,7 @@
                                         <tr>
                                             <th width="40%"><?=lang("product");?></th>
                                             <th width="15%"><?=lang("price");?></th>
+                                            <th width="15%"><?=lang("Tax");?></th>
                                             <th width="15%"><?=lang("qty");?></th>
                                             <th width="20%"><?=lang("subtotal");?></th>
                                             <th style="width: 5%; text-align: center;">

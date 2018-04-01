@@ -76,18 +76,19 @@ class Customers extends MY_Controller
                 'state' => $this->input->post('state'),
                 'postal_code' => $this->input->post('postal_code'),
                 'country' => $this->input->post('country'),
-                'phone' => $this->input->post('phone'),
-                'cf1' => $this->input->post('cf1'),
-                'cf2' => $this->input->post('cf2'),
-                'cf3' => $this->input->post('cf3'),
-                'cf4' => $this->input->post('cf4'),
-                'cf5' => $this->input->post('cf5'),
-                'cf6' => $this->input->post('cf6'),
+                'phone' => $this->input->post('phone')
+//                'cf1' => $this->input->post('cf1'),
+//                'cf2' => $this->input->post('cf2'),
+//                'cf3' => $this->input->post('cf3'),
+//                'cf4' => $this->input->post('cf4'),
+//                'cf5' => $this->input->post('cf5'),
+//                'cf6' => $this->input->post('cf6'),
             );
         } elseif ($this->input->post('add_customer')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect('customers');
         }
+
 
         if ($this->form_validation->run() == true && $cid = $this->companies_model->addCompany($data)) {
             $this->session->set_flashdata('message', lang("customer_added"));
@@ -134,18 +135,19 @@ class Customers extends MY_Controller
                 'postal_code' => $this->input->post('postal_code'),
                 'country' => $this->input->post('country'),
                 'phone' => $this->input->post('phone'),
-                'cf1' => $this->input->post('cf1'),
-                'cf2' => $this->input->post('cf2'),
-                'cf3' => $this->input->post('cf3'),
-                'cf4' => $this->input->post('cf4'),
-                'cf5' => $this->input->post('cf5'),
-                'cf6' => $this->input->post('cf6'),
-                'award_points' => $this->input->post('award_points'),
+//                'cf1' => $this->input->post('cf1'),
+//                'cf2' => $this->input->post('cf2'),
+//                'cf3' => $this->input->post('cf3'),
+//                'cf4' => $this->input->post('cf4'),
+//                'cf5' => $this->input->post('cf5'),
+//                'cf6' => $this->input->post('cf6'),
+                'award_points' => $this->input->post('award_points')
             );
         } elseif ($this->input->post('edit_customer')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect($_SERVER["HTTP_REFERER"]);
         }
+
 
         if ($this->form_validation->run() == true && $this->companies_model->updateCompany($id, $data)) {
             $this->session->set_flashdata('message', lang("customer_updated"));

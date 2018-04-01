@@ -57,6 +57,7 @@ class system_settings extends MY_Controller
         $this->form_validation->set_rules('expense_prefix', lang('expense_prefix'), 'trim');
         $this->form_validation->set_rules('detect_barcode', lang('detect_barcode'), 'trim|required');
         $this->form_validation->set_rules('code_prefix', lang('code_prefix'), 'trim|required');
+        $this->form_validation->set_rules('icpg', lang('icpg'), 'trim|required');
         $this->form_validation->set_rules('theme', lang('theme'), 'trim|required');
         $this->form_validation->set_rules('rows_per_page', lang('rows_per_page'), 'trim|required|greater_than[9]|less_than[501]');
         $this->form_validation->set_rules('accounting_method', lang('accounting_method'), 'trim|required');
@@ -168,6 +169,7 @@ class system_settings extends MY_Controller
                 'price_group' => $this->input->post('price_group'),
                 'barcode_img' => $this->input->post('barcode_renderer'),
                  'code_prefix' => $this->input->post('code_prefix'),
+                 'internal_price_group' => $this->input->post('icpg'),
                 'update_cost' => $this->input->post('update_cost'),
             );
             if ($this->input->post('smtp_pass')) {

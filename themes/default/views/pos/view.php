@@ -87,7 +87,7 @@
 
         echo "<br>";
         if ($pos_settings->cf_title1 != "" && $pos_settings->cf_value1 != "") {
-            echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . "; &nbsp;&nbsp;&nbsp;";
+            echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . ", &nbsp;&nbsp;&nbsp;";
         }
         if ($pos_settings->cf_title2 != "" && $pos_settings->cf_value2 != "") {
             echo $pos_settings->cf_title2 . ": " . $pos_settings->cf_value2 . "<br>";
@@ -106,12 +106,11 @@
     echo "<p><span class='left'>" .lang("date") . ": " . $this->sma->hrld($inv->date) . "</span><span class='right'>";
     echo lang("sale_no_ref") . ": " . $inv->reference_no . "</span>";
     if (!empty($inv->return_sale_ref)) {
-        echo '<span class="left">'.lang("return_ref").': '.$inv->return_sale_ref;
-        if ($inv->return_id) {
-            echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('sales/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i></a><br>';
-        } else {
-            echo '</span>';
-        }
+        echo '<span class="left">'.lang("return_ref").': '.$inv->return_sale_ref.'</span>';
+        echo '<span class="right"></span>';
+//        if ($inv->return_id) {
+//            echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('sales/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i>Return Details</a>';
+//        } echo '</span>';
     }
     echo "<span class='left'>" .lang("sales_person") . ": " . $created_by->first_name." ".$created_by->last_name . "</span>";
     echo "<span class='right'>" .lang("customer") . ": " . ($customer->company && $customer->company != '-' ? $customer->company : $customer->name) . "</span>";
@@ -180,16 +179,8 @@
                     $tax_summary[$row->tax_code]['rate'] = $row->tax_rate;
                 }
             }
-//                            echo '<tr><td class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-left"></td><td>' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td>';
-            echo '<tr><td style="text-align:left;  width:5px;"> #' . $r . '</td><td style="text-align:left; width:180px;">' . $row->product_name. '(' . $this->sma->formatQuantity($row->quantity)  . ')</td>';
+            echo '<tr><td style="text-align:left;  width:5px;"> #' . $r . '</td><td style="text-align:left; width:180px;">' . $row->product_name. '(' . $row->product_code . ')'.'(' . $this->sma->formatQuantity($row->quantity)  . ')</td>';
             echo '<td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->net_unit_price).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->item_tax).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
-//                            echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
-
-            // echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x ';
-            // if ($row->item_discount != 0) {
-            //     echo '<del>' . $this->sma->formatMoney($row->net_unit_price + ($row->item_discount / $row->quantity) + ($row->item_tax / $row->quantity)) . '</del> ';
-            // }
-            // echo $this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).' ('.$this->sma->formatMoney($row->net_unit_price).' + '.$this->sma->formatMoney($row->item_tax / $row->quantity) . ')</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
             $r++;
         }
         if ($return_rows) {
@@ -213,15 +204,18 @@
                         $tax_summary[$row->tax_code]['rate'] = $row->tax_rate;
                     }
                 }
-                echo '<tr><td colspan="2" class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-right">' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td></tr>';
-//                                echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
+
+                echo '<tr><td style="text-align:left;  width:5px;"> #' . $r . '</td><td style="text-align:left; width:180px;">' . $row->product_name. '(' . $row->product_code . ')'.'(' . $this->sma->formatQuantity($row->quantity)  . ')</td>';
+                echo '<td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->net_unit_price).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom">'. $this->sma->formatMoney($row->item_tax).'</td><td style="text-align:left; width:60px;" class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
+                $r++;
+              //  echo '<tr><td colspan="2" class="no-border">#' . $r . ': &nbsp;&nbsp;' . product_name($row->product_name, $printer->char_per_line) . ($row->variant ? ' (' . $row->variant . ')' : '') . '<span class="pull-right">' . ($row->tax_code ? '*'.$row->tax_code : '') . '</span></td></tr>';
+                 //               echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x '.$this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)).'</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
 
                 // echo '<tr><td class="no-border border-bottom">' . $this->sma->formatQuantity($row->quantity) . ' x ';
                 // if ($row->item_discount != 0) {
                 //     echo '<del>' . $this->sma->formatMoney($row->net_unit_price + ($row->item_discount / $row->quantity) + ($row->item_tax / $row->quantity)) . '</del> ';
                 // }
                 // echo $this->sma->formatMoney($row->net_unit_price + ($row->item_tax / $row->quantity)) . '</td><td class="no-border border-bottom text-right">' . $this->sma->formatMoney($row->subtotal) . '</td></tr>';
-                $r++;
             }
         }
 
@@ -242,16 +236,16 @@
             echo '<tr><th class="text-left">' . lang("tax") . '</th><th colspan="100%" class="text-right" class="text-right">' . $this->sma->formatMoney($return_sale ? ($inv->order_tax+$return_sale->order_tax) : $inv->order_tax) . '</th></tr>';
         }
         if ($inv->order_discount != 0) {
-            echo '<tr><th  style="width: 100px;" colspan="100%" class="text-right">' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->order_discount) . '</th></tr>';
+            echo '<tr><th  style="width: 100px;" colspan="100%" class="text-right">' . lang("order_discount") . '</th><th  colspan="100%" class="text-right">' . $this->sma->formatMoney($inv->order_discount) . '</th></tr>';
         }
 
         if ($inv->shipping != 0) {
-            echo '<tr><th style="width: 100px;" colspan="100%" class="text-right">' . lang("shipping") . '</th><th class="text-right">' . $this->sma->formatMoney($inv->shipping) . '</th></tr>';
+            echo '<tr><th style="width: 100px;" colspan="100%" class="text-right">' . lang("shipping") . '</th><th  colspan="100%" class="text-right">' . $this->sma->formatMoney($inv->shipping) . '</th></tr>';
         }
 
         if ($return_sale) {
             if ($return_sale->surcharge != 0) {
-                echo '<tr><th style="width: 100px;"  colspan="100%" class="text-right">' . lang("order_discount") . '</th><th class="text-right">' . $this->sma->formatMoney($return_sale->surcharge) . '</th></tr>';
+                echo '<tr><th style="width: 100px;"  colspan="100%" class="text-right">' . lang("order_discount") . '</th><th  colspan="100%" class="text-right">' . $this->sma->formatMoney($return_sale->surcharge) . '</th></tr>';
             }
         }
 
@@ -278,11 +272,11 @@
             ?>
             <tr>
                 <th><?=lang("paid_amount");?></th>
-                <th class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid);?></th>
+                <th  colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid);?></th>
             </tr>
             <tr>
                 <th><?=lang("due_amount");?></th>
-                <th class="text-right"><?=$this->sma->formatMoney(($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total) : ($inv->grand_total + $inv->rounding)) - ($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid));?></th>
+                <th  colspan="100%" class="text-right"><?=$this->sma->formatMoney(($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total) : ($inv->grand_total + $inv->rounding)) - ($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid));?></th>
             </tr>
         <?php
         } ?>

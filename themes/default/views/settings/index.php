@@ -582,6 +582,14 @@ $ps = array('0' => lang("disable"), '1' => lang("enable"));
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" for="bc_fix"><?= lang("inter_company_sale_price"); ?></label>
+
+
+                                <?= form_input('icpg', $Settings->internal_price_group, 'class="form-control tip" required="required" id="icpg"'); ?>
+                            </div>
+                        </div>
                     </fieldset>
 
                     <fieldset class="scheduler-border">

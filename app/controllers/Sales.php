@@ -2155,6 +2155,7 @@ class Sales extends MY_Controller
         $customer = $this->site->getCompanyByID($customer_id);
         $customer_group = $this->site->getCustomerGroupByID($customer->customer_group_id);
         $rows = $this->sales_model->getProductNames($sr, $warehouse_id);
+        $icsg= $this->site->getInterCompanyPriceGroup();
         if ($rows) {
             $c = str_replace(".", "", microtime(true));
             $r = 0;
@@ -2212,9 +2213,10 @@ class Sales extends MY_Controller
                 }
                 $row->price = $row->price + (($row->price * $customer_group->percent) / 100);
                 $row->real_unit_price = $row->price;
+                if(trim($customer->price_group_name) === trim($icsg)) $row->real_unit_price = $row->cost;
+                else $row->real_unit_price = $row->price;
                 $row->base_quantity = 1;
                 $row->base_unit = $row->unit;
-                $row->base_unit_price = $row->price;
                 $row->unit = $row->sale_unit ? $row->sale_unit : $row->unit;
                 $row->comment = '';
                 $combo_items = false;
