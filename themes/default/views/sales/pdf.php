@@ -76,9 +76,12 @@
                     <?php
                         echo $biller->address . '<br />' . $biller->city . ' ' . $biller->postal_code . ' ' . $biller->state . '<br />' . $biller->country;
                         echo '<p>';
-                        if ($biller->vat_no != "-" && $biller->vat_no != "") {
-                            echo "<br>" . lang("vat_no") . ": " . $biller->vat_no;
-                        }
+                    if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
+                        echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
+                    }
+                    if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
+                        echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
+                    }
                         if ($biller->cf1 != '-' && $biller->cf1 != '') {
                             echo '<br>' . lang('bcf1') . ': ' . $biller->cf1;
                         }

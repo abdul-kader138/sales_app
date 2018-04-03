@@ -38,10 +38,10 @@
                         <?= lang("name", "name"); ?>
                         <?php echo form_input('name', '', 'class="form-control tip" id="name" data-bv-notempty="true"'); ?>
                     </div>
-                    <div class="form-group">
-                        <?= lang("vat_no", "vat_no"); ?>
-                        <?php echo form_input('vat_no', '', 'class="form-control" id="vat_no"'); ?>
-                    </div>
+<!--                    <div class="form-group">-->
+<!--                        --><?//= lang("vat_no", "vat_no"); ?>
+<!--                        --><?php //echo form_input('vat_no', '', 'class="form-control" id="vat_no"'); ?>
+<!--                    </div>-->
                     <!--<div class="form-group company">
                     <?= lang("contact_person", "contact_person"); ?>
                     <?php echo form_input('contact_person', '', 'class="form-control" id="contact_person" data-bv-notempty="true"'); ?>
@@ -78,31 +78,27 @@
                         <?php echo form_input('country', '', 'class="form-control" id="country"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf1", "gst_reg"); ?>
+                        <?= lang("gst_reg", "gst_reg"); ?>
                         <?php echo form_input('gst_reg', '', 'class="form-control" id="gst_reg"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf2", "vat_reg"); ?>
+                        <?= lang("vat_reg", "vat_reg"); ?>
                         <?php echo form_input('vat_reg', '', 'class="form-control" id="vat_reg"'); ?>
+
+                    </div>
+                    <div class="form-group">
+                        <?= lang("bcf1", "cf1"); ?>
+                        <?php echo form_input('cf1', '', 'class="form-control" id="cf1"'); ?>
+                    </div>
+                    <div class="form-group">
+                        <?= lang("bcf2", "cf2"); ?>
+                        <?php echo form_input('cf2', '', 'class="form-control" id="cf2"'); ?>
 
                     </div>
                     <div class="form-group">
                         <?= lang("bcf3", "cf3"); ?>
                         <?php echo form_input('cf3', '', 'class="form-control" id="cf3"'); ?>
-                    </div>
-                    <div class="form-group">
-                        <?= lang("bcf4", "cf4"); ?>
-                        <?php echo form_input('cf4', '', 'class="form-control" id="cf4"'); ?>
 
-                    </div>
-                    <div class="form-group">
-                        <?= lang("bcf5", "cf5"); ?>
-                        <?php echo form_input('cf5', '', 'class="form-control" id="cf5"'); ?>
-
-                    </div>
-                    <div class="form-group">
-                        <?= lang("bcf6", "cf6"); ?>
-                        <?php echo form_input('cf6', '', 'class="form-control" id="cf6"'); ?>
                     </div>
                 </div>
                 <div class="col-md-12">
