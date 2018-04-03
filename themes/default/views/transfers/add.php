@@ -339,13 +339,6 @@
             <div class="modal-body" id="pr_popover_content">
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="pquantity" class="col-sm-4 control-label"><?= lang('quantity') ?></label>
-
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="pquantity">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="punit" class="col-sm-4 control-label"><?= lang('product_unit') ?></label>
                         <div class="col-sm-8">
                             <div id="punits-div"></div>
@@ -355,6 +348,20 @@
                         <label for="poption" class="col-sm-4 control-label"><?= lang('product_option') ?></label>
                         <div class="col-sm-8">
                             <div id="poptions-div"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentStock" class="col-sm-4 control-label"><?= lang('stock_quantity') ?></label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="currentStock" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pquantity" class="col-sm-4 control-label"><?= lang('quantity') ?></label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="pquantity">
                         </div>
                     </div>
                     <div class="form-group">
