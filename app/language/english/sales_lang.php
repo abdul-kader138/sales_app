@@ -150,3 +150,5 @@ $lang['last_topups']                        = "Last Topups";
 $lang['topup_added']                        = "Gift card balance successfully updated";
 $lang['duplicate_sale']                     = "Duplicate Sale";
 $lang['update_customer_email']              = "Please update customer email address";
+$lang['gst_reg']                            = "GST Reg. No";
+$lang['vat_reg']                            = "VAT Reg. No";

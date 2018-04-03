@@ -78,12 +78,12 @@
                         <?php echo form_input('country', '', 'class="form-control" id="country"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf1", "cf1"); ?>
-                        <?php echo form_input('cf1', '', 'class="form-control" id="cf1"'); ?>
+                        <?= lang("bcf1", "gst_reg"); ?>
+                        <?php echo form_input('gst_reg', '', 'class="form-control" id="gst_reg"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf2", "cf2"); ?>
-                        <?php echo form_input('cf2', '', 'class="form-control" id="cf2"'); ?>
+                        <?= lang("bcf2", "vat_reg"); ?>
+                        <?php echo form_input('vat_reg', '', 'class="form-control" id="vat_reg"'); ?>
 
                     </div>
                     <div class="form-group">

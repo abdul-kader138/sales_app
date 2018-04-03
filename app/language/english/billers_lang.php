@@ -29,3 +29,5 @@ $lang['no_biller_selected']             = "No biller selected. Please select at 
 $lang['invoice_footer']                 = "Invoice Footer";
 $lang['biller_x_deleted_have_sales']    = "Action failed! biller have sales";
 $lang['billers_x_deleted_have_sales']   = "Some billers cannot be deleted as they have sales";
+$lang['gst_reg']                        = "GST Reg. No";
+$lang['vat_reg']                        = "VAT Reg. No";

@@ -81,12 +81,12 @@
                         <?php echo form_input('country', $biller->country, 'class="form-control" id="country"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf1", "cf1"); ?>
-                        <?php echo form_input('cf1', $biller->cf1, 'class="form-control" id="cf1"'); ?>
+                        <?= lang("gst_reg", "gst_reg"); ?>
+                        <?php echo form_input('gst_reg', $biller->gst_reg, 'class="form-control" id="gst_reg"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("bcf2", "cf2"); ?>
-                        <?php echo form_input('cf2', $biller->cf2, 'class="form-control" id="cf2"'); ?>
+                        <?= lang("vat_reg", "vat_reg"); ?>
+                        <?php echo form_input('vat_reg', $biller->vat_reg, 'class="form-control" id="vat_reg"'); ?>
 
                     </div>
                     <div class="form-group">

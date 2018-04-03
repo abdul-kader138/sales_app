@@ -88,7 +88,7 @@
                 </div>
                 <div class="well well-sm">
 
-                    <div class="col-xs-4 border-right">
+                    <div class="col-xs-6 border-right">
 
                         <div class="col-xs-2"><i class="fa fa-3x fa-user padding010 text-muted"></i></div>
                         <div class="col-xs-10">
@@ -129,7 +129,7 @@
                         <div class="clearfix"></div>
                     </div>
 
-                    <div class="col-xs-4 border-right">
+                    <div class="col-xs-6 border-right">
 
                         <div class="col-xs-2"><i class="fa fa-3x fa-building padding010 text-muted"></i></div>
                         <div class="col-xs-10">
@@ -141,11 +141,11 @@
 
                             echo "<p>";
 
-                            if ($biller->vat_no != "-" && $biller->vat_no != "") {
-                                echo "<br>" . lang("vat_no") . ": " . $biller->vat_no;
+                            if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
+                                echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
                             }
-                            if ($biller->cf1 != "-" && $biller->cf1 != "") {
-                                echo "<br>" . lang("bcf1") . ": " . $biller->cf1;
+                            if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
+                                echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
                             }
                             if ($biller->cf2 != "-" && $biller->cf2 != "") {
                                 echo "<br>" . lang("bcf2") . ": " . $biller->cf2;
@@ -171,19 +171,7 @@
 
                     </div>
 
-                    <div class="col-xs-4">
-                        <div class="col-xs-2"><i class="fa fa-3x fa-building-o padding010 text-muted"></i></div>
-                        <div class="col-xs-10">
-                            <h2 class=""><?= $Settings->site_name; ?></h2>
-                            <?= $warehouse->name ?>
-
-                            <?php
-                            echo $warehouse->address . "<br>";
-                            echo ($warehouse->phone ? lang("tel") . ": " . $warehouse->phone . "<br>" : '') . ($warehouse->email ? lang("email") . ": " . $warehouse->email : '');
-                            ?>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
+<!--                    Comment Warehouse Part-->
                     <div class="clearfix"></div>
                 </div>
                 <div class="clearfix"></div>

@@ -86,12 +86,18 @@
         // end of the customer fields
 
         echo "<br>";
-        if ($pos_settings->cf_title1 != "" && $pos_settings->cf_value1 != "") {
-            echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . ", &nbsp;&nbsp;&nbsp;";
+        if ($biller->gst_reg != "") {
+             echo '<span>'.lang("gst_reg")  . ": " . $biller->gst_reg . ",</span> &nbsp;&nbsp;&nbsp;";
         }
-        if ($pos_settings->cf_title2 != "" && $pos_settings->cf_value2 != "") {
-            echo $pos_settings->cf_title2 . ": " . $pos_settings->cf_value2 . "<br>";
+        if ($biller->vat_reg != "") {
+            echo '<span>'.lang("vat_reg")  . ": " . $biller->vat_reg . "</span>";
         }
+//        if ($pos_settings->cf_title1 != "" && $pos_settings->cf_value1 != "") {
+//            echo $pos_settings->cf_title1 . ": " . $pos_settings->cf_value1 . ", &nbsp;&nbsp;&nbsp;";
+//        }
+//        if ($pos_settings->cf_title2 != "" && $pos_settings->cf_value2 != "") {
+//            echo $pos_settings->cf_title2 . ": " . $pos_settings->cf_value2 . "<br>";
+//        }
         echo '</p>';
         ?>
     </div>
