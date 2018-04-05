@@ -108,6 +108,7 @@ class Transfers extends MY_Controller
             $to_warehouse_details = $this->site->getWarehouseByID($to_warehouse);
             $to_warehouse_code = $to_warehouse_details->code;
             $to_warehouse_name = $to_warehouse_details->name;
+            $purchase_id = $this->sma->fld(trim($this->input->post('show_purchase')));
 
             $total = 0;
             $product_tax = 0;
@@ -237,7 +238,7 @@ class Transfers extends MY_Controller
             // $this->sma->print_arrays($data, $products);
         }
 
-        if ($this->form_validation->run() == true && $this->transfers_model->addTransfer($data, $products)) {
+        if ($this->form_validation->run() == true && $this->transfers_model->addTransfer($data, $products,$purchase_id)) {
             $this->session->set_userdata('remove_tols', 1);
             $this->session->set_flashdata('message', lang("transfer_added"));
             redirect("transfers");
@@ -896,7 +897,7 @@ class Transfers extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        if ($this->transfers_model->deleteTransfer($id)) {
+        if ($this->transfers_model->deleteTransfer($id,$p)) {
             if($this->input->is_ajax_request()) {
                 echo lang("transfer_deleted"); die();
             }

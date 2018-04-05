@@ -246,7 +246,7 @@
                                         <div class="form-group">
                                             <?= lang("from_warehouse", "from_warehouse"); ?>
                                             <select name="itemLaod" id="itemLaod" style="width:100%;">
-                                                <option value='' selected>Select Item Load Type</option>
+                                                <option value='other' selected>Select Item Load Type</option>
                                                 <option value='item'>Individual Item</option>
                                                 <option value='po'>From Purchase Order</option>
                                             </select>

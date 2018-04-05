@@ -538,6 +538,17 @@ $( "#itemLaod" ).change(function() {
         }
 
     }
+    if ($(this).val()== 'other') {
+        rowCount = $('#toTable >tbody >tr').length;
+        if( rowCount > 0) reloadPage();
+        else{
+            $('#toTable tbody').empty();
+            $('#sticker').hide();
+            $('#show_purchase_div').show();
+            loadAllPO();
+        }
+
+    }
 });
 
 
@@ -556,6 +567,7 @@ function loadAllPO(){
         warehouse_id: $("#from_warehouse").val()
     },
     success: function (data) {
+        // $("#show_purchase").empty();
         $.each(data,function(index,json){
             $("#show_purchase").append( // Append an object to the inside of the select box
                 $("<option></option>") // Yes you can do this.

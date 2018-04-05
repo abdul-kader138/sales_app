@@ -42,7 +42,7 @@ class Transfers_model extends CI_Model
         return FALSE;
     }
 
-    public function addTransfer($data = array(), $items = array())
+    public function addTransfer($data = array(), $items = array(),$id=null)
     {
         $status = $data['status'];
         if ($this->db->insert('transfers', $data)) {
@@ -57,6 +57,7 @@ class Transfers_model extends CI_Model
                     $item['warehouse_id'] = $data['to_warehouse_id'];
                     $item['status'] = 'received';
                     $this->db->insert('purchase_items', $item);
+                    $this->db->update('purchase_items',array('tr_status'=>"Yes"), array('product_id'=>$items['product_id'],'purchase_id'=>$items['product_id']));
                 } else {
                     $this->db->insert('transfer_items', $item);
                 }
@@ -406,7 +407,7 @@ class Transfers_model extends CI_Model
 
 //    public function getPurchaseByWareHouseID($id)
 //    {
-//        $q = $this->db->get_where('purchases',  array('warehouse_id' => $id,'status'=>'received'));
+//        $q = $this->db->get_where('purchase_items',  array('from_warehouse_id' => $id,'status'=>'received'));
 //        if ($q->num_rows() > 0) {
 //            foreach (($q->result()) as $row) {
 //                $data[] = $row;
@@ -421,8 +422,8 @@ class Transfers_model extends CI_Model
         $this->db->select('purchases.id,purchases.reference_no')
             ->join('purchase_items', 'purchase_items.purchase_id=purchases.id', 'inner')
             ->group_by('purchases.id')
-//            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received')->where('tr_status',"");
-            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received');
+            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received')->where('tr_status',"");
+//            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received');
         $q = $this->db->get('purchases');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
