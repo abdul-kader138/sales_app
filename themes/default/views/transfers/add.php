@@ -25,8 +25,12 @@
     if (localStorage.getItem('tostatus')) {
         localStorage.removeItem('tostatus');
     }
+    // a.kader
+    if (localStorage.getItem('load_purchase')) {
+        localStorage.removeItem('load_purchase');
+    }
     <?php $this->sma->unset_data('remove_tols');
-} ?>
+    } ?>
     var count = 1, an = 1, product_variant = 0, shipping = 0,
         product_tax = 0, total = 0,
         tax_rates = <?php echo json_encode($tax_rates); ?>, toitems = {},
@@ -115,6 +119,7 @@
             select: function (event, ui) {
                 event.preventDefault();
                 if (ui.item.id !== 0) {
+                    debugger;
                     var row = add_transfer_item(ui.item);
                     if (row)
                         $(this).val('');
@@ -219,7 +224,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("document", "document") ?>
-                                <input id="document" type="file" data-browse-label="<?= lang('browse'); ?>" name="document" data-show-upload="false"
+                                <input id="document" type="file" data-browse-label="<?= lang('browse'); ?>"
+                                       name="document" data-show-upload="false"
                                        data-show-preview="false" class="form-control file">
                             </div>
                         </div>
@@ -227,7 +233,7 @@
                         <div class="col-md-12">
                             <div class="panel panel-warning">
                                 <div
-                                    class="panel-heading"><?= lang('please_select_these_before_adding_product') ?></div>
+                                        class="panel-heading"><?= lang('please_select_these_before_adding_product') ?></div>
                                 <div class="panel-body" style="padding: 5px;">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -236,13 +242,33 @@
                                             ?>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <?= lang("from_warehouse", "from_warehouse"); ?>
+                                            <select name="itemLaod" id="itemLaod" style="width:100%;">
+                                                <option value='' selected>Select Item Load Type</option>
+                                                <option value='item'>Individual Item</option>
+                                                <option value='po'>From Purchase Order</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4" style="display: none;" id="show_purchase_div" >
+                                        <div class="form-group">
+                                            <?= lang("show_purchase", "show_purchase"); ?><br>
+                                            <select name="show_purchase" id="show_purchase" style="width:100%;">
+                                                <option value=""> </option>
+                                            </select>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
                             <div class="clearfix"></div>
                         </div>
 
-                        <div class="col-md-12" id="sticker">
+
+                        <div class="col-md-12" id="sticker" style="display: none">
                             <div class="well well-sm">
                                 <div class="form-group" style="margin-bottom:0;">
                                     <div class="input-group wide-tip">
@@ -265,7 +291,7 @@
                                            class="table items table-striped table-bordered table-condensed table-hover sortable_table">
                                         <thead>
                                         <tr>
-                                            <th class="col-md-4"><?= lang('product') . ' (' . lang('code') .' - '.lang('name') . ')'; ?></th>
+                                            <th class="col-md-4"><?= lang('product') . ' (' . lang('code') . ' - ' . lang('name') . ')'; ?></th>
                                             <?php
                                             if ($Settings->product_expiry) {
                                                 echo '<th class="col-md-2">' . $this->lang->line("expiry_date") . '</th>';
@@ -279,11 +305,11 @@
                                             }
                                             ?>
                                             <th><?= lang("subtotal"); ?> (<span
-                                                    class="currency"><?= $default_currency->code ?></span>)
+                                                        class="currency"><?= $default_currency->code ?></span>)
                                             </th>
                                             <th style="width: 30px !important; text-align: center;"><i
-                                                    class="fa fa-trash-o"
-                                                    style="opacity:0.5; filter:alpha(opacity=50);"></i></th>
+                                                        class="fa fa-trash-o"
+                                                        style="opacity:0.5; filter:alpha(opacity=50);"></i></th>
                                         </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -300,7 +326,7 @@
 
 
                             <div
-                                class="from-group"><?php echo form_submit('add_transfer', $this->lang->line("submit"), 'id="add_transfer" class="btn btn-primary" style="padding: 6px 15px; margin:15px 0;"'); ?>
+                                    class="from-group"><?php echo form_submit('add_transfer', $this->lang->line("submit"), 'id="add_transfer" class="btn btn-primary" style="padding: 6px 15px; margin:15px 0;"'); ?>
                                 <button type="button" class="btn btn-danger" id="reset"><?= lang('reset') ?></button>
                             </div>
                         </div>
@@ -333,7 +359,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"><i
-                            class="fa fa-2x">&times;</i></span><span class="sr-only"><?=lang('close');?></span></button>
+                                class="fa fa-2x">&times;</i></span><span class="sr-only"><?= lang('close'); ?></span>
+                </button>
                 <h4 class="modal-title" id="prModalLabel"></h4>
             </div>
             <div class="modal-body" id="pr_popover_content">
@@ -383,3 +410,5 @@
         </div>
     </div>
 </div>
+
+<select name="loadAllPO" id="loadAllPO"></select>

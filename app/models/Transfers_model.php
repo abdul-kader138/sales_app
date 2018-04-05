@@ -404,4 +404,49 @@ class Transfers_model extends CI_Model
         return FALSE;
     }
 
+//    public function getPurchaseByWareHouseID($id)
+//    {
+//        $q = $this->db->get_where('purchases',  array('warehouse_id' => $id,'status'=>'received'));
+//        if ($q->num_rows() > 0) {
+//            foreach (($q->result()) as $row) {
+//                $data[] = $row;
+//            }
+//            return $data;
+//        }
+//        return null;
+//    }
+
+    public function getPurchaseByWareHouseID($purchase_id)
+    {
+        $this->db->select('purchases.id,purchases.reference_no')
+            ->join('purchase_items', 'purchase_items.purchase_id=purchases.id', 'inner')
+            ->group_by('purchases.id')
+//            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received')->where('tr_status',"");
+            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received');
+        $q = $this->db->get('purchases');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return null;
+    }
+
+    public function getProductNamesForPO($term, $warehouse_id)
+    {
+        $this->db->select('products.id, code, name, warehouses_products.quantity, cost, tax_rate, type, unit, purchase_unit, tax_method')
+            ->join('warehouses_products', 'warehouses_products.product_id=products.id', 'left')
+            ->join('purchase_items', 'purchase_items.product_id=products.id', 'left')
+            ->group_by('purchase_items.product_id')
+            ->where('purchase_items.purchase_id',$term);
+        $q = $this->db->get('products');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+
 }

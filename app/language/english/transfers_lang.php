@@ -45,3 +45,5 @@ $lang['first_2_are_required_other_optional']            = "<strong>First two col
 $lang['pr_not_found']                                   = "No product found ";
 $lang['line_no']                                        = "Line Number";
 $lang['transfer_order']                                 = "Transfer Order";
+$lang['load_purchase']                                  = "Item Load From PO";
+$lang['show_purchase']                                  = "Purchase List";

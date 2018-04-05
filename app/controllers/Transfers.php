@@ -1103,4 +1103,98 @@ class Transfers extends MY_Controller
         }
     }
 
+    function loadAllPO()
+    {
+        $this->sma->checkPermissions();
+        $warehouse_id = $this->input->get('warehouse_id', TRUE);
+        $rows = $this->transfers_model->getPurchaseByWareHouseID($warehouse_id);
+        $this->sma->send_json($rows);
+    }
+
+
+    function loadAllPOItems()
+    {
+        $this->sma->checkPermissions();
+        $purchase_id = $this->input->get('purchase_id', TRUE);
+        $warehouse_id = $this->input->get('warehouse_id', TRUE);
+        $product = $this->pOItemLoadAtUI($purchase_id,$warehouse_id);
+        $this->sma->send_json($product);
+    }
+
+    function pOItemLoadAtUI($purchase_id)
+    {
+        $this->sma->checkPermissions('index', TRUE);
+        $term = $this->input->get('term', TRUE);
+        $warehouse_id = $this->input->get('warehouse_id', TRUE);
+
+        $analyzed = $this->sma->analyze_term($term);
+        $sr = $analyzed['term'];
+        $option_id = $analyzed['option_id'];
+
+        $rows = $this->transfers_model->getProductNamesForPO($purchase_id, $warehouse_id);
+        if ($rows) {
+            $c = str_replace(".", "", microtime(true));
+            $r = 0;
+            foreach ($rows as $row) {
+                $option = FALSE;
+                $row->quantity = 0;
+                $row->item_tax_method = $row->tax_method;
+                $row->base_quantity = 1;
+                $row->base_unit = $row->unit;
+                $row->base_unit_cost = $row->cost;
+                $row->unit = $row->purchase_unit ? $row->purchase_unit : $row->unit;
+                $row->qty = 1;
+                $row->discount = '0';
+                $row->expiry = '';
+                $row->quantity_balance = 0;
+                $row->ordered_quantity = 0;
+                $options = $this->transfers_model->getProductOptions($row->id, $warehouse_id);
+                if ($options) {
+                    $opt = $option_id && $r == 0 ? $this->transfers_model->getProductOptionByID($option_id) : $options[0];
+                    if (!$option_id || $r > 0) {
+                        $option_id = $opt->id;
+                    }
+                } else {
+                    $opt = json_decode('{}');
+                    $opt->cost = 0;
+                    $option_id = FALSE;
+                }
+                $row->option = $option_id;
+                $pis = $this->site->getPurchasedItems($row->id, $warehouse_id, $row->option);
+                if($pis){
+                    foreach ($pis as $pi) {
+                        $row->quantity += $pi->quantity_balance;
+                    }
+                }
+                if ($options) {
+                    $option_quantity = 0;
+                    foreach ($options as $option) {
+                        $pis = $this->site->getPurchasedItems($row->id, $warehouse_id, $row->option);
+                        if($pis){
+                            foreach ($pis as $pi) {
+                                $option_quantity += $pi->quantity_balance;
+                            }
+                        }
+                        if($option->quantity > $option_quantity) {
+                            $option->quantity = $option_quantity;
+                        }
+                    }
+                }
+                if ($opt->cost != 0) {
+                    $row->cost = $opt->cost;
+                }
+                $row->real_unit_cost = $row->cost;
+                $units = $this->site->getUnitsByBUID($row->base_unit);
+                $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
+
+                $pr[] = array('id' => ($c + $r), 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")",
+                    'row' => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
+                $r++;
+            }
+            $this->sma->send_json($pr);
+        } else {
+            $this->sma->send_json(array(array('id' => 0, 'label' => lang('no_match_found'), 'value' => $term)));
+        }
+    }
+
 }
