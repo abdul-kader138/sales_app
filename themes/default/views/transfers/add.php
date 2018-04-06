@@ -257,7 +257,7 @@
                                         <div class="form-group">
                                             <?= lang("show_purchase", "show_purchase"); ?><br>
                                             <select name="show_purchase" id="show_purchase" style="width:100%;">
-                                                <option value=""> </option>
+                                                <option value='0' selected>Please Select  PO</option>
                                             </select>
                                         </div>
                                     </div>

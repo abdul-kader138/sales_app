@@ -44,6 +44,7 @@ class Transfers_model extends CI_Model
 
     public function addTransfer($data = array(), $items = array(),$id=null)
     {
+        $transfer_id=NULL;
         $status = $data['status'];
         if ($this->db->insert('transfers', $data)) {
             $transfer_id = $this->db->insert_id();
@@ -57,13 +58,12 @@ class Transfers_model extends CI_Model
                     $item['warehouse_id'] = $data['to_warehouse_id'];
                     $item['status'] = 'received';
                     $this->db->insert('purchase_items', $item);
-                    $this->db->update('purchase_items',array('tr_status'=>"Yes"), array('product_id'=>$items['product_id'],'purchase_id'=>$items['product_id']));
                 } else {
                     $this->db->insert('transfer_items', $item);
                 }
 
                 if ($status == 'sent' || $status == 'completed') {
-                    $this->syncTransderdItem($item['product_id'], $data['from_warehouse_id'], $item['quantity'], $item['option_id']);
+                    $this->syncTransderdItem($item['product_id'], $data['from_warehouse_id'], $item['quantity'], $item['option_id'],$item['product_id'],$item['tr_remain_qty']);
                 }
             }
 
@@ -304,10 +304,18 @@ class Transfers_model extends CI_Model
     public function deleteTransfer($id)
     {
         $ostatus = $this->resetTransferActions($id, 1);
+        $transfer = $this->getTransferByID($id);
         $oitems = $this->getAllTransferItems($id, $ostatus);
+
         $tbl = $ostatus == 'completed' ? 'purchase_items' : 'transfer_items';
         if ($this->db->delete('transfers', array('id' => $id)) && $this->db->delete($tbl, array('transfer_id' => $id))) {
             foreach ($oitems as $item) {
+
+                if($transfer->purchase_id){
+                     $purchase_details=$this->getPurchaseItemByID($transfer->purchase_id,$item->product_id);
+                     $this->db->update('purchase_items',array('tr_remain_qty' => ($purchase_details->tr_remain_qty + $item->quantity)),array('purchase_id'=>$transfer->purchase_id, 'product_id'=>$item->product_id));
+                }
+
                 $this->site->syncQuantity(NULL, NULL, NULL, $item->product_id);
             }
             return true;
@@ -362,7 +370,7 @@ class Transfers_model extends CI_Model
         return FALSE;
     }
 
-    public function syncTransderdItem($product_id, $warehouse_id, $quantity, $option_id = NULL)
+    public function syncTransderdItem($product_id, $warehouse_id, $quantity, $option_id = NULL,$purchase_id=NULL,$qty=NULL)
     {
         if ($pis = $this->site->getPurchasedItems($product_id, $warehouse_id, $option_id)) {
             $balance_qty = $quantity;
@@ -370,12 +378,14 @@ class Transfers_model extends CI_Model
                 if ($balance_qty <= $quantity && $quantity > 0) {
                     if ($pi->quantity_balance >= $quantity) {
                         $balance_qty = $pi->quantity_balance - $quantity;
-                        $this->db->update('purchase_items', array('quantity_balance' => $balance_qty), array('id' => $pi->id));
+                        if($purchase_id)$this->db->update('purchase_items', array('quantity_balance' => $balance_qty,'tr_remain_qty'=>$qty), array('id' => $pi->id));
+                        else $this->db->update('purchase_items', array('quantity_balance' => $balance_qty), array('id' => $pi->id));
                         $quantity = 0;
                     } elseif ($quantity > 0) {
                         $quantity = $quantity - $pi->quantity_balance;
                         $balance_qty = $quantity;
-                        $this->db->update('purchase_items', array('quantity_balance' => 0), array('id' => $pi->id));
+                        if($purchase_id) $this->db->update('purchase_items', array('quantity_balance' => 0,'tr_remain_qty'=>$qty), array('id' => $pi->id));
+                        else $this->db->update('purchase_items', array('quantity_balance' => 0), array('id' => $pi->id));
                     }
                 }
                 if ($quantity == 0) { break; }
@@ -422,7 +432,7 @@ class Transfers_model extends CI_Model
         $this->db->select('purchases.id,purchases.reference_no')
             ->join('purchase_items', 'purchase_items.purchase_id=purchases.id', 'inner')
             ->group_by('purchases.id')
-            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received')->where('tr_status',"");
+            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received')->where('tr_remain_qty >',0);
 //            ->where('purchases.warehouse_id',$purchase_id)->where('purchases.status','received');
         $q = $this->db->get('purchases');
         if ($q->num_rows() > 0) {
@@ -440,7 +450,8 @@ class Transfers_model extends CI_Model
             ->join('warehouses_products', 'warehouses_products.product_id=products.id', 'left')
             ->join('purchase_items', 'purchase_items.product_id=products.id', 'left')
             ->group_by('purchase_items.product_id')
-            ->where('purchase_items.purchase_id',$term);
+            ->where('purchase_items.purchase_id',$term)
+            ->where('tr_remain_qty >',0);
         $q = $this->db->get('products');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -448,6 +459,15 @@ class Transfers_model extends CI_Model
             }
             return $data;
         }
+    }
+
+    public function getPurchaseItemByID($id,$code_id)
+    {
+        $q = $this->db->get_where('purchase_items', array('purchase_id' => $id,'product_id' => $code_id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
     }
 
 }

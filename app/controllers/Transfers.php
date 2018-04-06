@@ -43,7 +43,7 @@ class Transfers extends MY_Controller
 
         $detail_link = anchor('transfers/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('transfer_details'), 'data-toggle="modal" data-target="#myModal"');
         $email_link = anchor('transfers/email/$1', '<i class="fa fa-envelope"></i> ' . lang('email_transfer'), 'data-toggle="modal" data-target="#myModal"');
-        $edit_link = anchor('transfers/edit/$1', '<i class="fa fa-edit"></i> ' . lang('edit_transfer'));
+     //   $edit_link = anchor('transfers/edit/$1', '<i class="fa fa-edit"></i> ' . lang('edit_transfer'));
         $pdf_link = anchor('transfers/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $print_barcode = anchor('products/print_barcodes/?transfer=$1', '<i class="fa fa-print"></i> ' . lang('print_barcodes'));
         $delete_link = "<a href='#' class='tip po' title='<b>" . lang("delete_transfer") . "</b>' data-content=\"<p>"
@@ -55,7 +55,6 @@ class Transfers extends MY_Controller
             . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
-            <li>' . $edit_link . '</li>
             <li>' . $pdf_link . '</li>
             <li>' . $email_link . '</li>
             <li>' . $print_barcode . '</li>
@@ -108,7 +107,7 @@ class Transfers extends MY_Controller
             $to_warehouse_details = $this->site->getWarehouseByID($to_warehouse);
             $to_warehouse_code = $to_warehouse_details->code;
             $to_warehouse_name = $to_warehouse_details->name;
-            $purchase_id = $this->sma->fld(trim($this->input->post('show_purchase')));
+            $purchase_id = $this->input->post('show_purchase');
 
             $total = 0;
             $product_tax = 0;
@@ -134,6 +133,10 @@ class Transfers extends MY_Controller
                             $this->session->set_flashdata('error', lang("no_match_found") . " (" . lang('product_name') . " <strong>" . $product_details->name . "</strong> " . lang('product_code') . " <strong>" . $product_details->code . "</strong>)");
                             redirect("transfers/add");
                         }
+                    if ($item_quantity <= 0) {
+                        $this->session->set_flashdata('error', lang("quantity_zero") . " (" . lang('product_name') . " <strong>" . $product_details->name . "</strong> " . lang('product_code') . " <strong>" . $product_details->code . "</strong>)");
+                        redirect("transfers/add");
+                    }
                    // }
 
                     if (isset($item_tax_rate) && $item_tax_rate != 0) {
@@ -168,7 +171,15 @@ class Transfers extends MY_Controller
                     $product_tax += $pr_item_tax;
                     $subtotal = $this->sma->formatDecimal((($item_net_cost * $item_unit_quantity) + $pr_item_tax), 4);
                     $unit = $this->site->getUnitByID($item_unit);
-
+                    $tr_qty_rm=$item_unit_quantity;
+                    $purchase_details=$this->transfers_model->getPurchaseItemByID($purchase_id,$product_details->id);
+                    if($purchase_id > 0) {
+                        $tr_qty_rm=($purchase_details->tr_remain_qty - $item_quantity);
+                        if ($purchase_details->tr_remain_qty < $item_quantity) {
+                            $this->session->set_flashdata('error', lang("tr_quantity_gt_po_qty") . " (" . lang('product_name') . " <strong>" . $product_details->name . "</strong> " . lang('product_code') . " <strong>" . $product_details->code . "</strong>)");
+                            redirect("transfers/add");
+                        }
+                    }
                     $products[] = array(
                         'product_id' => $product_details->id,
                         'product_code' => $item_code,
@@ -188,6 +199,7 @@ class Transfers extends MY_Controller
                         'subtotal' => $this->sma->formatDecimal($subtotal),
                         'expiry' => $item_expiry,
                         'real_unit_cost' => $real_unit_cost,
+                        'tr_remain_qty' => $tr_qty_rm,
                         'date' => date('Y-m-d', strtotime($date))
                     );
 
@@ -210,6 +222,7 @@ class Transfers extends MY_Controller
                 'to_warehouse_code' => $to_warehouse_code,
                 'to_warehouse_name' => $to_warehouse_name,
                 'note' => $note,
+                'purchase_id' => $purchase_id,
                 'total_tax' => $product_tax,
                 'total' => $total,
                 'grand_total' => $grand_total,
@@ -429,7 +442,8 @@ class Transfers extends MY_Controller
 
         }
 
-        if ($this->form_validation->run() == true && $this->transfers_model->updateTransfer($id, $data, $products)) {
+        if ($this->form_validation->run() == true) {
+//        if ($this->form_validation->run() == true && $this->transfers_model->updateTransfer($id, $data, $products)) {
             $this->session->set_userdata('remove_tols', 1);
             $this->session->set_flashdata('message', lang("transfer_updated"));
             redirect("transfers");
@@ -897,7 +911,7 @@ class Transfers extends MY_Controller
             $id = $this->input->get('id');
         }
 
-        if ($this->transfers_model->deleteTransfer($id,$p)) {
+        if ($this->transfers_model->deleteTransfer($id)) {
             if($this->input->is_ajax_request()) {
                 echo lang("transfer_deleted"); die();
             }

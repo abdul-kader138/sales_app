@@ -567,14 +567,19 @@ function loadAllPO(){
         warehouse_id: $("#from_warehouse").val()
     },
     success: function (data) {
-        // $("#show_purchase").empty();
-        $.each(data,function(index,json){
-            $("#show_purchase").append( // Append an object to the inside of the select box
-                $("<option></option>") // Yes you can do this.
-                    .text(json.reference_no)
-                    .val(json.id)
-            );
-        });
+        document.getElementById("show_purchase").innerHTML = "";
+        document.getElementById("show_purchase").text = "";
+
+        if(data){
+            $("#show_purchase").append($("<option value='0' selected>Please Select  PO</option>"));
+            $.each(data,function(index,json){
+                $("#show_purchase").append( // Append an object to the inside of the select box
+                    $("<option></option>") // Yes you can do this.
+                        .text(json.reference_no)
+                        .val(json.id)
+                );
+            });
+        }
         $(this).removeClass('ui-autocomplete-loading');
     }
 });
@@ -582,9 +587,10 @@ function loadAllPO(){
 
 
 $("#show_purchase").change(function() {
+    localStorage.removeItem('toitems');
     var row_count = $('#toTable >tbody >tr').length;
     if( row_count > 0) {
-        $('#toTable tbody').empty();
+        $('#toTable tbody').remove();
         reloadPage();
     }
     if (!$('#from_warehouse').val()) {
@@ -603,10 +609,11 @@ $("#show_purchase").change(function() {
             warehouse_id: $("#from_warehouse").val()
         },
         success: function (data) {
-            debugger;
-            $.each(data,function(index,json){
-                var row = add_transfer_item(json);
-            });
+            if(data){
+                $.each(data,function(index,json){
+                    var row = add_transfer_item(json);
+                });
+            }
             $(this).removeClass('ui-autocomplete-loading');
         }
     });

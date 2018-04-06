@@ -201,6 +201,7 @@ class Purchases_model extends CI_Model
             
             foreach ($items as $item) {
                 $item['purchase_id'] = $purchase_id;
+                $item['tr_remain_qty']=$item['quantity'];
                 $this->db->insert('purchase_items', $item);
 //                if ($this->Settings->update_cost) {
 //                    $this->db->update('products', array('cost' => $item['real_unit_cost']), array('id' => $item['product_id']));
