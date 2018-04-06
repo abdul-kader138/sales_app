@@ -521,3 +521,4 @@ $lang['please_select_these_before_adding_product'] = "Please select these before
 $lang['stock_quantity']                     = "Stock In Hand";
 $lang['sale_unit_price']                    = "Sale Price";
 $lang['cost_unit_price']                    = "Cost Price";
+$lang['tr_is_greater_po']                   = "Transfer quantity is greater than available PO quantity(available PO Qty-";

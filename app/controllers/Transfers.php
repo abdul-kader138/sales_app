@@ -174,11 +174,12 @@ class Transfers extends MY_Controller
                     $tr_qty_rm=$item_unit_quantity;
                     $purchase_details=$this->transfers_model->getPurchaseItemByID($purchase_id,$product_details->id);
                     if($purchase_id > 0) {
-                        $tr_qty_rm=($purchase_details->tr_remain_qty - $item_quantity);
+                        $tr_qty_rm=0;
                         if ($purchase_details->tr_remain_qty < $item_quantity) {
                             $this->session->set_flashdata('error', lang("tr_quantity_gt_po_qty") . " (" . lang('product_name') . " <strong>" . $product_details->name . "</strong> " . lang('product_code') . " <strong>" . $product_details->code . "</strong>)");
                             redirect("transfers/add");
                         }
+                        $tr_qty_rm=($purchase_details->tr_remain_qty - $item_quantity);
                     }
                     $products[] = array(
                         'product_id' => $product_details->id,
