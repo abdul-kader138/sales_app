@@ -170,7 +170,6 @@ $('body a, body button').attr('tabindex', -1);
             return;
         }
         var prqty = row.children().children('.prqty').val();
-        debugger;
         // @a.kader
         // Check tr quantity with po qty
         if(prqty > 0){
