@@ -1463,22 +1463,37 @@ class Sales extends MY_Controller
                     $this->excel->getActiveSheet()->setTitle(lang('sales'));
                     $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
                     $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
-                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('biller'));
-                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('customer'));
-                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('grand_total'));
-                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('paid'));
-                    $this->excel->getActiveSheet()->SetCellValue('G1', lang('payment_status'));
+                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('code'));
+                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('name'));
+                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('quantity'));
+                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('net_unit_price'));
+                    $this->excel->getActiveSheet()->SetCellValue('G1', lang('tax'));
+                    $this->excel->getActiveSheet()->SetCellValue('H1', lang('discount'));
+                    $this->excel->getActiveSheet()->SetCellValue('I1', lang('subtotal'));
 
                     $row = 2;
-                    foreach ($_POST['val'] as $id) {
-                        $sale = $this->sales_model->getInvoiceByID($id);
+                    $id=$_POST['val'];
+//                    foreach ($_POST['val'] as $id) {
+                        $sale = $this->sales_model->getInvoiceByID($id[0]);
+//                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($sale->date));
+//                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale->reference_no);
+//                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale->biller);
+//                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale->customer);
+//                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale->grand_total);
+//                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, lang($sale->paid));
+//                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, lang($sale->payment_status));
+
+                        $sale_items = $this->sales_model->getAllInvoiceItemsWithDetails($id[0]);
+                    foreach ($sale_items as $sale_item) {
                         $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($sale->date));
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale->reference_no);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale->biller);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale->customer);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale->grand_total);
-                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, lang($sale->paid));
-                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, lang($sale->payment_status));
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row,  $sale->reference_no);
+                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale_item->product_code);
+                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale_item->product_name);
+                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale_item->quantity);
+                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sale_item->net_unit_price);
+                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $sale_item->item_tax);
+                        $this->excel->getActiveSheet()->SetCellValue('H' . $row, $sale_item->item_discount);
+                        $this->excel->getActiveSheet()->SetCellValue('I' . $row, $sale_item->subtotal);
                         $row++;
                     }
 
