@@ -972,7 +972,9 @@ class Purchases extends MY_Controller
                 $row->real_unit_cost = $item->real_unit_cost;
                 $row->cost = $this->sma->formatDecimal($item->net_unit_cost + ($item->item_discount / $item->quantity));
                 $row->tax_rate = $item->tax_rate_id;
-                unset($row->details, $row->product_details, $row->price, $row->file, $row->product_group_id);
+//                unset($row->details, $row->product_details, $row->price, $row->file, $row->product_group_id);
+                unset($row->details, $row->product_details, $row->file, $row->product_group_id);
+//                $row->price = $item->price;
                 $units = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri = $this->Settings->item_addition ? $row->id : $c;

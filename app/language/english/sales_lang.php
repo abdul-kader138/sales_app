@@ -83,6 +83,7 @@ $lang['sale_no']                            = "Sale Number";
 $lang['payment_reference']                  = "Payment Reference";
 $lang['quantity_out_of_stock_for_%s']       = "The quantity is out of stock for %s";
 $lang['no_sale_selected']                   = "No sale selected. Please select at least one sale.";
+$lang['multiple_sale_selected']             = "Please select only one sales at a time.";
 $lang['you_will_loss_sale_data']            = "You will loss current sale data. Do you want to proceed?";
 $lang['sale_status_x_competed']             = "Sale status is pending, you can add return sale for only completed sales.";
 $lang['unselect_customer']                  = "De-select Customer";

@@ -310,6 +310,8 @@ class Sales extends MY_Controller
             $message = $message . $btn_code;
 
             $attachment = $this->pdf($id, null, 'S');
+//            $attachment = $this->creat_sales_xls($id);
+            $t="lll";
         } elseif ($this->input->post('send_email')) {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->session->set_flashdata('error', $this->data['error']);
@@ -1443,6 +1445,13 @@ class Sales extends MY_Controller
         if ($this->form_validation->run() == true) {
 
             if (!empty($_POST['val'])) {
+
+                if(count($_POST['val']) > 1 ){
+                    $this->session->set_flashdata('error', lang("multiple_sale_selected"));
+                    redirect($_SERVER["HTTP_REFERER"]);
+
+                }
+
                 if ($this->input->post('form_action') == 'delete') {
 
                     $this->sma->checkPermissions('delete');
@@ -1527,6 +1536,7 @@ class Sales extends MY_Controller
                         header('Cache-Control: max-age=0');
 
                         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+
                         return $objWriter->save('php://output');
                     }
 
@@ -2926,5 +2936,49 @@ class Sales extends MY_Controller
 
         }
     }
+
+
+    function creat_sales_xls($id=null){
+        $this->load->library('excel');
+        $this->excel->setActiveSheetIndex(0);
+        $this->excel->getActiveSheet()->setTitle(lang('sales'));
+        $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
+        $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
+        $this->excel->getActiveSheet()->SetCellValue('C1', lang('code'));
+        $this->excel->getActiveSheet()->SetCellValue('D1', lang('name'));
+        $this->excel->getActiveSheet()->SetCellValue('E1', lang('quantity'));
+        $this->excel->getActiveSheet()->SetCellValue('F1', lang('net_unit_price'));
+        $this->excel->getActiveSheet()->SetCellValue('G1', lang('tax'));
+        $this->excel->getActiveSheet()->SetCellValue('H1', lang('discount'));
+        $this->excel->getActiveSheet()->SetCellValue('I1', lang('subtotal'));
+
+        $row = 2;
+        $sale = $this->sales_model->getInvoiceByID($id);
+
+        $sale_items = $this->sales_model->getAllInvoiceItemsWithDetails($id);
+        foreach ($sale_items as $sale_item) {
+            $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($sale->date));
+            $this->excel->getActiveSheet()->SetCellValue('B' . $row,  $sale->reference_no);
+            $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale_item->product_code);
+            $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale_item->product_name);
+            $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale_item->quantity);
+            $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sale_item->net_unit_price);
+            $this->excel->getActiveSheet()->SetCellValue('G' . $row, $sale_item->item_tax);
+            $this->excel->getActiveSheet()->SetCellValue('H' . $row, $sale_item->item_discount);
+            $this->excel->getActiveSheet()->SetCellValue('I' . $row, $sale_item->subtotal);
+            $row++;
+        }
+
+        $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+        $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $filename = 'sales_' . date('Y_m_d_H_i_s');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+            header('Cache-Control: max-age=0');
+           $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+            return $objWriter->save('php://output');
+    }
+
 
 }

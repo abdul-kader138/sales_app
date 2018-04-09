@@ -633,6 +633,7 @@ $('#podiscount').focus(function () {
             bootbox.alert("invalid amount");
             return;
 		}
+         $(this).val(new_selling_price);
         poitems[item_id].row.selling_price = new_selling_price;
         localStorage.setItem('poitems', JSON.stringify(poitems));
         loadItems();
@@ -772,7 +773,6 @@ function loadItems() {
         $.each(sortedItems, function () {
            
             var item = this;
-            console.log(item);
             var item_id = site.settings.item_addition == 1 ? item.item_id : item.id;
             item.order = item.order ? item.order : order_no++;
             var product_id = item.row.id, item_type = item.row.type, combo_items = item.combo_items, item_cost = item.row.cost, item_oqty = item.row.oqty, item_qty = item.row.qty, item_bqty = item.row.quantity_balance, item_expiry = item.row.expiry, item_tax_method = item.row.tax_method, item_ds = item.row.discount, item_discount = 0, item_option = item.row.option, item_code = item.row.code, item_name = item.row.name.replace(/"/g, "&#034;").replace(/'/g, "&#039;");
@@ -863,7 +863,7 @@ function loadItems() {
             tr_html += '<td class="text-right"><input class="form-control input-sm text-right rcost" name="net_cost[]" type="hidden" id="cost_' + row_no + '" value="' + item_cost + '"><input class="rucost" name="unit_cost[]" type="hidden" value="' + unit_cost + '"><input class="form-control text-right realucost" name="real_unit_cost[]" type="text" value="' + formatMoney(item.row.real_unit_cost) + '"></td>';
             tr_html += '<td><input class="form-control text-right min_selling_price" name="min_selling_price[]" type="text" value="' + ( formatMoney(item.row.min_selling_price) != '0.00' ? formatMoney(item.row.min_selling_price): formatMoney(item.row.real_unit_cost) ) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="min_selling_price_' + row_no + '" onClick="this.select();"></td>';
             tr_html += '<td><input class="form-control text-right landing_price" name="landing_price[]" type="text" value="' + ( formatMoney(item.row.landing_price) != '0.00' ? formatMoney(item.row.landing_price) : formatMoney(item.row.real_unit_cost) ) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="landing_price_' + row_no + '" onClick="this.select();"></td>';
-            tr_html += '<td><input class="form-control text-right selling_price" name="selling_price[]" type="text" value="' + ( formatMoney(item.row.price) != '0.00' ? formatMoney(item.row.price) : formatMoney(item.row.real_unit_cost) ) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="selling_price_' + row_no + '" onClick="this.select();"></td>';
+            tr_html += '<td><input class="form-control text-right selling_price" name="selling_price[]" type="text" value="' + ( formatMoney(item.row.selling_price) != '0.00' ? formatMoney(item.row.selling_price) : formatMoney(item.row.price) ) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="selling_price_' + row_no + '" onClick="this.select();"></td>';
             tr_html += '<td><input name="quantity_balance[]" type="hidden" class="rbqty" value="' + item_bqty + '"><input class="form-control text-center rquantity" name="quantity[]" type="text" tabindex="'+((site.settings.set_focus == 1) ? an : (an+1))+'" value="' + formatDecimal(item_qty) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="quantity_' + row_no + '" onClick="this.select();"><input name="product_unit[]" type="hidden" class="runit" value="' + product_unit + '"><input name="product_base_quantity[]" type="hidden" class="rbase_quantity" value="' + base_quantity + '"></td>';
             if (po_edit) {
                 tr_html += '<td class="rec_con"><input name="ordered_quantity[]" type="hidden" class="oqty" value="' + item_oqty + '"><input class="form-control text-center received" name="received[]" type="text" value="' + formatDecimal(unit_qty_received) + '" data-id="' + row_no + '" data-item="' + item_id + '" id="received_' + row_no + '" onClick="this.select();"><input name="received_base_quantity[]" type="hidden" class="rrbase_quantity" value="' + qty_received + '"></td>';
