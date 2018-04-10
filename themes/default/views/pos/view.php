@@ -377,9 +377,10 @@
     </div>
 
     <div class="order_barcodes text-center">
-        <?= $this->sma->save_barcode($inv->reference_no, 'code128', 66, false); ?>
+        <?= $this->sma->save_barcode($inv->reference_no, 'code128', 30, false); ?>
         <br>
-        <?= $this->sma->qrcode('link', urlencode(site_url('sales/view/' . $inv->id)), 2); ?>
+<!--        Print Qrcode
+        //$this->sma->qrcode('link', urlencode(site_url('sales/view/' . $inv->id)), 1); -->
     </div>
     <div style="clear:both;"></div>
     </div>
