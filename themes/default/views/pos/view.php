@@ -87,7 +87,7 @@
 
         echo "<br>";
         if ($biller->gst_reg != "") {
-             echo '<span>'.lang("gst_reg")  . ": " . $biller->gst_reg . ",</span> &nbsp;&nbsp;&nbsp;";
+             echo '<span>'.lang("gst_reg")  . ": " . $biller->gst_reg . "</span> &nbsp;&nbsp;&nbsp;";
         }
         if ($biller->vat_reg != "") {
             echo '<span>'.lang("vat_reg")  . ": " . $biller->vat_reg . "</span>";

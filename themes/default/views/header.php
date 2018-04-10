@@ -852,6 +852,13 @@
                                                                     </a>
                                                                 </li>
                                                             <?php } ?>
+                                                            <?php if ($GP['brand-index']) { ?>
+                                                                <li id="system_settings_categories">
+                                                                    <a href="<?= site_url('system_settings/categories') ?>">
+                                                                        <i class="fa fa-folder-open"></i><span class="text"> <?= lang('categories'); ?></span>
+                                                                    </a>
+                                                                </li>
+                                                            <?php } ?>
                                                         </ul>
                                                     </li>
                                                 <?php } ?>

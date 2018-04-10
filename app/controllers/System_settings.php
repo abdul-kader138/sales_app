@@ -1111,6 +1111,14 @@ class system_settings extends MY_Controller
     function categories()
     {
 
+        if(! $this->Owner && ! $this->Admin) {
+            $get_permission=$this->permission_details[0];
+            if ((!$get_permission['category-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('categories')));
         $meta = array('page_title' => lang('categories'), 'bc' => $bc);
@@ -1120,6 +1128,27 @@ class system_settings extends MY_Controller
     function getCategories()
     {
 
+        if(! $this->Owner && ! $this->Admin) {
+            $get_permission=$this->permission_details[0];
+            if ((!$get_permission['category-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
+        //        build  anchor
+        $edit_link='';
+        if ($this->Owner || $this->Admin || $get_permission['category-edit'])
+            $edit_link= '&nbsp<a href="' . site_url("system_settings/edit_category/$1") . '"data-toggle="modal" data-target="#myModal" class="tip" title="' .  lang("edit_category") . '"><i class="fa fa-edit"></i></a>';
+
+        $delete_link='';
+        if ($this->Owner || $this->Admin || $get_permission['category-delete'])
+
+            $delete_link = "&nbsp<a href='#' class='po' title='<b>" . lang("delete_category") . "</b>' data-content=\"<p>"
+                . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('system_settings/delete_category/$1') . "'>"
+                . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> </a>";
+//
+
         $print_barcode = anchor('products/print_barcodes/?category=$1', '<i class="fa fa-print"></i>', 'title="'.lang('print_barcodes').'" class="tip"');
 
         $this->load->library('datatables');
@@ -1128,13 +1157,23 @@ class system_settings extends MY_Controller
             ->from("categories")
             ->join("categories c", 'c.id=categories.parent_id', 'left')
             ->group_by('categories.id')
-            ->add_column("Actions", "<div class=\"text-center\">".$print_barcode." <a href='" . site_url('system_settings/edit_category/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit_category") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_category") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('system_settings/delete_category/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class=\"text-center\">".$print_barcode.$edit_link.$delete_link."</div>", "id");
 
         echo $this->datatables->generate();
     }
 
     function add_category()
     {
+
+        if(! $this->Owner && ! $this->Admin) {
+            $get_permission=$this->permission_details[0];
+            if ((!$get_permission['category-add'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
 
         $this->load->helper('security');
         $this->form_validation->set_rules('code', lang("category_code"), 'trim|is_unique[categories.code]|required');
@@ -1218,6 +1257,16 @@ class system_settings extends MY_Controller
 
     function edit_category($id = NULL)
     {
+
+        if(! $this->Owner && ! $this->Admin) {
+            $get_permission=$this->permission_details[0];
+            if ((!$get_permission['category-edit'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         $this->load->helper('security');
         $this->form_validation->set_rules('code', lang("category_code"), 'trim|required');
         $pr_details = $this->settings_model->getCategoryByID($id);
@@ -1307,6 +1356,14 @@ class system_settings extends MY_Controller
     function delete_category($id = NULL)
     {
 
+        if(! $this->Owner && ! $this->Admin) {
+            $get_permission=$this->permission_details[0];
+            if ((!$get_permission['category-delete'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
         if ($this->site->getSubCategories($id)) {
             $this->session->set_flashdata('error', lang("category_has_subcategory"));
             redirect("system_settings/categories");
@@ -1328,6 +1385,14 @@ class system_settings extends MY_Controller
 
             if (!empty($_POST['val'])) {
                 if ($this->input->post('form_action') == 'delete') {
+                    if(! $this->Owner && ! $this->Admin) {
+                        $get_permission=$this->permission_details[0];
+                        if ((!$get_permission['category-delete'])) {
+                            $this->session->set_flashdata('warning', lang('access_denied'));
+                            redirect($_SERVER["HTTP_REFERER"]);
+                        }
+                    }
+
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteCategory($id);
                     }
@@ -2408,7 +2473,8 @@ class system_settings extends MY_Controller
 
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect('welcome');
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            redirect($_SERVER["HTTP_REFERER"]);
         }
 
         $this->load->helper('security');
@@ -2498,7 +2564,8 @@ class system_settings extends MY_Controller
     {
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect('welcome');
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            redirect($_SERVER["HTTP_REFERER"]);
         }
 
 
@@ -2582,7 +2649,8 @@ class system_settings extends MY_Controller
     {
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect('welcome');
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            redirect($_SERVER["HTTP_REFERER"]);
         }
 
 
@@ -3300,7 +3368,7 @@ class system_settings extends MY_Controller
     {
         if(! $this->Owner && ! $this->Admin) {
         $get_permission=$this->permission_details[0];
-            if ((!$get_permission['brand-index'])) {
+            if ((!$get_permission['brand-add'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 redirect($_SERVER["HTTP_REFERER"]);
@@ -3370,7 +3438,7 @@ class system_settings extends MY_Controller
     {
         if(! $this->Owner && ! $this->Admin) {
         $get_permission=$this->permission_details[0];
-            if ((!$get_permission['brand-index'])) {
+            if ((!$get_permission['brand-edit'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
                 die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
                 redirect($_SERVER["HTTP_REFERER"]);
@@ -3445,9 +3513,9 @@ class system_settings extends MY_Controller
 
         if(! $this->Owner && ! $this->Admin) {
         $get_permission=$this->permission_details[0];
-            if ((!$get_permission['brand-index'])) {
+            if ((!$get_permission['brand-delete'])) {
                 $this->session->set_flashdata('warning', lang('access_denied'));
-                redirect('welcome');
+                redirect($_SERVER["HTTP_REFERER"]);
             }
         }
 
@@ -3468,7 +3536,8 @@ class system_settings extends MY_Controller
 
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect('welcome');
+            die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+            redirect($_SERVER["HTTP_REFERER"]);
         }
 
         $this->load->helper('security');
@@ -3548,6 +3617,15 @@ class system_settings extends MY_Controller
 
             if (!empty($_POST['val'])) {
                 if ($this->input->post('form_action') == 'delete') {
+
+                    if(! $this->Owner && ! $this->Admin) {
+                        $get_permission=$this->permission_details[0];
+                        if ((!$get_permission['brand-delete'])) {
+                            $this->session->set_flashdata('warning', lang('access_denied'));
+                            redirect($_SERVER["HTTP_REFERER"]);
+                        }
+                    }
+
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteBrand($id);
                     }

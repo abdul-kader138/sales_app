@@ -201,7 +201,7 @@ if (!empty($variants)) {
                         <div class="form-group all">
                             <?= lang("tax_method", "tax_method") ?>
                             <?php
-                            $tm = array('0' => lang('exclusive'), '1' => lang('inclusive'));
+                            $tm = array('1' => lang('exclusive'), '0' => lang('inclusive'));
                             echo form_dropdown('tax_method', $tm, (isset($_POST['tax_method']) ? $_POST['tax_method'] : ($product ? $product->tax_method : '')), 'class="form-control select" id="tax_method" placeholder="' . lang("select") . ' ' . lang("tax_method") . '" style="width:100%"')
                             ?>
                         </div>
