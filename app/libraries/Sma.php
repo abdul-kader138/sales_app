@@ -334,7 +334,7 @@ class Sma
         return FALSE;
     }
 
-    public function qrcode($type = 'text', $text = 'http://tecdiary.com', $size = 2, $level = 'H', $sq = null)
+    public function qrcode($type = 'text', $text = 'http://oneclicksolutionbd.com', $size = 2, $level = 'H', $sq = null)
     {
         $file_name = 'assets/uploads/qrcode' . $this->session->userdata('user_id') . ($sq ? $sq : '') . ($this->Settings->barcode_img ? '.png' : '.svg');
         if ($type == 'link') {
