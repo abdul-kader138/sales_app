@@ -3,6 +3,7 @@
 class system_settings extends MY_Controller
 {
 
+    private $permission_details;
     function __construct()
     {
         parent::__construct();
@@ -11,11 +12,8 @@ class system_settings extends MY_Controller
             $this->session->set_userdata('requested_page', $this->uri->uri_string());
             $this->sma->md('login');
         }
+        $this->permission_details = $this->site->checkPermissions();
 
-        if (!$this->Owner) {
-            $this->session->set_flashdata('warning', lang('access_denied'));
-            redirect('welcome');
-        }
         $this->lang->load('settings', $this->Settings->user_language);
         $this->load->library('form_validation');
         $this->load->model('settings_model');
@@ -28,6 +26,11 @@ class system_settings extends MY_Controller
 
     function index()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('site_name', lang('site_name'), 'trim|required');
         $this->form_validation->set_rules('dateformat', lang('dateformat'), 'trim|required');
@@ -208,6 +211,12 @@ class system_settings extends MY_Controller
     function paypal()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
+
         $this->form_validation->set_rules('active', $this->lang->line('activate'), 'trim');
         $this->form_validation->set_rules('account_email', $this->lang->line('paypal_account_email'), 'trim|valid_email');
         if ($this->input->post('active')) {
@@ -244,6 +253,11 @@ class system_settings extends MY_Controller
 
     function skrill()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('active', $this->lang->line('activate'), 'trim');
         $this->form_validation->set_rules('account_email', $this->lang->line('paypal_account_email'), 'trim|valid_email');
@@ -285,6 +299,12 @@ class system_settings extends MY_Controller
             $this->session->set_flashdata('warning', lang('disabled_in_demo'));
             $this->sma->md();
         }
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
+
         $this->load->helper('security');
         $this->form_validation->set_rules('site_logo', lang("site_logo"), 'xss_clean');
         $this->form_validation->set_rules('login_logo', lang("login_logo"), 'xss_clean');
@@ -365,6 +385,11 @@ class system_settings extends MY_Controller
 
     public function write_index($timezone)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $template_path = './assets/config_dumps/index.php';
         $output_path = SELF;
@@ -595,6 +620,11 @@ class system_settings extends MY_Controller
 
     function email_templates($template = "credentials")
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('mail_body', lang('mail_message'), 'trim|required');
         $this->load->helper('file');
@@ -627,6 +657,11 @@ class system_settings extends MY_Controller
 
     function create_group()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('group_name', lang('group_name'), 'required|alpha_dash|is_unique[groups.name]');
 
@@ -666,6 +701,11 @@ class system_settings extends MY_Controller
 
     function edit_group($id)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         if (!$id || empty($id)) {
             redirect('system_settings/user_groups');
@@ -713,6 +753,12 @@ class system_settings extends MY_Controller
 
     function permissions($id = NULL)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('group', lang("group"), 'is_natural_no_zero');
         if ($this->form_validation->run() == true) {
@@ -791,6 +837,15 @@ class system_settings extends MY_Controller
                 'reports-monthly_purchases' => $this->input->post('reports-monthly_purchases'),
                 'products-stock_count' => $this->input->post('products-stock_count'),
                 'edit_price' => $this->input->post('edit_price'),
+//                a.kader
+                'category-index' => $this->input->post('category-index'),
+                'category-edit' => $this->input->post('category-edit'),
+                'category-add' => $this->input->post('category-add'),
+                'category-delete' => $this->input->post('category-delete'),
+                'brand-index' => $this->input->post('brand-index'),
+                'brand-edit' => $this->input->post('brand-edit'),
+                'brand-add' => $this->input->post('brand-add'),
+                'brand-delete' => $this->input->post('brand-delete'),
             );
 
             if (POS) {
@@ -855,6 +910,11 @@ class system_settings extends MY_Controller
     function currencies()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('currencies')));
@@ -864,6 +924,11 @@ class system_settings extends MY_Controller
 
     function getCurrencies()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -877,6 +942,11 @@ class system_settings extends MY_Controller
 
     function add_currency()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('code', lang("currency_code"), 'trim|is_unique[currencies.code]|required');
         $this->form_validation->set_rules('name', lang("name"), 'required');
@@ -905,6 +975,11 @@ class system_settings extends MY_Controller
 
     function edit_currency($id = NULL)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('code', lang("currency_code"), 'trim|required');
         $cur_details = $this->settings_model->getCurrencyByID($id);
@@ -940,6 +1015,11 @@ class system_settings extends MY_Controller
     function delete_currency($id = NULL)
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deleteCurrency($id)) {
             echo lang("currency_deleted");
         }
@@ -947,6 +1027,11 @@ class system_settings extends MY_Controller
 
     function currency_actions()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -1227,6 +1312,8 @@ class system_settings extends MY_Controller
             redirect("system_settings/categories");
         }
 
+//        @todo
+//        Need to check product tagging before delete
         if ($this->settings_model->deleteCategory($id)) {
             echo lang("category_deleted");
         }
@@ -1320,6 +1407,11 @@ class system_settings extends MY_Controller
 
     function tax_rates()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
@@ -1330,6 +1422,11 @@ class system_settings extends MY_Controller
 
     function getTaxRates()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -1343,6 +1440,11 @@ class system_settings extends MY_Controller
 
     function add_tax_rate()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("name"), 'trim|is_unique[tax_rates.name]|required');
         $this->form_validation->set_rules('type', lang("type"), 'required');
@@ -1372,6 +1474,11 @@ class system_settings extends MY_Controller
 
     function edit_tax_rate($id = NULL)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("name"), 'trim|required');
         $tax_details = $this->settings_model->getTaxRateByID($id);
@@ -1409,6 +1516,11 @@ class system_settings extends MY_Controller
 
     function delete_tax_rate($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deleteTaxRate($id)) {
             echo lang("tax_rate_deleted");
         }
@@ -1416,6 +1528,11 @@ class system_settings extends MY_Controller
 
     function tax_actions()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -1497,6 +1614,11 @@ class system_settings extends MY_Controller
 
     function customer_groups()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
@@ -1507,6 +1629,11 @@ class system_settings extends MY_Controller
 
     function getCustomerGroups()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->load->library('datatables');
         $this->datatables
@@ -1520,6 +1647,11 @@ class system_settings extends MY_Controller
 
     function add_customer_group()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('name', lang("group_name"), 'trim|is_unique[customer_groups.name]|required');
         $this->form_validation->set_rules('percent', lang("group_percentage"), 'required|numeric');
@@ -1546,6 +1678,11 @@ class system_settings extends MY_Controller
 
     function edit_customer_group($id = NULL)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("group_name"), 'trim|required');
         $pg_details = $this->settings_model->getCustomerGroupByID($id);
@@ -1580,6 +1717,11 @@ class system_settings extends MY_Controller
 
     function delete_customer_group($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deleteCustomerGroup($id)) {
             echo lang("customer_group_deleted");
         }
@@ -1587,6 +1729,11 @@ class system_settings extends MY_Controller
 
     function customer_group_actions()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -1663,6 +1810,12 @@ class system_settings extends MY_Controller
     function warehouses()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('warehouses')));
@@ -1672,6 +1825,10 @@ class system_settings extends MY_Controller
 
     function getWarehouses()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -1685,6 +1842,11 @@ class system_settings extends MY_Controller
 
     function add_warehouse()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->load->helper('security');
         $this->form_validation->set_rules('code', lang("code"), 'trim|is_unique[warehouses.code]|required');
         $this->form_validation->set_rules('name', lang("name"), 'required');
@@ -1758,6 +1920,11 @@ class system_settings extends MY_Controller
 
     function edit_warehouse($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->load->helper('security');
         $this->form_validation->set_rules('code', lang("code"), 'trim|required');
         $wh_details = $this->settings_model->getWarehouseByID($id);
@@ -1835,6 +2002,11 @@ class system_settings extends MY_Controller
 
     function delete_warehouse($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deleteWarehouse($id)) {
             echo lang("warehouse_deleted");
         }
@@ -1842,6 +2014,11 @@ class system_settings extends MY_Controller
 
     function warehouse_actions()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -1925,6 +2102,11 @@ class system_settings extends MY_Controller
     function variants()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('variants')));
@@ -1934,6 +2116,11 @@ class system_settings extends MY_Controller
 
     function getVariants()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -1947,6 +2134,11 @@ class system_settings extends MY_Controller
 
     function add_variant()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("name"), 'trim|is_unique[variants.name]|required');
 
@@ -1969,6 +2161,11 @@ class system_settings extends MY_Controller
 
     function edit_variant($id = NULL)
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("name"), 'trim|required');
         $tax_details = $this->settings_model->getVariantByID($id);
@@ -1996,6 +2193,11 @@ class system_settings extends MY_Controller
 
     function delete_variant($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deleteVariant($id)) {
             echo lang("variant_deleted");
         }
@@ -2003,6 +2205,11 @@ class system_settings extends MY_Controller
 
     function expense_categories()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('expense_categories')));
@@ -2012,6 +2219,11 @@ class system_settings extends MY_Controller
 
     function getExpenseCategories()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -2024,6 +2236,11 @@ class system_settings extends MY_Controller
 
     function add_expense_category()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('code', lang("category_code"), 'trim|is_unique[categories.code]|required');
         $this->form_validation->set_rules('name', lang("name"), 'required|min_length[3]');
@@ -2052,6 +2269,11 @@ class system_settings extends MY_Controller
 
     function edit_expense_category($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->form_validation->set_rules('code', lang("category_code"), 'trim|required');
         $category = $this->settings_model->getExpenseCategoryByID($id);
         if ($this->input->post('code') != $category->code) {
@@ -2084,6 +2306,11 @@ class system_settings extends MY_Controller
 
     function delete_expense_category($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         if ($this->settings_model->hasExpenseCategoryRecord($id)) {
             $this->session->set_flashdata('error', lang("category_has_expenses"));
@@ -2097,6 +2324,11 @@ class system_settings extends MY_Controller
 
     function expense_category_actions()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -2173,6 +2405,11 @@ class system_settings extends MY_Controller
 
     function import_categories()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->helper('security');
         $this->form_validation->set_rules('userfile', lang("upload_file"), 'xss_clean');
@@ -2259,6 +2496,11 @@ class system_settings extends MY_Controller
 
     function import_subcategories()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->load->helper('security');
         $this->form_validation->set_rules('userfile', lang("upload_file"), 'xss_clean');
@@ -2338,6 +2580,11 @@ class system_settings extends MY_Controller
 
     function import_expense_categories()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->load->helper('security');
         $this->form_validation->set_rules('userfile', lang("upload_file"), 'xss_clean');
@@ -2409,6 +2656,11 @@ class system_settings extends MY_Controller
     function units()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('units')));
@@ -2418,6 +2670,10 @@ class system_settings extends MY_Controller
 
     function getUnits()
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
 
         $this->load->library('datatables');
@@ -2433,6 +2689,11 @@ class system_settings extends MY_Controller
 
     function add_unit()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('code', lang("unit_code"), 'trim|is_unique[units.code]|required');
         $this->form_validation->set_rules('name', lang("unit_name"), 'trim|required');
@@ -2471,6 +2732,11 @@ class system_settings extends MY_Controller
 
     function edit_unit($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('code', lang("code"), 'trim|required');
         $unit_details = $this->site->getUnitByID($id);
@@ -2515,6 +2781,11 @@ class system_settings extends MY_Controller
     function delete_unit($id = NULL)
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->site->getUnitsByBUID($id)) {
             $this->session->set_flashdata('error', lang("unit_has_subunit"));
             redirect("system_settings/units");
@@ -2527,6 +2798,11 @@ class system_settings extends MY_Controller
 
     function unit_actions()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('form_action', lang("form_action"), 'required');
 
@@ -2610,6 +2886,11 @@ class system_settings extends MY_Controller
     function price_groups()
     {
 
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('price_groups')));
@@ -2619,6 +2900,11 @@ class system_settings extends MY_Controller
 
     function getPriceGroups()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->library('datatables');
         $this->datatables
@@ -2632,6 +2918,11 @@ class system_settings extends MY_Controller
 
     function add_price_group()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->form_validation->set_rules('name', lang("group_name"), 'trim|is_unique[price_groups.name]|required|alpha_numeric_spaces');
 
@@ -2655,6 +2946,11 @@ class system_settings extends MY_Controller
 
     function edit_price_group($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->form_validation->set_rules('name', lang("group_name"), 'trim|required|alpha_numeric_spaces');
         $pg_details = $this->settings_model->getPriceGroupByID($id);
@@ -2684,6 +2980,11 @@ class system_settings extends MY_Controller
 
     function delete_price_group($id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if ($this->settings_model->deletePriceGroup($id)) {
             echo lang("price_group_deleted");
         }
@@ -2691,6 +2992,11 @@ class system_settings extends MY_Controller
 
     function product_group_price_actions($group_id)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if (!$group_id) {
             $this->session->set_flashdata('error', lang('no_price_group_selected'));
             redirect('system_settings/price_groups');
@@ -2785,6 +3091,11 @@ class system_settings extends MY_Controller
 
     function group_product_prices($group_id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         if (!$group_id) {
             $this->session->set_flashdata('error', lang('no_price_group_selected'));
@@ -2800,6 +3111,11 @@ class system_settings extends MY_Controller
 
     function getProductPrices($group_id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if (!$group_id) {
             $this->session->set_flashdata('error', lang('no_price_group_selected'));
             redirect('system_settings/price_groups');
@@ -2820,6 +3136,11 @@ class system_settings extends MY_Controller
 
     function update_product_group_price($group_id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
         if (!$group_id) {
             $this->sma->send_json(array('status' => 0));
         }
@@ -2837,6 +3158,11 @@ class system_settings extends MY_Controller
 
     function update_prices_csv($group_id = NULL)
     {
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
+
 
         $this->load->helper('security');
         $this->form_validation->set_rules('userfile', lang("upload_file"), 'xss_clean');
@@ -2925,6 +3251,13 @@ class system_settings extends MY_Controller
 
     function brands()
     {
+        if(! $this->Owner && ! $this->Admin) {
+        $get_permission=$this->permission_details[0];
+            if ((!$get_permission['brand-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('system_settings'), 'page' => lang('system_settings')), array('link' => '#', 'page' => lang('brands')));
         $meta = array('page_title' => lang('brands'), 'bc' => $bc);
@@ -2934,17 +3267,45 @@ class system_settings extends MY_Controller
     function getBrands()
     {
 
+        if(! $this->Owner && ! $this->Admin) {
+        $get_permission=$this->permission_details[0];
+            if ((!$get_permission['brand-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
+
+//        build  anchor
+        $edit_link='';
+        if ($this->Owner || $this->Admin || $get_permission['brand-edit'])
+            $edit_link= '<a href="' . site_url("system_settings/edit_brand/$1") . '"data-toggle="modal" data-target="#myModal" class="tip" title="' .  lang("edit_brand") . '"><i class="fa fa-edit"></i></a>';
+
+        $delete_link='';
+        if ($this->Owner || $this->Admin || $get_permission['brand-delete'])
+
+            $delete_link = "&nbsp<a href='#' class='po' title='<b>" . lang("delete_brand") . "</b>' data-content=\"<p>"
+                . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('system_settings/delete_brand/$1') . "'>"
+                . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> </a>";
+//
         $this->load->library('datatables');
         $this->datatables
             ->select("id, image, code, name", FALSE)
             ->from("brands")
-            ->add_column("Actions", "<div class=\"text-center\"><a href='" . site_url('system_settings/edit_brand/$1') . "' data-toggle='modal' data-target='#myModal' class='tip' title='" . lang("edit_brand") . "'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang("delete_brand") . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('system_settings/delete_brand/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", "id");
+            ->add_column("Actions", "<div class='text-center'>".$edit_link.$delete_link."</div>", "id");
 
         echo $this->datatables->generate();
     }
 
     function add_brand()
     {
+        if(! $this->Owner && ! $this->Admin) {
+        $get_permission=$this->permission_details[0];
+            if ((!$get_permission['brand-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
 
         $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required|is_unique[brands.name]|alpha_numeric_spaces');
 
@@ -3007,7 +3368,14 @@ class system_settings extends MY_Controller
 
     function edit_brand($id = NULL)
     {
-
+        if(! $this->Owner && ! $this->Admin) {
+        $get_permission=$this->permission_details[0];
+            if ((!$get_permission['brand-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : site_url('welcome')) . "'; }, 10);</script>");
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         $this->form_validation->set_rules('name', lang("brand_name"), 'trim|required|alpha_numeric_spaces');
         $brand_details = $this->site->getBrandByID($id);
         if ($this->input->post('name') != $brand_details->name) {
@@ -3075,10 +3443,20 @@ class system_settings extends MY_Controller
     function delete_brand($id = NULL)
     {
 
-        if ($this->settings_model->brandHasProducts($id)) {
-            $this->session->set_flashdata('error', lang("brand_has_products"));
-            redirect("system_settings/brands");
+        if(! $this->Owner && ! $this->Admin) {
+        $get_permission=$this->permission_details[0];
+            if ((!$get_permission['brand-index'])) {
+                $this->session->set_flashdata('warning', lang('access_denied'));
+                redirect('welcome');
+            }
         }
+
+//        @todo
+//        Need to check product tagging before delete
+//        if ($this->settings_model->brandHasProducts($id)) {
+//            $this->session->set_flashdata('error', lang("brand_has_products"));
+//            redirect("system_settings/brands");
+//        }
 
         if ($this->settings_model->deleteBrand($id)) {
             echo lang("brand_deleted");
@@ -3087,6 +3465,11 @@ class system_settings extends MY_Controller
 
     function import_brands()
     {
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect('welcome');
+        }
 
         $this->load->helper('security');
         $this->form_validation->set_rules('userfile', lang("upload_file"), 'xss_clean');

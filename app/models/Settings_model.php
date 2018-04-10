@@ -700,7 +700,7 @@ class Settings_model extends CI_Model
         if ($this->db->delete("brands", array('id' => $id))) {
             return true;
         }
-        return FALSE;
+        return false;
     }
 
 }

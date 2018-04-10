@@ -255,6 +255,42 @@
                                 </tr>
 
                                 <tr>
+                                    <td><?= lang("brands"); ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="brand-index" <?php echo $p->{'brand-index'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="brand-add" <?php echo $p->{'brand-add'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="brand-edit" <?php echo $p->{'brand-edit'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="brand-delete" <?php echo $p->{'brand-delete'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td><?= lang("categories"); ?></td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="category-index" <?php echo $p->{'category-index'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="category-add" <?php echo $p->{'category-add'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="category-edit" <?php echo $p->{'category-edit'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" value="1" class="checkbox" name="category-delete" <?php echo $p->{'category-delete'} ? "checked" : ''; ?>>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                                <tr>
                                     <td><?= lang("reports"); ?></td>
                                     <td colspan="5">
                                         <span style="inline-block">

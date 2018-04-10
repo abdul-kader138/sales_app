@@ -845,6 +845,13 @@
                                                                     </a>
                                                                 </li>
                                                             <?php } ?>
+                                                            <?php if ($GP['brand-index']) { ?>
+                                                                <li id="products_sheet">
+                                                                    <a class="submenu" href="<?= site_url('system_settings/brands'); ?>">
+                                                                        <i class="fa fa-tags"></i><span class="text"> <?= lang('brands'); ?></span>
+                                                                    </a>
+                                                                </li>
+                                                            <?php } ?>
                                                         </ul>
                                                     </li>
                                                 <?php } ?>
