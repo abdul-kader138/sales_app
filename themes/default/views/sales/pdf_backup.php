@@ -26,7 +26,7 @@
 <body>
 <div id="wrap">
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <?php if ($logo) { ?>
                 <div class="text-left" style="margin-bottom:20px;">
                     <img src="<?= base_url('assets/uploads/logos/' . $biller->logo); ?>" alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>">
@@ -34,16 +34,14 @@
             <?php }
             ?>
             <div class="clearfix"></div>
-            <div class="row">
+            <div class="row padding10">
 
-                <div class="col-xs-4">
-                    <span><?php echo $this->lang->line("customer"); ?>:</span>
+                <div class="col-xs-5">
+                    <?php echo $this->lang->line("to"); ?>:
                     <h2 class=""><?= $customer->company ? $customer->company : $customer->name; ?></h2>
                     <?= $customer->company ? '' : 'Attn: ' . $customer->name; ?>
                     <?php
-                    $address='';
-                    if($customer->address ) $address=$customer->address.'<br />';
-                        echo $address . $customer-> city . ' ' . $customer->postal_code . ' ' . $customer->state . '<br />' . $customer->country;
+                        echo $customer->address . '<br />' . $customer->city . ' ' . $customer->postal_code . ' ' . $customer->state . '<br />' . $customer->country;
                         echo '<p>';
                         if ($customer->vat_no != "-" && $customer->vat_no != "") {
                             echo "<br>" . lang("vat_no") . ": " . $customer->vat_no;
@@ -71,19 +69,19 @@
                     ?>
                 </div>
 
-                <div class="col-xs-4 pull-right">
-                    <?php echo $this->lang->line("biller"); ?>:
+                <div class="col-xs-5">
+                    <?php echo $this->lang->line("from"); ?>:
                     <h2 class=""><?= $biller->company != '-' ? $biller->company : $biller->name; ?></h2>
                     <?= $biller->company ? '' : 'Attn: ' . $biller->name; ?>
                     <?php
                         echo $biller->address . '<br />' . $biller->city . ' ' . $biller->postal_code . ' ' . $biller->state . '<br />' . $biller->country;
                         echo '<p>';
-//                    if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
-//                        echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
-//                    }
-//                    if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
-//                        echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
-//                    }
+                    if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
+                        echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
+                    }
+                    if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
+                        echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
+                    }
                         if ($biller->cf1 != '-' && $biller->cf1 != '') {
                             echo '<br>' . lang('bcf1') . ': ' . $biller->cf1;
                         }
@@ -105,6 +103,23 @@
                         echo '</p>';
                         echo lang('tel') . ': ' . $biller->phone . '<br />' . lang('email') . ': ' . $biller->email;
                     ?>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row padding10">
+                <div class="col-xs-5">
+                    <span class="bold"><?= $Settings->site_name; ?></span><br>
+                    <?= $warehouse->name ?>
+
+                    <?php
+                        echo $warehouse->address . '<br>';
+                        echo ($warehouse->phone ? lang('tel') . ': ' . $warehouse->phone . '<br>' : '') . ($warehouse->email ? lang('email') . ': ' . $warehouse->email : '');
+//                    ?>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-xs-5">
                     <div class="bold">
                         <?= lang('date'); ?>: <?= $this->sma->hrld($inv->date); ?><br>
                         <?= lang('ref'); ?>: <?= $inv->reference_no; ?><br>
@@ -112,12 +127,16 @@
                             echo lang("return_ref").': '.$inv->return_sale_ref.'<br>';
                         } ?>
                         <div class="clearfix"></div>
+                        <div class="order_barcodes">
+                            <?= $this->sma->save_barcode($inv->reference_no, 'code128', 66, false); ?>
+                            <?= $this->sma->qrcode('link', urlencode(site_url('sales/view/' . $inv->id)), 2); ?>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-
             </div>
-            <div class="clearfix padding10"></div>
+
+            <div class="clearfix"></div>
             <?php
                 $col = 4;
                 if ( $Settings->product_discount && $inv->product_discount != 0) {
@@ -287,6 +306,18 @@
                     ?>
                 </div>
                 <div class="clearfix"></div>
+                <div class="col-xs-4  pull-left">
+                    <p style="height: 80px;"><?= lang('seller'); ?>
+                        : <?= $biller->company != '-' ? $biller->company : $biller->name; ?> </p>
+                    <hr>
+                    <p><?= lang('stamp_sign'); ?></p>
+                </div>
+                <div class="col-xs-4  pull-right">
+                    <p style="height: 80px;"><?= lang('customer'); ?>
+                        : <?= $customer->company ? $customer->company : $customer->name; ?> </p>
+                    <hr>
+                    <p><?= lang('stamp_sign'); ?></p>
+                </div>
                 <div class="clearfix"></div>
                 <?php if ($customer->award_points != 0 && $Settings->each_spent > 0) { ?>
                 <div class="col-xs-4 pull-right">
