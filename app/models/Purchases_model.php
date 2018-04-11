@@ -86,7 +86,7 @@ class Purchases_model extends CI_Model
 
     public function getAllPurchaseItems($purchase_id)
     {
-        $this->db->select('purchase_items.*, tax_rates.code as tax_code, tax_rates.name as tax_name, tax_rates.rate as tax_rate, products.unit, products.details as details, product_variants.name as variant')
+        $this->db->select('purchase_items.*, tax_rates.code as tax_code, tax_rates.name as tax_name, tax_rates.rate as tax_rate, products.unit, products.details as details, product_variants.name as variant, products.price as sale_price')
             ->join('products', 'products.id=purchase_items.product_id', 'left')
             ->join('product_variants', 'product_variants.id=purchase_items.option_id', 'left')
             ->join('tax_rates', 'tax_rates.id=purchase_items.tax_rate_id', 'left')

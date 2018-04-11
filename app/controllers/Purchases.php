@@ -1412,21 +1412,21 @@ class Purchases extends MY_Controller
                     $this->load->library('excel');
                     $this->excel->setActiveSheetIndex(0);
                     $this->excel->getActiveSheet()->setTitle(lang('purchases'));
-                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
-                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
-                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('supplier'));
-                    $this->excel->getActiveSheet()->SetCellValue('F1', lang('status'));
-                    $this->excel->getActiveSheet()->SetCellValue('E1', lang('grand_total'));
+                    $this->excel->getActiveSheet()->SetCellValue('A1', lang('description'));
+                    $this->excel->getActiveSheet()->SetCellValue('B1', lang('item_number'));
+                    $this->excel->getActiveSheet()->SetCellValue('C1', lang('qty'));
+                    $this->excel->getActiveSheet()->SetCellValue('D1', lang('sale_price'));
 
                     $row = 2;
                     foreach ($_POST['val'] as $id) {
-                        $purchase = $this->purchases_model->getPurchaseByID($id);
-                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($purchase->date));
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $purchase->reference_no);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $purchase->supplier);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $purchase->status);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $this->sma->formatMoney($purchase->grand_total));
-                        $row++;
+                        $purchase_list = $this->purchases_model->getAllPurchaseItems($id);
+                        foreach ($purchase_list as $item) {
+                            $this->excel->getActiveSheet()->SetCellValue('A' . $row, $item->product_name);
+                            $this->excel->getActiveSheet()->SetCellValue('B' . $row, $item->product_code);
+                            $this->excel->getActiveSheet()->SetCellValue('C' . $row, $item->quantity);
+                            $this->excel->getActiveSheet()->SetCellValue('D' . $row, $item->sale_price);
+                            $row++;
+                        }
                     }
 
                     $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);

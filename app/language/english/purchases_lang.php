@@ -119,3 +119,7 @@ $lang['calculate_unit_cost']                = "Calculate Unit Cost";
 $lang['purchase_already_paid']              = "Payment status is already paid for the purchase";
 $lang['payment_sent']                       = "Payment Sent";
 $lang['update_supplier_email']              = "Please update supplier email address";
+$lang['description']                        = "description";
+$lang['item_number']                        = "item_number";
+$lang['qty']                                = "qty";
+$lang['sale_price']                         = "sale_price";
