@@ -3,7 +3,7 @@
     $(document).ready(function () {
         oTable = $('#SLData').dataTable({
             "aaSorting": [[0, "asc"], [1, "desc"]],
-            "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?=lang('all')?>"]],
+            "aLengthMenu": [[10, 25, 50, 100, 500], [10, 25, 50, 500, "<?=lang('all')?>"]],
             "iDisplayLength": <?=$Settings->rows_per_page?>,
             'bProcessing': true, 'bServerSide': true,
             'sAjaxSource': '<?=site_url('sales/getSales' . ($warehouse_id ? '/' . $warehouse_id : ''))?>',

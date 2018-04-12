@@ -88,7 +88,7 @@ class Products extends MY_Controller {
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
-                    ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, wp.rack as rack, alert_quantity", FALSE)
+                    ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, wp.rack as rack, ,null,alert_quantity,(SELECT COUNT(p.id) FROM sma_purchases p JOIN sma_purchase_items pi ON pi.purchase_id = p.id where pi.product_id = sma_products.id) as count", FALSE)
                     ->from('products');
             if ($this->Settings->display_all_products) {
                 $this->datatables->join("( SELECT product_id, quantity, rack from {$this->db->dbprefix('warehouses_products')} WHERE warehouse_id = {$warehouse_id}) wp", 'products.id=wp.product_id', 'left');

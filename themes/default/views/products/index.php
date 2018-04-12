@@ -17,8 +17,8 @@
     var oTable;
     $(document).ready(function () {
         oTable = $('#PRData').dataTable({
-            "aaSorting": [[2, "asc"], [3, "asc"]],
-            "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
+            "aaSorting": [[2, "desc"], [3, "asc"]],
+            "aLengthMenu": [[10, 25, 50, 100, 500], [10, 25, 50, 100,500]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,
             'sAjaxSource': '<?= site_url('products/getProducts'.($warehouse_id ? '/'.$warehouse_id : '').($supplier ? '?supplier='.$supplier->id : '')) ?>',
@@ -33,13 +33,13 @@
                 var oSettings = oTable.fnSettings();
                 nRow.id = aData[0];
                 nRow.className = "product_link";
-//                if(aData[7] > aData[9]){ nRow.className = "product_link warning"; } else { nRow.className = "product_link"; }
                 return nRow;
             },
             "aoColumns": [
                 {"bSortable": false, "mRender": checkbox}, {"bSortable": false,"mRender": img_hl}, null, null, null, null, <?php if($Owner || $Admin) { echo '{"mRender": currencyFormat}, {"mRender": currencyFormat},'; } else { if($this->session->userdata('show_cost')) { echo '{"mRender": currencyFormat},';  } if($this->session->userdata('show_price')) { echo '{"mRender": currencyFormat},';  } } ?> {"mRender": formatQuantity}, null, <?php if(!$warehouse_id || !$Settings->racks) { echo '{"bVisible": false},'; } else { echo '{"bSortable": true},'; } ?> {"mRender": formatQuantity}, {"mRender": row_status}, {"bSortable": false}
             ]
         }).fnSetFilteringDelay().dtFilter([
+            {column_number: 1, filter_default_label: "[<?=lang('image');?>]", filter_type: "text", data: []},
             {column_number: 2, filter_default_label: "[<?=lang('code');?>]", filter_type: "text", data: []},
             {column_number: 3, filter_default_label: "[<?=lang('name');?>]", filter_type: "text", data: []},
             {column_number: 4, filter_default_label: "[<?=lang('brand');?>]", filter_type: "text", data: []},
