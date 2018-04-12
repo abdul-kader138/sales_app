@@ -167,6 +167,18 @@ class Sales_model extends CI_Model
         }
     }
 
+    public function getAllInvoiceItemsWithDetailsForMail($sale_id)
+    {
+        $this->db->select('product_code,product_name,quantity,net_unit_price, item_tax,item_discount,subtotal') ->from('sale_items') ->where('sale_id', $sale_id);
+        $q = $this->db->get();
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+
     public function getInvoiceByID($id)
     {
         $q = $this->db->get_where('sales', array('id' => $id), 1);
