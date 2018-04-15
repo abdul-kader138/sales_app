@@ -27,12 +27,18 @@
 <div id="wrap">
     <div class="row">
         <div class="col-lg-3">
+            <div class="row" style="margin-bottom:0px;">
             <?php if ($logo) { ?>
-                <div class="text-left" style="margin-bottom:20px;">
-                    <img src="<?= base_url('assets/uploads/logos/' . $biller->logo); ?>" alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>">
+            <div class="col-lg-6">
+<!--                <div class="text-left" style="margin-bottom:5px;margin-top: 0px;">-->
+<!--                    <span>-->
+                        <img src="<?= base_url('assets/uploads/logos/' . $biller->logo); ?>" alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>"> </div>
+                <div class="col-lg-5 pull-right" style="margin-right:80px; text-align: right;"> <h1><b>Invoice</b></h1>
                 </div>
             <?php }
             ?>
+            </div>
+
             <div class="clearfix"></div>
             <div class="row">
 
@@ -72,7 +78,6 @@
                 </div>
 
                 <div class="col-xs-4 pull-right">
-                    <?php echo $this->lang->line("biller"); ?>:
                     <h2 class=""><?= $biller->company != '-' ? $biller->company : $biller->name; ?></h2>
                     <?= $biller->company ? '' : 'Attn: ' . $biller->name; ?>
                     <?php
@@ -167,7 +172,7 @@
                                     <?= $row->serial_no ? '<br>' . $row->serial_no : ''; ?>
                                 </td>
                                 <td style="width: 80px; text-align:center; vertical-align:middle;"><?= $this->sma->formatQuantity($row->unit_quantity).' '.$row->product_unit_code; ?></td>
-                                <td style="text-align:right; width:90px;"><?= $this->sma->formatMoney($row->unit_price); ?></td>
+                                <td style="text-align:right; width:90px;"><?= $this->sma->formatMoney($row->real_unit_price); ?></td>
                                 <?php
                                     if ($Settings->tax1 && $inv->product_tax > 0) {
                                         echo '<td style="width: 90px; text-align:right; vertical-align:middle;">' . ($row->item_tax != 0 && $row->tax_code ? '<small>(' . $row->tax_code . ')</small> ' : '') . $this->sma->formatMoney($row->item_tax) . '</td>';
