@@ -1411,7 +1411,7 @@ class Purchases extends MY_Controller
 
                     $this->load->library('excel');
                     $this->excel->setActiveSheetIndex(0);
-                    $this->excel->getActiveSheet()->setTitle(lang('purchases'));
+                    $this->excel->getActiveSheet()->setTitle('Purchase Barcode');
                     $this->excel->getActiveSheet()->SetCellValue('A1', lang('description'));
                     $this->excel->getActiveSheet()->SetCellValue('B1', lang('item_number'));
                     $this->excel->getActiveSheet()->SetCellValue('C1', lang('qty'));
