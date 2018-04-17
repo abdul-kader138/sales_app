@@ -136,14 +136,13 @@
                                 <i class="fa fa-hourglass-half"></i>
                             </a>
                         </li>
-                    <?php }
-                    ?>
-                    <?php if ($Owner || $Admin) { ?>
+                    <?php }?>
                         <li class="dropdown">
                             <a class="btn bdarkGreen pos-tip" id="today_sale" title="<span><?=lang('today_sale')?></span>" data-placement="bottom" data-html="true" href="<?=site_url('pos/today_sale')?>" data-toggle="modal" data-target="#myModal">
                                 <i class="fa fa-heart"></i>
                             </a>
                         </li>
+                    <?php if ($Owner || $Admin) { ?>
                         <li class="dropdown hidden-xs">
                             <a class="btn bblue pos-tip" title="<?=lang('list_open_registers')?>" data-placement="bottom" href="<?=site_url('pos/registers')?>">
                                 <i class="fa fa-list"></i>

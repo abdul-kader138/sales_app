@@ -258,7 +258,7 @@
                                     </a>
                                 </li>
                             <?php } ?>
-<!--                            --><?php //if ($Owner) { ?>
+                            <?php if ($Owner) { ?>
                                 <li class="dropdown">
                                     <a class="btn bdarkGreen tip" id="today_profit" title="<span><?= lang('today_profit') ?></span>" 
                                        data-placement="bottom" data-html="true" href="<?= site_url('reports/profit') ?>" 
@@ -266,7 +266,7 @@
                                         <i class="fa fa-hourglass-2"></i>
                                     </a>
                                 </li>
-<!--                            --><?php //} ?>
+                            <?php } ?>
                             <?php if ($Owner || $Admin) { ?>
                                 <?php if (POS) { ?>
                                     <li class="dropdown hidden-xs">

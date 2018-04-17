@@ -965,10 +965,10 @@ class Pos extends MY_Controller
 
     public function today_sale()
     {
-        if (!$this->Owner && !$this->Admin) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            $this->sma->md();
-        }
+//        if (!$this->Owner && !$this->Admin) {
+//            $this->session->set_flashdata('error', lang('access_denied'));
+//            $this->sma->md();
+//        }
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['ccsales'] = $this->pos_model->getTodayCCSales();
