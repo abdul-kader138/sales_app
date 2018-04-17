@@ -20,7 +20,7 @@ class Time_scheduler extends MY_Controller {
     }
 
     function index($action = NULL) {
-        $this->sma->checkPermissions();
+        //$this->sma->checkPermissions();
 
         $time_user = $this->session->userdata(self::TIME_SCHEDULER_SESSION_NAME);
 

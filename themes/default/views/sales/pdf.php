@@ -27,22 +27,63 @@
 <div id="wrap">
     <div class="row">
         <div class="col-lg-3">
-            <div class="row" style="margin-bottom:0px;">
+            <div class="row" style="margin-bottom:-2px;">
             <?php if ($logo) { ?>
-            <div class="col-lg-6">
-<!--                <div class="text-left" style="margin-bottom:5px;margin-top: 0px;">-->
-<!--                    <span>-->
+            <div class="col-lg-6" style="margin-bottom: -2px;">
                         <img src="<?= base_url('assets/uploads/logos/' . $biller->logo); ?>" alt="<?= $biller->company != '-' ? $biller->company : $biller->name; ?>"> </div>
-                <div class="col-lg-5 pull-right" style="margin-right:80px; text-align: right;"> <h1><b>Invoice</b></h1>
+                <div class="col-lg-5 pull-right" style="margin-right:135px;margin-bottom: -2px; text-align: right;"> <h1><b>Invoice</b></h1>
                 </div>
             <?php }
             ?>
             </div>
 
-            <div class="clearfix"></div>
+<!--            <div class="clearfix"></div>-->
             <div class="row">
-
                 <div class="col-xs-4">
+                    <h2 class=""><?= $biller->company != '-' ? $biller->company : $biller->name; ?></h2>
+                    <?= $biller->company ? '' : 'Attn: ' . $biller->name; ?>
+                    <?php
+                    echo $biller->address . '<br />' . $biller->city . ' ' . $biller->postal_code . ' ' . $biller->state . '<br />' . $biller->country;
+                    echo '<p>';
+                    //                    if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
+                    //                        echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
+                    //                    }
+                    //                    if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
+                    //                        echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
+                    //                    }
+                    if ($biller->cf1 != '-' && $biller->cf1 != '') {
+                        echo '<br>' . lang('bcf1') . ': ' . $biller->cf1;
+                    }
+                    if ($biller->cf2 != '-' && $biller->cf2 != '') {
+                        echo '<br>' . lang('bcf2') . ': ' . $biller->cf2;
+                    }
+                    if ($biller->cf3 != '-' && $biller->cf3 != '') {
+                        echo '<br>' . lang('bcf3') . ': ' . $biller->cf3;
+                    }
+                    if ($biller->cf4 != '-' && $biller->cf4 != '') {
+                        echo '<br>' . lang('bcf4') . ': ' . $biller->cf4;
+                    }
+                    if ($biller->cf5 != '-' && $biller->cf5 != '') {
+                        echo '<br>' . lang('bcf5') . ': ' . $biller->cf5;
+                    }
+                    if ($biller->cf6 != '-' && $biller->cf6 != '') {
+                        echo '<br>' . lang('bcf6') . ': ' . $biller->cf6;
+                    }
+                    echo '</p>';
+                    echo lang('tel') . ': ' . $biller->phone . '<br />' . lang('email') . ': ' . $biller->email;
+                    ?>
+                    <div class="bold">
+                        <?= lang('date'); ?>: <?= $this->sma->hrld($inv->date); ?><br>
+                        <?= lang('ref'); ?>: <?= $inv->reference_no; ?><br>
+                        <?php if (!empty($inv->return_sale_ref)) {
+                            echo lang("return_ref").': '.$inv->return_sale_ref.'<br>';
+                        } ?>
+<!--                        <div class="clearfix"></div>-->
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="col-xs-4  pull-right">
                     <span><?php echo $this->lang->line("customer"); ?>:</span>
                     <h2 class=""><?= $customer->company ? $customer->company : $customer->name; ?></h2>
                     <?= $customer->company ? '' : 'Attn: ' . $customer->name; ?>
@@ -77,49 +118,6 @@
                     ?>
                 </div>
 
-                <div class="col-xs-4 pull-right">
-                    <h2 class=""><?= $biller->company != '-' ? $biller->company : $biller->name; ?></h2>
-                    <?= $biller->company ? '' : 'Attn: ' . $biller->name; ?>
-                    <?php
-                        echo $biller->address . '<br />' . $biller->city . ' ' . $biller->postal_code . ' ' . $biller->state . '<br />' . $biller->country;
-                        echo '<p>';
-//                    if ($biller->gst_reg != "-" && $biller->gst_reg != "") {
-//                        echo "<br>" . lang("gst_reg") . ": " . $biller->gst_reg;
-//                    }
-//                    if ($biller->vat_reg != "-" && $biller->vat_reg != "") {
-//                        echo "<br>" . lang("vat_reg") . ": " . $biller->vat_reg;
-//                    }
-                        if ($biller->cf1 != '-' && $biller->cf1 != '') {
-                            echo '<br>' . lang('bcf1') . ': ' . $biller->cf1;
-                        }
-                        if ($biller->cf2 != '-' && $biller->cf2 != '') {
-                            echo '<br>' . lang('bcf2') . ': ' . $biller->cf2;
-                        }
-                        if ($biller->cf3 != '-' && $biller->cf3 != '') {
-                            echo '<br>' . lang('bcf3') . ': ' . $biller->cf3;
-                        }
-                        if ($biller->cf4 != '-' && $biller->cf4 != '') {
-                            echo '<br>' . lang('bcf4') . ': ' . $biller->cf4;
-                        }
-                        if ($biller->cf5 != '-' && $biller->cf5 != '') {
-                            echo '<br>' . lang('bcf5') . ': ' . $biller->cf5;
-                        }
-                        if ($biller->cf6 != '-' && $biller->cf6 != '') {
-                            echo '<br>' . lang('bcf6') . ': ' . $biller->cf6;
-                        }
-                        echo '</p>';
-                        echo lang('tel') . ': ' . $biller->phone . '<br />' . lang('email') . ': ' . $biller->email;
-                    ?>
-                    <div class="bold">
-                        <?= lang('date'); ?>: <?= $this->sma->hrld($inv->date); ?><br>
-                        <?= lang('ref'); ?>: <?= $inv->reference_no; ?><br>
-                        <?php if (!empty($inv->return_sale_ref)) {
-                            echo lang("return_ref").': '.$inv->return_sale_ref.'<br>';
-                        } ?>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
 
             </div>
             <div class="clearfix padding10"></div>

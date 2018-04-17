@@ -954,10 +954,10 @@ class Reports extends MY_Controller {
     }
 
     function profit($date = NULL, $warehouse_id = NULL) {
-        if (!$this->Owner) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            $this->sma->md();
-        }
+//        if (!$this->Owner) {
+//            $this->session->set_flashdata('error', lang('access_denied'));
+//            $this->sma->md();
+//        }
         if (!$date) {
             $date = date('Y-m-d');
         }

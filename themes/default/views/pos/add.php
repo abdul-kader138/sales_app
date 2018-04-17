@@ -601,8 +601,8 @@
                                                                 <option
                                                                     value="MasterCard"><?=lang("MasterCard");?></option>
                                                                 <option value="Amex"><?=lang("Amex");?></option>
-                                                                <option
-                                                                    value="Discover"><?=lang("Discover");?></option>
+<!--                                                                <option-->
+<!--                                                                    value="Discover">--><?//=lang("Discover");?><!--</option>-->
                                                             </select>
                                                             <!-- <input type="text" id="pcc_type_1" class="form-control" placeholder="<?=lang('card_type')?>" />-->
                                                         </div>
@@ -1808,7 +1808,7 @@ var lang = {
                 $('.pcc_' + pa_no).hide();
                 $('.pcash_' + pa_no).show();
                 $('#payment_note_' + pa_no).focus();
-            } else if (p_val == 'CC' || p_val == 'stripe' || p_val == 'ppp' || p_val == 'authorize') {
+            } else if (p_val == 'CC' || p_val == 'DC' || p_val == 'stripe' || p_val == 'ppp' || p_val == 'authorize') {
                 $('.pcheque_' + pa_no).hide();
                 $('.pcash_' + pa_no).hide();
                 $('.pcc_' + pa_no).show();

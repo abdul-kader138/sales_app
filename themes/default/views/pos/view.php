@@ -302,7 +302,12 @@
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';
                 echo '<td>' . lang("name") . ': ' . $payment->cc_holder . '</td>';
-            } elseif ($payment->paid_by == 'Cheque' && $payment->cheque_no) {
+            } elseif (($payment->paid_by == 'DC') && $payment->cc_no) {
+                echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
+                echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
+                echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';
+                echo '<td>' . lang("name") . ': ' . $payment->cc_holder . '</td>';
+            }elseif ($payment->paid_by == 'Cheque' && $payment->cheque_no) {
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("cheque_no") . ': ' . $payment->cheque_no . '</td>';
@@ -335,7 +340,12 @@
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';
                 echo '<td>' . lang("name") . ': ' . $payment->cc_holder . '</td>';
-            } elseif ($payment->paid_by == 'Cheque' && $payment->cheque_no) {
+            } elseif (($payment->paid_by == 'DC') && $payment->cc_no) {
+                echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
+                echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
+                echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';
+                echo '<td>' . lang("name") . ': ' . $payment->cc_holder . '</td>';
+            }elseif ($payment->paid_by == 'Cheque' && $payment->cheque_no) {
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("cheque_no") . ': ' . $payment->cheque_no . '</td>';
