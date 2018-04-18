@@ -169,7 +169,10 @@ class Sales_model extends CI_Model
 
     public function getAllInvoiceItemsWithDetailsForMail($sale_id)
     {
-        $this->db->select('product_code,product_name,quantity,net_unit_price, item_tax,item_discount,subtotal') ->from('sale_items') ->where('sale_id', $sale_id);
+        $this->db->select('sale_items.product_name,sale_items.product_code,products.barcode_symbology,units.code,sale_items.product_unit_code,units.code as p_unit_code,sale_items.net_unit_price,products.price,products.alert_quantity,tax_rates.name as tax_name,products.tax_method,sale_items.quantity as qty,sale_items.discount,products.min_selling_price,products.landing_price')->from('sale_items')
+            ->join('products', 'products.id=sale_items.product_id', 'left')->join('units', 'units.id=products.unit', 'left')
+            ->join('tax_rates', 'tax_rates.id=products.tax_rate', 'left')
+            ->where('sale_id', $sale_id);
         $q = $this->db->get();
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
