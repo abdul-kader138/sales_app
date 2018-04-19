@@ -456,6 +456,12 @@
                                                                 <span class="text"> <?= lang('add_purchase_by_csv'); ?></span>
                                                             </a>
                                                         </li>
+                                                        <li id="inter_company_purchase_by_csv">
+                                                            <a class="submenu" href="<?= site_url('purchases/inter_company_purchase_by_csv'); ?>">
+                                                                <i class="fa fa-plus-circle"></i>
+                                                                <span class="text"> <?= lang('company_add_purchase_by_csv'); ?></span>
+                                                            </a>
+                                                        </li>
                                                         <li id="purchases_expenses">
                                                             <a class="submenu" href="<?= site_url('purchases/expenses'); ?>">
                                                                 <i class="fa fa-dollar"></i>

@@ -2945,8 +2945,8 @@ class Sales extends MY_Controller
         //Use the function is_file to check if the file already exists or not.
        if(!is_file($file)) file_put_contents($file);
        if (!$fp = fopen('assets/uploads/temp/products.csv', 'w+')) return FALSE;
-       fputcsv($fp, array('Name','Code', 'Barcode Symbology', 'Unit Code', 'Sale Unit Code',' Purchase Unit Code','Cost',
-           'Price', 'Alert Quantity','Tax Rate Name','Tax Method','Quantity','Discount','Min Selling Price','Landing Price'));
+       fputcsv($fp, array('name','code', 'barcode_symbology', 'unit', 'sale_unit','purchase_unit','cost',
+           'price', 'alert_quantity','tax_rate','tax_method','quantity','discount','min_selling_rice','landing_price'));
         foreach ($sale_items as $items){
             $item = array();
             foreach($items as $val) {

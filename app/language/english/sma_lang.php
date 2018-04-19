@@ -159,6 +159,7 @@ $lang['purchases']                          = "Purchases";
 $lang['list_purchases']                     = "List Purchases";
 $lang['add_purchase']                       = "Add Purchase";
 $lang['add_purchase_by_csv']                = "Add Purchase by CSV";
+$lang['company_add_purchase_by_csv']        = "Internal Purchase by CSV";
 $lang['transfers']                          = "Transfers";
 $lang['list_transfers']                     = "List Transfers";
 $lang['add_transfer']                       = "Add Transfer";

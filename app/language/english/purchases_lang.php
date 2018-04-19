@@ -123,3 +123,7 @@ $lang['description']                        = "description";
 $lang['item_number']                        = "item_number";
 $lang['qty']                                = "qty";
 $lang['sale_price']                         = "sale_price";
+
+$lang['check_unit']                         = "Please check unit code";
+$lang['unit_code_x_exist']                  = "Unit code does not exist.";
+$lang['products_not_added_to_list']         = "New Products found but not created into product master";

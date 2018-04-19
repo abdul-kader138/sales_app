@@ -642,4 +642,39 @@ class Purchases_model extends CI_Model
         
     }
 
+
+//    add for product add
+
+    public function add_products($products = array())
+    {
+        if (!empty($products)) {
+            foreach ($products as $product) {
+                $variants = explode('|', $product['variants']);
+                unset($product['variants']);
+                if ($this->db->insert('products', $product)) {
+                    $product_id = $this->db->insert_id();
+                    foreach ($variants as $variant) {
+                        if ($variant && trim($variant) != '') {
+                            $vat = array('product_id' => $product_id, 'name' => trim($variant));
+                            $this->db->insert('product_variants', $vat);
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    public function getUnitByCode($code)
+    {
+        $q = $this->db->get_where("units", array('code' => $code), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+
 }
