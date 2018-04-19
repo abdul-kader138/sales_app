@@ -1658,7 +1658,7 @@ class Purchases extends MY_Controller
             $this->data['tax_rates'] = $this->site->getAllTaxRates();
             $this->data['ponumber'] = ''; // $this->site->getReference('po');
 
-            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('purchases'), 'page' => lang('purchases')), array('link' => '#', 'page' => lang('add_purchase_by_csv')));
+            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('purchases'), 'page' => lang('purchases')), array('link' => '#', 'page' => lang('company_add_purchase_by_csv')));
             $meta = array('page_title' => lang('inter_company_purchase_by_csv'), 'bc' => $bc);
             $this->page_construct('purchases/inter_company_purchase_by_csv', $meta, $this->data);
 
