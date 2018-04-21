@@ -1264,7 +1264,7 @@ class Reports extends MY_Controller {
             $si .= " GROUP BY {$this->db->dbprefix('sale_items')}.sale_id ) FSI";
             $this->load->library('datatables');
             $this->datatables
-                    ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, biller, customer, FSI.item_nane as iname, grand_total, paid, (grand_total-paid) as balance, payment_status, {$this->db->dbprefix('sales')}.id as id", FALSE)
+                    ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, biller, customer, FSI.item_nane as iname, grand_total, paid, ((ROUND(grand_total,2))-(ROUND(paid,2))) as balance, payment_status, {$this->db->dbprefix('sales')}.id as id", FALSE)
                     ->from('sales')
                     ->join($si, 'FSI.sale_id=sales.id', 'left')
                     ->join('warehouses', 'warehouses.id=sales.warehouse_id', 'left');
