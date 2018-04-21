@@ -113,13 +113,11 @@
                     <div class="col-md-12">
                         <div class="clearfix"></div>
                         <div class="well well-sm">
-                            <a href="<?php echo $this->config->base_url(); ?>assets/csv/sample_purchase_products.csv"
+                            <a href="<?php echo $this->config->base_url(); ?>assets/csv/sample_internal_purchases.csv"
                                class="btn btn-primary pull-right"><i class="fa fa-download"></i> Download Sample
                                 File</a>
                             <span class="text-warning"><?php echo $this->lang->line("csv1"); ?></span><br>
-                            <?php echo $this->lang->line("csv2"); ?> <span
-                                class="text-info">(<?= lang("product_code") . ', ' . lang("net_unit_cost") . ', ' . lang("quantity") . ', ' . lang("product_variant") . ', ' . lang("tax_rate_name") . ', ' . lang("discount") . ', ' . lang("expiry"); ?>
-                                )</span> <?php echo $this->lang->line("csv3"); ?><br>
+                            <?php echo $this->lang->line("csv2"); ?> <?php echo $this->lang->line("csv3"); ?><br>
                             <strong><?= sprintf(lang('x_col_required'), 3); ?></strong>
                         </div>
                     </div>

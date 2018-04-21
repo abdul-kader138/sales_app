@@ -1350,7 +1350,7 @@ class Purchases extends MY_Controller
                 $csv = $this->upload->file_name;
 
 
-//                check for product if not found then add it
+//                check for product if not found then insert it
                 $arr_result = array();
                 $handles = fopen($this->digital_upload_path . $csv, "r");
                 if ($handles) {
@@ -1369,13 +1369,9 @@ class Purchases extends MY_Controller
                 }
                 $rw = 2;
                 foreach ($finals as $csv_pr) {
-
                     $product_details = $this->purchases_model->getProductByCode($csv_pr['code']);
                      if (! $product_details){
-
-//                            ttt
-
-                    if ($unit = $this->purchases_model->getUnitByCode(trim($csv_pr['unit']))) {
+                     if ($unit = $this->purchases_model->getUnitByCode(trim($csv_pr['unit']))) {
                         $base_unit = $unit ? $unit->id : NULL;
                         $sale_unit = $base_unit;
                         $purcahse_unit = $base_unit;
@@ -1463,7 +1459,7 @@ class Purchases extends MY_Controller
                             }
 
                             $item_code = $csv_pr['code'];
-                            $item_net_cost = $this->sma->formatDecimal($csv_pr['net_unit_cost']);
+                            $item_net_cost = $this->sma->formatDecimal($csv_pr['cost']);
                             $item_quantity = $csv_pr['quantity'];
                             $quantity_balance = $csv_pr['quantity'];
                             $item_tax_rate = $csv_pr['tax_rate'];
@@ -1647,6 +1643,7 @@ class Purchases extends MY_Controller
         }
 
         if ($this->form_validation->run() == true && $this->purchases_model->addPurchase($data, $products)) {
+//        if ($this->form_validation->run() == true) {
 
             $this->session->set_flashdata('message', $this->lang->line("purchase_added"));
             redirect("purchases");
@@ -1658,7 +1655,7 @@ class Purchases extends MY_Controller
             $this->data['tax_rates'] = $this->site->getAllTaxRates();
             $this->data['ponumber'] = ''; // $this->site->getReference('po');
 
-            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('purchases'), 'page' => lang('purchases')), array('link' => '#', 'page' => lang('add_purchase_by_csv')));
+            $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('purchases'), 'page' => lang('purchases')), array('link' => '#', 'page' => lang('company_add_purchase_by_csv')));
             $meta = array('page_title' => lang('inter_company_purchase_by_csv'), 'bc' => $bc);
             $this->page_construct('purchases/inter_company_purchase_by_csv', $meta, $this->data);
 
