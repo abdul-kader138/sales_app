@@ -7,7 +7,9 @@
             <button type="button" class="btn btn-xs btn-default no-print pull-right" style="margin-right:15px;" onclick="window.print();">
                 <i class="fa fa-print"></i> <?= lang('print'); ?>
             </button>
-            <h4 class="modal-title" id="myModalLabel"><?= lang('today_sale'); ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?= lang('today_sale'); ?><br>
+                <?= date('d-M-y'); ?>
+            </h4>
         </div>
         <div class="modal-body">
             <table width="100%" class="stable">
