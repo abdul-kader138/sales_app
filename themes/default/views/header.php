@@ -741,6 +741,11 @@
                                                                 <i class="fa fa-heart"></i><span class="text"> <?= lang('sales_report'); ?></span>
                                                             </a>
                                                         </li>
+                                                        <li id="reports_sales_margin">
+                                                            <a href="<?= site_url('reports/sales_margin') ?>">
+                                                                <i class="fa fa-heart"></i><span class="text"> <?= lang('sales_margin_report'); ?></span>
+                                                            </a>
+                                                        </li>
                                                         <li id="reports_payments">
                                                             <a href="<?= site_url('reports/payments') ?>">
                                                                 <i class="fa fa-money"></i><span class="text"> <?= lang('payments_report'); ?></span>
@@ -1123,6 +1128,15 @@
                                                                 <li id="reports_sales">
                                                                     <a href="<?= site_url('reports/sales') ?>">
                                                                         <i class="fa fa-heart"></i><span class="text"> <?= lang('sales_report'); ?></span>
+                                                                    </a>
+                                                                </li>
+                                                                <?php
+                                                            }
+                                                            if ($GP['reports-sales-margin']) {
+                                                                ?>
+                                                                <li id="reports_sales_margin">
+                                                                    <a href="<?= site_url('reports/sales_margin') ?>">
+                                                                        <i class="fa fa-heart"></i><span class="text"> <?= lang('sales_margin_report'); ?></span>
                                                                     </a>
                                                                 </li>
                                                                 <?php

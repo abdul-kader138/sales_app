@@ -820,6 +820,7 @@ class system_settings extends MY_Controller
                 'reports-monthly_sales' => $this->input->post('reports-monthly_sales'),
                 'reports-payments' => $this->input->post('reports-payments'),
                 'reports-sales' => $this->input->post('reports-sales'),
+                'reports-sales-margin' => $this->input->post('reports-sales-margin'),
                 'reports-purchases' => $this->input->post('reports-purchases'),
                 'reports-customers' => $this->input->post('reports-customers'),
                 'reports-suppliers' => $this->input->post('reports-suppliers'),

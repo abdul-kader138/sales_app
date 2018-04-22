@@ -345,6 +345,10 @@
                                             <input type="checkbox" value="1" class="checkbox" id="suppliers" name="reports-suppliers" <?php echo $p->{'reports-suppliers'} ? "checked" : ''; ?>>
                                             <label for="suppliers" class="padding05"><?= lang('suppliers') ?></label>
                                         </span>
+                                        <span style="inline-block">
+                                            <input type="checkbox" value="1" class="checkbox" id="sales_margin" name="reports-sales-margin" <?php echo $p->{'reports-sales-margin'} ? "checked" : ''; ?>>
+                                            <label for="sales" class="padding05"><?= lang('sales_margin') ?></label>
+                                        </span>
                                     </td>
                                 </tr>
 

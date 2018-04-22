@@ -1099,6 +1099,17 @@ class Reports extends MY_Controller {
         $this->page_construct('reports/sales', $meta, $this->data);
     }
 
+    function sales_margin() {
+        $this->sma->checkPermissions('sales');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
+        $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('reports'), 'page' => lang('reports')), array('link' => '#', 'page' => lang('sales_report')));
+        $meta = array('page_title' => lang('sales_margin_report'), 'bc' => $bc);
+        $this->page_construct('reports/sales_margin', $meta, $this->data);
+    }
+
     function getSalesReport($pdf = NULL, $xls = NULL) {
         $this->sma->checkPermissions('sales', TRUE);
         $product = $this->input->get('product') ? $this->input->get('product') : NULL;
@@ -1268,6 +1279,208 @@ class Reports extends MY_Controller {
                     ->from('sales')
                     ->join($si, 'FSI.sale_id=sales.id', 'left')
                     ->join('warehouses', 'warehouses.id=sales.warehouse_id', 'left');
+            // ->group_by('sales.id');
+
+            if ($user) {
+                $this->datatables->where('sales.created_by', $user);
+            }
+            if ($product) {
+                $this->datatables->where('FSI.product_id', $product, FALSE);
+            }
+            if ($serial) {
+                $this->datatables->like('FSI.serial_no', $serial, FALSE);
+            }
+            if ($biller) {
+                $this->datatables->where('sales.biller_id', $biller);
+            }
+            if ($customer) {
+                $this->datatables->where('sales.customer_id', $customer);
+            }
+            if ($warehouse) {
+                $this->datatables->where('sales.warehouse_id', $warehouse);
+            }
+            if ($reference_no) {
+                $this->datatables->like('sales.reference_no', $reference_no, 'both');
+            }
+            if ($start_date) {
+                $this->datatables->where($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+
+            echo $this->datatables->generate();
+        }
+    }
+
+
+    function getSalesMarginReport($pdf = NULL, $xls = NULL) {
+        $this->sma->checkPermissions('sales', TRUE);
+        $product = $this->input->get('product') ? $this->input->get('product') : NULL;
+        $user = $this->input->get('user') ? $this->input->get('user') : NULL;
+        $customer = $this->input->get('customer') ? $this->input->get('customer') : NULL;
+        $biller = $this->input->get('biller') ? $this->input->get('biller') : NULL;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : NULL;
+        $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : NULL;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : NULL;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : NULL;
+        $serial = $this->input->get('serial') ? $this->input->get('serial') : NULL;
+
+        if ($start_date) {
+            $start_date = $this->sma->fld($start_date);
+            $end_date = $this->sma->fld($end_date);
+        }
+        if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
+            $user = $this->session->userdata('user_id');
+        }
+
+        if ($pdf || $xls) {
+
+            $this->db
+                ->select("date, reference_no, biller, customer, CONCAT(" . $this->db->dbprefix('sale_items') . ".product_name, ' (', " . $this->db->dbprefix('sale_items') . ".quantity, ')') as iname, sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('products')}.cost) as actual_price,sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('sale_items')}.net_unit_price) as sl_price, payment_status", FALSE)
+                ->from('sales')
+                ->join('sale_items', 'sale_items.sale_id=sales.id', 'left')
+                ->join('products', 'products.id=sale_items.product_id', 'left')
+                ->join('warehouses', 'warehouses.id=sales.warehouse_id', 'left')
+                ->group_by('sale_items.sale_id,sale_items.product_id')
+                ->order_by('sale_items.sale_id asc');
+
+            if ($user) {
+                $this->db->where('sales.created_by', $user);
+            }
+            if ($product) {
+                $this->db->where('sale_items.product_id', $product);
+            }
+            if ($serial) {
+                $this->db->like('sale_items.serial_no', $serial);
+            }
+            if ($biller) {
+                $this->db->where('sales.biller_id', $biller);
+            }
+            if ($customer) {
+                $this->db->where('sales.customer_id', $customer);
+            }
+            if ($warehouse) {
+                $this->db->where('sales.warehouse_id', $warehouse);
+            }
+            if ($reference_no) {
+                $this->db->like('sales.reference_no', $reference_no, 'both');
+            }
+            if ($start_date) {
+                $this->db->where($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+
+            $q = $this->db->get();
+            if ($q->num_rows() > 0) {
+                foreach (($q->result()) as $row) {
+                    $data[] = $row;
+                }
+            } else {
+                $data = NULL;
+            }
+
+            if (!empty($data)) {
+
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle(lang('sales_report'));
+                $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
+                $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
+                $this->excel->getActiveSheet()->SetCellValue('C1', lang('biller'));
+                $this->excel->getActiveSheet()->SetCellValue('D1', lang('customer'));
+                $this->excel->getActiveSheet()->SetCellValue('E1', lang('product_qty'));
+                $this->excel->getActiveSheet()->SetCellValue('F1', lang('product_cost'));
+                $this->excel->getActiveSheet()->SetCellValue('G1', lang('product_price'));
+                $this->excel->getActiveSheet()->SetCellValue('H1', lang('margin'));
+                $this->excel->getActiveSheet()->SetCellValue('I1', lang('payment_status'));
+
+                $row = 2;
+                $total = 0;
+                $paid = 0;
+                $balance = 0;
+                foreach ($data as $data_row) {
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
+                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->reference_no);
+                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->biller);
+                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->customer);
+                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->iname);
+                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->actual_price);
+                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->sl_price);
+                    $this->excel->getActiveSheet()->SetCellValue('H' . $row, ($data_row->sl_price - $data_row->actual_price));
+                    $this->excel->getActiveSheet()->SetCellValue('I' . $row, lang($data_row->payment_status));
+                    $total += $data_row->actual_price;
+                    $paid += $data_row->sl_price;
+                    $balance += ($data_row->sl_price - $data_row->actual_price);
+                    $row++;
+                }
+                $this->excel->getActiveSheet()->getStyle("F" . $row . ":H" . $row)->getBorders()
+                    ->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+                $this->excel->getActiveSheet()->SetCellValue('F' . $row, $total);
+                $this->excel->getActiveSheet()->SetCellValue('G' . $row, $paid);
+                $this->excel->getActiveSheet()->SetCellValue('H' . $row, $balance);
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+                $filename = 'sales_report';
+                $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if ($pdf) {
+                    $styleArray = array(
+                        'borders' => array(
+                            'allborders' => array(
+                                'style' => PHPExcel_Style_Border::BORDER_THIN
+                            )
+                        )
+                    );
+                    $this->excel->getDefaultStyle()->applyFromArray($styleArray);
+                    $this->excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+                    require_once(APPPATH . "third_party" . DIRECTORY_SEPARATOR . "MPDF" . DIRECTORY_SEPARATOR . "mpdf.php");
+                    $rendererName = PHPExcel_Settings::PDF_RENDERER_MPDF;
+                    $rendererLibrary = 'MPDF';
+                    $rendererLibraryPath = APPPATH . 'third_party' . DIRECTORY_SEPARATOR . $rendererLibrary;
+                    if (!PHPExcel_Settings::setPdfRenderer($rendererName, $rendererLibraryPath)) {
+                        die('Please set the $rendererName: ' . $rendererName . ' and $rendererLibraryPath: ' . $rendererLibraryPath . ' values' .
+                            PHP_EOL . ' as appropriate for your directory structure');
+                    }
+
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
+                    header('Cache-Control: max-age=0');
+
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'PDF');
+                    $objWriter->save('php://output');
+                    exit();
+                }
+                if ($xls) {
+                    $this->excel->getActiveSheet()->getStyle('E2:E' . $row)->getAlignment()->setWrapText(true);
+                    ob_clean();
+                    header('Content-Type: application/vnd.ms-excel');
+                    header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+                    header('Cache-Control: max-age=0');
+                    ob_clean();
+                    $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+                    $objWriter->save('php://output');
+                    exit();
+                }
+            }
+            $this->session->set_flashdata('error', lang('nothing_found'));
+            redirect($_SERVER["HTTP_REFERER"]);
+        } else {
+
+            $si = "( SELECT sale_id, product_id, serial_no, CONCAT({$this->db->dbprefix('sale_items')}.product_name, '__', {$this->db->dbprefix('sale_items')}.quantity) as item_nane, sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('products')}.cost) as actual_price,sum( {$this->db->dbprefix('sale_items')}.quantity *  {$this->db->dbprefix('sale_items')}.net_unit_price) as sl_price from {$this->db->dbprefix('sale_items')} inner join  {$this->db->dbprefix('products')} on {$this->db->dbprefix('sale_items')}.product_id={$this->db->dbprefix('products')}.id";
+            if ($product) {
+                $si .= " WHERE {$this->db->dbprefix('sale_items')}.product_id = {$product} ";
+            }
+            $si .= " GROUP BY {$this->db->dbprefix('sale_items')}.sale_id,{$this->db->dbprefix('sale_items')}.product_id ) FSI";
+            $this->load->library('datatables');
+            $this->datatables
+                ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, biller, customer, FSI.item_nane as iname, FSI.actual_price, FSI.sl_price, ((ROUND(FSI.sl_price,2))-(ROUND(FSI.actual_price,2))) as balance, payment_status, {$this->db->dbprefix('sales')}.id as id", FALSE)
+                ->from('sales')
+                ->join($si, 'FSI.sale_id=sales.id', 'left')
+                ->join('warehouses', 'warehouses.id=sales.warehouse_id', 'left');
             // ->group_by('sales.id');
 
             if ($user) {
