@@ -76,9 +76,9 @@ class Customers extends MY_Controller
                 'state' => $this->input->post('state'),
                 'postal_code' => $this->input->post('postal_code'),
                 'country' => $this->input->post('country'),
-                'phone' => $this->input->post('phone')
-//                'cf1' => $this->input->post('cf1'),
-//                'cf2' => $this->input->post('cf2'),
+                'phone' => $this->input->post('phone'),
+                'customer_credit_limit' => $this->input->post('customer_credit_limit'),
+                'credit_enjoy_days' => $this->input->post('credit_enjoy_days')
 //                'cf3' => $this->input->post('cf3'),
 //                'cf4' => $this->input->post('cf4'),
 //                'cf5' => $this->input->post('cf5'),
@@ -111,6 +111,7 @@ class Customers extends MY_Controller
             $id = $this->input->get('id');
         }
 
+
         $company_details = $this->companies_model->getCompanyByID($id);
         if ($this->input->post('email') != $company_details->email) {
             $this->form_validation->set_rules('code', lang("email_address"), 'is_unique[companies.email]');
@@ -135,6 +136,8 @@ class Customers extends MY_Controller
                 'postal_code' => $this->input->post('postal_code'),
                 'country' => $this->input->post('country'),
                 'phone' => $this->input->post('phone'),
+                'customer_credit_limit' => $this->input->post('customer_credit_limit'),
+                'credit_enjoy_days' => $this->input->post('credit_enjoy_days'),
 //                'cf1' => $this->input->post('cf1'),
 //                'cf2' => $this->input->post('cf2'),
 //                'cf3' => $this->input->post('cf3'),

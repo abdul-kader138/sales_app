@@ -89,12 +89,12 @@
                         <?php echo form_input('country', $customer->country, 'class="form-control" id="country"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("ccf1", "cf1"); ?>
-                        <?php echo form_input('cf1', $customer->cf1, 'class="form-control" id="cf1"'); ?>
+                        <?= lang("customer_credit_limit", "customer_credit_limit"); ?>
+                        <?php echo form_input('customer_credit_limit',  $customer->customer_credit_limit, 'class="form-control" id="customer_credit_limit"'); ?>
                     </div>
                     <div class="form-group">
-                        <?= lang("ccf2", "cf2"); ?>
-                        <?php echo form_input('cf2', $customer->cf2, 'class="form-control" id="cf2"'); ?>
+                        <?= lang("credit_enjoy_days", "credit_enjoy_days"); ?>
+                        <?php echo form_input('credit_enjoy_days',$customer->credit_enjoy_days, 'class="form-control" id="credit_enjoy_days"'); ?>
 
                     </div>
                     <div class="form-group">

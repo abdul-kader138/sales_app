@@ -386,6 +386,14 @@ class Sales extends MY_Controller
             $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
             $quote_id = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
 
+//            Validate credit limit if Credit limit exist
+            if($customer_details->customer_credit_limit > 0 && $customer_details->credit_enjoy_days > 0){
+                $set_start_date=date('Y-m-d', strtotime('-'.$customer_details->credit_enjoy_days.' days'));
+                $set_start_date=$set_start_date.' 00:00:00';
+                $end_date=date('Y-m-d h:i:s');
+                $t="ssss";
+            }
+
             $total = 0;
             $product_tax = 0;
             $order_tax = 0;
@@ -632,6 +640,7 @@ class Sales extends MY_Controller
             // $this->sma->print_arrays($data, $products, $payment);
         }
 
+//        if ($this->form_validation->run() == true) {
         if ($this->form_validation->run() == true && $this->sales_model->addSale($data, $products, $payment)) {
             $this->session->set_userdata('remove_slls', 1);
             if ($quote_id) {

@@ -61,3 +61,5 @@ $lang['delete_address']                 = "Delete Address";
 $lang['address_added']                  = "Address successfully added";
 $lang['address_updated']                = "Address successfully updated";
 $lang['address_deleted']                = "Address successfully deleted";
+$lang['customer_credit_limit']          = "Credit Limit";
+$lang['credit_enjoy_days']              = "Credit Duration(Days)";
