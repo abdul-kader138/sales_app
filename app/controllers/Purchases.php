@@ -356,15 +356,38 @@ class Purchases extends MY_Controller
             $percentage = '%';
             $i = sizeof($_POST['product']);
             for ($r = 0; $r < $i; $r++) {
-                
                 $prod_id = $_POST['product_id'][$r];
                 $item_code = $_POST['product'][$r];
                 $item_net_cost = $this->sma->formatDecimal($_POST['net_cost'][$r]);
                 $unit_cost = $this->sma->formatDecimal($_POST['unit_cost'][$r]);
-                $min_selling_price = $this->sma->formatDecimal($_POST['min_selling_price'][$r]);
-                $landing_price = $this->sma->formatDecimal($_POST['landing_price'][$r]);
-                $selling_price = $this->sma->formatDecimal($_POST['selling_price'][$r]);
-                $real_unit_cost = $this->sma->formatDecimal($_POST['real_unit_cost'][$r]);
+                $min_selling_price=0;
+                $min_selling_price_symbol = $this->sma->formatMoney($_POST['min_selling_price'][$r]);
+                if($min_selling_price_symbol){
+                    $min_selling_price=str_replace($min_selling_price_symbol,"",$_POST['real_unit_cost'][$r]);
+                }
+                $min_selling_price = $this->sma->formatDecimal($min_selling_price);
+
+                $landing_price=0;
+                $landing_price_symbol = $this->sma->formatMoney($_POST['landing_price'][$r]);
+                if($landing_price_symbol){
+                    $landing_price=str_replace($landing_price_symbol,"",$_POST['landing_price'][$r]);
+                }
+                $landing_price = $this->sma->formatDecimal($landing_price);
+
+                $selling_price=0;
+                $selling_price_symbol = $this->sma->formatMoney($_POST['selling_price'][$r]);
+                if($selling_price_symbol){
+                    $selling_price=str_replace($selling_price_symbol,"",$_POST['selling_price'][$r]);
+                }
+                $selling_price = $this->sma->formatDecimal($selling_price);
+
+                $real_unit_cost=0;
+                $real_unit_cost_symbol = $this->sma->formatMoney($_POST['real_unit_cost'][$r]);
+                if($real_unit_cost_symbol){
+                    $real_unit_cost=str_replace($real_unit_cost_symbol,"",$_POST['real_unit_cost'][$r]);
+                }
+                $real_unit_cost = $this->sma->formatDecimal($real_unit_cost);
+
                 $item_unit_quantity = $_POST['quantity'][$r];
                 $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' ? $_POST['product_option'][$r] : null;
                 $item_tax_rate = isset($_POST['product_tax'][$r]) ? $_POST['product_tax'][$r] : null;
@@ -719,10 +742,35 @@ class Purchases extends MY_Controller
                 $item_code = $_POST['product'][$r];
                 $item_net_cost = $this->sma->formatDecimal($_POST['net_cost'][$r]);
                 $unit_cost = $this->sma->formatDecimal($_POST['unit_cost'][$r]);
-                $real_unit_cost = $this->sma->formatDecimal($_POST['real_unit_cost'][$r]);
-                $min_selling_price = $this->sma->formatDecimal($_POST['min_selling_price'][$r]);
-                $landing_price = $this->sma->formatDecimal($_POST['landing_price'][$r]);
-                $selling_price = $this->sma->formatDecimal($_POST['selling_price'][$r]);
+                $unit_cost = $this->sma->formatDecimal($_POST['unit_cost'][$r]);
+                $min_selling_price=0;
+                $min_selling_price_symbol = $this->sma->formatMoney($_POST['min_selling_price'][$r]);
+                if($min_selling_price_symbol){
+                    $min_selling_price=str_replace($min_selling_price_symbol,"",$_POST['real_unit_cost'][$r]);
+                }
+                $min_selling_price = $this->sma->formatDecimal($min_selling_price);
+
+                $landing_price=0;
+                $landing_price_symbol = $this->sma->formatMoney($_POST['landing_price'][$r]);
+                if($landing_price_symbol){
+                    $landing_price=str_replace($landing_price_symbol,"",$_POST['landing_price'][$r]);
+                }
+                $landing_price = $this->sma->formatDecimal($landing_price);
+
+                $selling_price=0;
+                $selling_price_symbol = $this->sma->formatMoney($_POST['selling_price'][$r]);
+                if($selling_price_symbol){
+                    $selling_price=str_replace($selling_price_symbol,"",$_POST['selling_price'][$r]);
+                }
+                $selling_price = $this->sma->formatDecimal($selling_price);
+
+                $real_unit_cost=0;
+                $real_unit_cost_symbol = $this->sma->formatMoney($_POST['real_unit_cost'][$r]);
+                if($real_unit_cost_symbol){
+                    $real_unit_cost=str_replace($real_unit_cost_symbol,"",$_POST['real_unit_cost'][$r]);
+                }
+                $real_unit_cost = $this->sma->formatDecimal($real_unit_cost);
+
                 $item_unit_quantity = $_POST['quantity'][$r];
                 $quantity_received = $_POST['received_base_quantity'][$r];
                 $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' ? $_POST['product_option'][$r] : null;
