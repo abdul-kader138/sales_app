@@ -528,3 +528,4 @@ $lang['tr_is_greater_po']                   = "Transfer quantity is greater than
 $lang['product_cost']                        = "Product Cost";
 $lang['product_price']                       = "Product Price";
 $lang['margin']                              = "Margin";
+$lang['insufficient_credit']                 = "Customer doesn't have sufficient credit limit";

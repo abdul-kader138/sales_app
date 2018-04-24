@@ -940,4 +940,25 @@ class Sales_model extends CI_Model
         return FALSE;
     }
 
+    public function getAllSalesFroCustomer($customer_id){
+        $this->db->select('sum(sales.grand_total)')
+            ->group_by('sales.customer_id');
+        $q = $this->db->get_where('sales', array('sales.customer_id' => $customer_id),1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+    public function getAllPaymentsFroCustomer($customer_id)
+    {
+        $this->db->select('sum(p.amount) as pay_val')
+            ->join('payments as p', 'p.sale_id=sales.id', 'inner')
+            ->where('p.type', 'received')->where('p.pos_paid', 0)->group_by('sales.customer_id');
+        $q = $this->db->get_where('sales', array('sales.customer_id' => $customer_id),1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
 }
