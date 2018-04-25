@@ -941,8 +941,7 @@ class Sales_model extends CI_Model
     }
 
     public function getAllSalesFroCustomer($customer_id){
-        $this->db->select('sum(sales.grand_total)')
-            ->group_by('sales.customer_id');
+        $this->db->select_sum('grand_total');
         $q = $this->db->get_where('sales', array('sales.customer_id' => $customer_id),1);
         if ($q->num_rows() > 0) {
             return $q->row();

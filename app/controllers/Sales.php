@@ -567,21 +567,18 @@ class Sales extends MY_Controller
             );
 
             //            Validate credit limit if Credit limit exist
-//            if($customer_details->customer_credit_limit > 0 && $customer_details->credit_enjoy_days > 0){
-//                $total_amount=0;
-//                $sales_amount=0;
-//                $set_start_date=date('Y-m-d', strtotime('-'.$customer_details->credit_enjoy_days.' days'));
-//                $set_start_date=$set_start_date.' 00:00:00';
-//                $end_date=date('Y-m-d h:i:s');
-//                $total_sales_amount=$this->sales_model->getAllSalesFroCustomer($customer_id);
-//                $total_payments_amount=$this->sales_model->getAllPaymentsFroCustomer($customer_id);
-//                $total_amount=$total_payments_amount->pay_val +$customer_details->customer_credit_limit;
-//                $sales_amount=$total_sales_amount->grand_total +$grand_total;
-//                if($total_amount <= $sales_amount){
-//                    $this->session->set_flashdata('error', lang("insufficient_credit"));
-//                    redirect($_SERVER["HTTP_REFERER"]);
-//                }
-//            }
+            if($customer_details->customer_credit_limit > 0){
+                $total_amount=0;
+                $sales_amount=0;
+                $total_sales_amount=$this->sales_model->getAllSalesFroCustomer($customer_id);
+                $total_payments_amount=$this->sales_model->getAllPaymentsFroCustomer($customer_id);
+                $total_amount=$total_payments_amount->pay_val +$customer_details->customer_credit_limit + $total_amount;
+                $sales_amount=$total_sales_amount->grand_total +$grand_total + $sales_amount;
+                if($total_amount < $sales_amount){
+                    $this->session->set_flashdata('error', lang("insufficient_credit"));
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+            }
 
 
 
@@ -653,7 +650,6 @@ class Sales extends MY_Controller
             // $this->sma->print_arrays($data, $products, $payment);
         }
 
-//        if ($this->form_validation->run() == true) {
         if ($this->form_validation->run() == true && $this->sales_model->addSale($data, $products, $payment)) {
             $this->session->set_userdata('remove_slls', 1);
             if ($quote_id) {
