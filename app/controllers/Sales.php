@@ -386,8 +386,10 @@ class Sales extends MY_Controller
             $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
             $quote_id = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
 
-
-
+            if($customer_details->customer_credit_limit <= 0){
+                $this->session->set_flashdata('error', lang("insufficient_credit"));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
             $total = 0;
             $product_tax = 0;
             $order_tax = 0;
@@ -429,7 +431,6 @@ class Sales extends MY_Controller
                             $pr_discount = $this->sma->formatDecimal($discount);
                         }
                     }
-
                     $unit_price = $this->sma->formatDecimal($unit_price - $pr_discount);
                     $item_net_price = $unit_price;
                     $pr_item_discount = $this->sma->formatDecimal($pr_discount * $item_unit_quantity);
@@ -574,7 +575,7 @@ class Sales extends MY_Controller
                 $total_payments_amount=$this->sales_model->getAllPaymentsFroCustomer($customer_id);
                 $total_amount=$total_payments_amount->pay_val +$customer_details->customer_credit_limit + $total_amount;
                 $sales_amount=$total_sales_amount->grand_total +$grand_total + $sales_amount;
-                if($total_amount < $sales_amount){
+                if($total_amount <= $sales_amount){
                     $this->session->set_flashdata('error', lang("insufficient_credit"));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
