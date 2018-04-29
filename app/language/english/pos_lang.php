@@ -308,3 +308,5 @@ $lang['tax']                            = "Tax";
 $lang['total']                          = "Total";
 $lang['gst_reg']                        = "GST Reg. No";
 $lang['vat_reg']                        = "VAT Reg. No";
+$lang['card_charge']                    = "Swap Charge(%)";
+$lang['select_correct_val']             = "Invalid Number";

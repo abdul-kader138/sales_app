@@ -593,17 +593,9 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <select name="cc_type[]" id="pcc_type_1"
-                                                                    class="form-control pcc_type"
-                                                                    placeholder="<?=lang('card_type')?>">
-                                                                <option value="Visa"><?=lang("Visa");?></option>
-                                                                <option
-                                                                    value="MasterCard"><?=lang("MasterCard");?></option>
-                                                                <option value="Amex"><?=lang("Amex");?></option>
-<!--                                                                <option-->
-<!--                                                                    value="Discover">--><?//=lang("Discover");?><!--</option>-->
-                                                            </select>
-                                                            <!-- <input type="text" id="pcc_type_1" class="form-control" placeholder="<?=lang('card_type')?>" />-->
+                                                            <input name="cc_charge[]" type="text" id="cc_charge"
+                                                                   class="form-control cc_charge"
+                                                                   placeholder="<?=lang('card_charge')?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
@@ -615,7 +607,6 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-
                                                             <input name="cc_year" type="text" id="pcc_year_1"
                                                                    class="form-control"
                                                                    placeholder="<?=lang('year')?>"/>
@@ -647,10 +638,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="multi-payment"></div>
-                        <button type="button" class="btn btn-primary col-md-12 addButton"><i
-                                class="fa fa-plus"></i> <?=lang('add_more_payments')?></button>
-                        <div style="clear:both; height:15px;"></div>
+<!--                        <div id="multi-payment"></div>-->
+<!--                        <button type="button" class="btn btn-primary col-md-12 addButton"><i-->
+<!--                                class="fa fa-plus"></i> --><?//=lang('add_more_payments')?><!--</button>-->
+<!--                        <div style="clear:both; height:15px;"></div>-->
                         <div class="font16">
                             <table class="table table-bordered table-condensed table-striped" style="margin-bottom: 0;">
                                 <tbody>
@@ -1199,6 +1190,12 @@ var lang = {
     var protect_delete = <?php if (!$Owner && !$Admin) {echo $pos_settings->pin_code ? '1' : '0';} else {echo '0';} ?>, billers = <?= json_encode($posbillers); ?>, biller = <?= json_encode($posbiller); ?>;
     var username = '<?=$this->session->userdata('username');?>', order_data = '', bill_data = '';
 
+    function initModalField(){
+        $('#cc_charge').val('');
+        $('#twt').text();
+        $('#total_paying').text();
+        $('#balance').text(0.00);
+    }
     function widthFunctions(e) {
         var wh = $(window).height(),
             lth = $('#left-top').height(),
@@ -1538,23 +1535,39 @@ var lang = {
         }).on('blur', '.amount', function () {
             calculateTotals();
         });
-
+        $(document).on('change', '.cc_charge', function () {
+            calculateTotals();
+        });
         function calculateTotals() {
+            // debugger;
             var total_paying = 0;
             var ia = $(".amount");
+            var card_charge = $("#cc_charge").val();
             $.each(ia, function (i) {
                 var this_amount = formatCNum($(this).val() ? $(this).val() : 0);
                 total_paying += parseFloat(this_amount);
             });
-            $('#total_paying').text(formatMoney(total_paying));
+            var total_amount=total_paying;
+            if(card_charge && !isNaN(card_charge)){
+                total_paying += (total_paying *card_charge)/100;
+            }
+            // $('#twt').text(formatMoney(total_paying));
+            // $('#total_paying').text(formatMoney(total_paying));
             <?php if ($pos_settings->rounding) {?>
             $('#balance').text(formatMoney(total_paying - round_total));
             $('#balance_' + pi).val(formatDecimal(total_paying - round_total));
             total_paid = total_paying;
             grand_total = round_total;
             <?php } else {?>
-            $('#balance').text(formatMoney(total_paying - gtotal));
-            $('#balance_' + pi).val(formatDecimal(total_paying - gtotal));
+           $('#balance').text(formatMoney(total_paying - gtotal));
+           $('#balance').text(formatMoney(total_paying - gtotal));
+          //   var y1=formatMoney(parseFloat($('#twt').text()));
+          //   var y2=formatMoney(parseFloat(y1+((y1 *card_charge)/100)));
+          //   var y=formatMoney(total_paying - y2);
+           // $('#balance').text(formatMoney(total_paying - (parseFloat($('#twt').text()) + parseFloat(((total_amount *card_charge)/100)))));
+           // $('#balance').text(formatMoney(y));
+           // $('#balance_' + pi).val(formatDecimal(total_paying - gtotal));
+           // $('#balance_' + pi).val(formatDecimal(y));
             total_paid = total_paying;
             grand_total = gtotal;
             <?php }
@@ -1801,28 +1814,70 @@ var lang = {
             var p_val = $(this).val(),
                 id = $(this).attr('id'),
                 pa_no = id.substr(id.length - 1);
+            debugger;
             $('#rpaidby').val(p_val);
             if (p_val == 'cash' || p_val == 'other') {
+                // initModalField();
+                // var quick_val=$('#quick-payable').text();
+                // $('.amount').val(quick_val);
+                // $('#twt').text(quick_val);
+                // $('#total_paying').text(quick_val);
+                // $('#balance').text(0.00);
+                $('#amount'+'_'+pa_no).attr('readonly', false);
                 $('.pcheque_' + pa_no).hide();
                 $('.pcc_' + pa_no).hide();
                 $('.pcash_' + pa_no).show();
                 $('#payment_note_' + pa_no).focus();
-            } else if (p_val == 'CC' || p_val == 'DC' || p_val == 'stripe' || p_val == 'ppp' || p_val == 'authorize') {
+            } else if (p_val == 'CC' || p_val == 'DC' ||
+                p_val == 'stripe' || p_val == 'ppp' ||
+                p_val == 'authorize' || p_val == 'Visa' ||
+                p_val == 'MasterCard' || p_val == 'Amex') {
+                // initModalField();
+                var card_charge = $("#cc_charge").val();
+                var quick_val=$('#quick-payable').text();
+                if(card_charge && !isNaN(card_charge)){
+                    var tax= ((quick_val *card_charge)/100);
+                    quick_val =formatDecimal(quick_val) + formatDecimal(((quick_val *card_charge)/100));
+                }
+                // $('.amount').val($('#quick-payable').text());
+                // $('#twt').text(quick_val);
+                // $('#total_paying').text(quick_val);
+                // $('#balance').text(0.00);
+                $('#amount'+'_'+pa_no).val(quick_val);
+                $('#amount'+'_'+pa_no).attr('readonly', true);
                 $('.pcheque_' + pa_no).hide();
                 $('.pcash_' + pa_no).hide();
                 $('.pcc_' + pa_no).show();
                 $('#swipe_' + pa_no).focus();
             } else if (p_val == 'Cheque') {
+                // initModalField();
+                // var quick_val=$('#quick-payable').text();
+                // $('.amount').val($('#quick-payable').text());
+                // $('#twt').text(quick_val);
+                // $('#total_paying').text(quick_val);
+                // $('#balance').text(0.00);
                 $('.pcc_' + pa_no).hide();
                 $('.pcash_' + pa_no).hide();
                 $('.pcheque_' + pa_no).show();
                 $('#cheque_no_' + pa_no).focus();
             } else {
+                // initModalField();
+                // var quick_val=$('#quick-payable').text();
+                // $('.amount').val($('#quick-payable').text());
+                // $('#twt').text(quick_val);
+                // $('#total_paying').text(quick_val);
+                // $('#balance').text(0.00);
                 $('.pcheque_' + pa_no).hide();
                 $('.pcc_' + pa_no).hide();
                 $('.pcash_' + pa_no).hide();
             }
             if (p_val == 'gift_card') {
+                // initModalField();
+                // var quick_val=$('#quick-payable').text();
+                // $('.amount').val($('#quick-payable').text());
+                // $('#twt').text(quick_val);
+                // $('#total_paying').text(quick_val);
+                // $('#balance').text(0.00);
                 $('.gc_' + pa_no).show();
                 $('.ngc_' + pa_no).hide();
                 $('#gift_card_no_' + pa_no).focus();
@@ -2047,6 +2102,12 @@ if ( ! $pos_settings->remote_printing) {
                 bootbox.alert('<?= lang('pos_print_error'); ?>');
                 return false;
             }
+        }
+
+        function initModalField(){
+            $('#twt').text();
+            $('#total_paying').text();
+            $('#balance').text(0.00);
         }
 
         function printBill() {
