@@ -1906,6 +1906,7 @@ var lang = {
                 $('#pos-sale-form').submit();
             }
         });
+        
         $('#suspend').click(function () {
             if (count <= 1) {
                 bootbox.alert('<?=lang('x_suspend');?>');
