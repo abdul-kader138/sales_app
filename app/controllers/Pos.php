@@ -310,8 +310,18 @@ class Pos extends MY_Controller
                 $order_tax_id = NULL;
             }
 
-            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4); 
-            $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $order_discount), 4);
+
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
+
+            // add card charge
+            $cc_charge=0;
+            $cc_charge_percentage=0;
+                if ($this->input->post('cc_charges_1')){
+                    $cc_charge_percentage =$this->input->post('cc_charges_1');
+                    $cc_charge=(($total+$total_tax)*$cc_charge/100);
+                }
+
+            $grand_total = $this->sma->formatDecimal(($total + $total_tax +$cc_charge+ $this->sma->formatDecimal($shipping) - $order_discount), 4);
             $rounding = 0;
             if ($this->pos_settings->rounding) {
                 $round_total = $this->sma->roundNumber($grand_total, $this->pos_settings->rounding);
@@ -328,6 +338,8 @@ class Pos extends MY_Controller
                           'staff_note'        => $staff_note,
                           'total'             => $total,
                           'product_discount'  => $product_discount,
+                          'card_charge'       => $cc_charge,
+                          'card_charge_percentage'       => $cc_charge_percentage,
                           'order_discount_id' => $order_discount_id,
                           'order_discount'    => $order_discount,
                           'total_discount'    => $total_discount,
