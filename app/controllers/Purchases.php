@@ -347,6 +347,16 @@ class Purchases extends MY_Controller
             $note = $this->sma->clear_tags($this->input->post('note'));
             $payment_term = $this->input->post('payment_term');
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
+            $internal_ref = $this->input->post('internal_ref') ? $this->input->post('internal_ref') : null;
+
+            //check internal Ref No.
+            if ($internal_ref) {
+                $ref_number = $this->purchases_model->getInternalRefID(trim($internal_ref));
+                if($ref_number){
+                    $this->session->set_flashdata('error', lang("internal_ref_exists").$ref_number->reference_no);
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+            }
 
             $total = 0;
             $product_tax = 0;
@@ -557,6 +567,7 @@ class Purchases extends MY_Controller
                 'order_discount' => $order_discount,
                 'total_discount' => $total_discount,
                 'product_tax' => $product_tax,
+                'internal_ref' => $internal_ref,
                 'order_tax_id' => $order_tax_id,
                 'order_tax' => $order_tax,
                 'total_tax' => $total_tax,
@@ -727,6 +738,7 @@ class Purchases extends MY_Controller
             $note = $this->sma->clear_tags($this->input->post('note'));
             $payment_term = $this->input->post('payment_term');
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
+            $internal_ref = $this->input->post('internal_ref') ? $this->input->post('internal_ref') : null;
 
             $total = 0;
             $product_tax = 0;
@@ -952,6 +964,7 @@ class Purchases extends MY_Controller
                 'product_tax' => $product_tax,
                 'order_tax_id' => $order_tax_id,
                 'order_tax' => $order_tax,
+                'internal_ref' => $internal_ref,
                 'total_tax' => $total_tax,
                 'shipping' => $this->sma->formatDecimal($shipping),
                 'grand_total' => $grand_total,

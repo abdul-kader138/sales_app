@@ -20,7 +20,11 @@
                     <p class="bold">
                         <?= lang("date"); ?>: <?= $this->sma->hrld($inv->date); ?><br>
                         <?= lang("ref"); ?>: <?= $inv->reference_no; ?><br>
-                        <?php if (!empty($inv->return_purchase_ref)) {
+                        <?php
+                        if (!empty($inv->internal_ref)) {
+                            echo lang("internal_ref").': '. $inv->internal_ref.'<br>';
+                        }
+                        if (!empty($inv->return_purchase_ref)) {
                             echo lang("return_ref").': '.$inv->return_purchase_ref;
                             if ($inv->return_id) {
                                 echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('purchases/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i></a><br>';

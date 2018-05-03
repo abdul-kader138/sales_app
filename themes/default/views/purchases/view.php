@@ -123,7 +123,11 @@
                         <div class="col-xs-2"><i class="fa fa-3x fa-file-text-o padding010 text-muted"></i></div>
                         <div class="col-xs-10">
                             <h2 class=""><?= lang("ref"); ?>: <?= $inv->reference_no; ?></h2>
-                            <?php if (!empty($inv->return_purchase_ref)) {
+                            <?php
+                            if (!empty($inv->internal_ref)) {
+                                echo '<p style="font-weight:bold;">'. lang("internal_ref").': '. $inv->internal_ref.'</p>';
+                            }
+                            if (!empty($inv->return_purchase_ref)) {
                                 echo '<p>'.lang("return_ref").': '.$inv->return_purchase_ref;
                                 if ($inv->return_id) {
                                     echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('purchases/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i></a><br>';
@@ -136,7 +140,7 @@
                             <p style="font-weight:bold;"><?= lang("payment_status"); ?>: <?= lang($inv->payment_status); ?></p>
                         </div>
                         <div class="col-xs-12 order_barcodes">
-                            <?= $this->sma->save_barcode($inv->reference_no, 'code128', 66, false); ?>
+                            <?= $this->sma->save_barcode($inv->reference_no, 'code128', 36, false); ?>
                             <?= $this->sma->qrcode('link', urlencode(site_url('purchases/view/' . $inv->id)), 2); ?>
                         </div>
                         <div class="clearfix"></div>

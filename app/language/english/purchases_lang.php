@@ -127,3 +127,5 @@ $lang['sale_price']                         = "sale_price";
 $lang['check_unit']                         = "Please check unit code";
 $lang['unit_code_x_exist']                  = "Unit code does not exist.";
 $lang['products_not_added_to_list']         = "New Products found but not created into product master";
+$lang['internal_ref']                       = "Internal Ref. No";
+$lang['internal_ref_exists']                = "Internal Ref. No already used for Purchase Ref. No-";

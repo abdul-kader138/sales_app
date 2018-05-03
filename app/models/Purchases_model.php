@@ -676,5 +676,14 @@ class Purchases_model extends CI_Model
         return FALSE;
     }
 
+    public function getInternalRefID($id)
+    {
+        $q = $this->db->get_where('purchases', array('internal_ref' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
 
 }

@@ -37,7 +37,11 @@
             <div class="well well-sm">
                 <div class="row bold">
                     <div class="col-xs-4"><?=lang("date");?>: <?=$this->sma->hrld($inv->date);?>
-                        <br><?=lang("ref");?>: <?=$inv->reference_no;?></div>
+                        <br><?=lang("ref");?>: <?=$inv->reference_no;?>
+                        <?php if (!empty($inv->internal_ref)) {
+                            echo '<br/>'. lang("internal_ref").': '. $inv->internal_ref.'<br>';
+                        } ?>
+                    </div>
                     <div class="col-xs-6 pull-right text-right order_barcodes">
                         <?= $this->sma->save_barcode($inv->reference_no, 'code128', 66, false); ?>
                         <?= $this->sma->qrcode('link', urlencode(site_url('purchases/view/' . $inv->id)), 2); ?>
