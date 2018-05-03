@@ -75,7 +75,10 @@
                     <div class="bold">
                         <?= lang('date'); ?>: <?= $this->sma->hrld($inv->date); ?><br>
                         <?= lang('ref'); ?>: <?= $inv->reference_no; ?><br>
-                        <?php if (!empty($inv->return_sale_ref)) {
+                        <?php if (!empty($inv->internal_ref)) {
+                            echo '<p style="font-weight:bold;">'. lang("internal_ref").': '. $inv->internal_ref.'</p>';
+                        }
+                        if (!empty($inv->return_sale_ref)) {
                             echo lang("return_ref").': '.$inv->return_sale_ref.'<br>';
                         } ?>
 <!--                        <div class="clearfix"></div>-->

@@ -170,6 +170,12 @@
                             echo form_input($biller_input);
                         } ?>
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <?= lang("internal_ref", "internal_ref"); ?>
+                                <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :$inv->internal_ref), 'class="form-control input-tip" id="internal_ref"'); ?>
+                            </div>
+                        </div>
                         <div class="clearfix"></div>
                         <div class="col-md-12">
                             <div class="panel panel-warning">

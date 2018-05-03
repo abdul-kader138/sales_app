@@ -279,7 +279,12 @@
 
                             echo form_input($biller_input);
                         } ?>
-
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <?= lang("internal_ref", "internal_ref"); ?>
+                                    <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :""), 'class="form-control input-tip" id="internal_ref"'); ?>
+                                </div>
+                            </div>
                         <div class="clearfix"></div>
                         <div class="col-md-12">
                             <div class="panel panel-warning">
@@ -474,7 +479,7 @@
 
                             </div>
                         </div>
-                        <?php 
+                        <?php
                         } else {
                             echo form_hidden('payment_status', 'pending');
                         }
@@ -710,7 +715,7 @@
                             </div>
                         </div>
                     <?php } ?>
-                    
+
                     <div class="form-group">
                         <label for="pcost" class="col-sm-4 control-label"><?= lang('Landing Price') ?></label>
                         <div class="col-sm-8">
@@ -736,7 +741,7 @@
                             <input type="text" class="form-control" id="pprice" <?= ($Owner || $Admin || $GP['edit_price']) ? '' : 'readonly'; ?>>
                             <span id="selling_price_message" style="display: none; color: red;">This amount is less than min selling price or landing price</span>
                         </div>
-                       
+
                     </div>
                     <table class="table table-bordered table-striped">
                         <tr>

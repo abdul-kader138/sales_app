@@ -385,6 +385,7 @@ class Sales extends MY_Controller
             $note = $this->sma->clear_tags($this->input->post('note'));
             $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
             $quote_id = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
+            $internal_ref = $this->input->post('internal_ref') ? $this->input->post('internal_ref') : null;
 
             if($customer_details->customer_credit_limit <= 0){
                 $this->session->set_flashdata('error', lang("insufficient_credit"));
@@ -564,6 +565,7 @@ class Sales extends MY_Controller
                 'payment_term' => $payment_term,
                 'due_date' => $due_date,
                 'paid' => 0,
+                'internal_ref' => $internal_ref,
                 'created_by' => $this->session->userdata('user_id'),
             );
 
@@ -783,6 +785,7 @@ class Sales extends MY_Controller
             $biller_id = $this->input->post('biller');
             $total_items = $this->input->post('total_items');
             $sale_status = $this->input->post('sale_status');
+            $internal_ref = $this->input->post('internal_ref') ? $this->input->post('internal_ref') : null;
             $payment_status = $this->input->post('payment_status');
             $payment_term = $this->input->post('payment_term');
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
@@ -954,6 +957,7 @@ class Sales extends MY_Controller
                 'order_discount' => $order_discount,
                 'total_discount' => $total_discount,
                 'product_tax' => $product_tax,
+                'internal_ref' => $internal_ref,
                 'order_tax_id' => $order_tax_id,
                 'order_tax' => $order_tax,
                 'total_tax' => $total_tax,
