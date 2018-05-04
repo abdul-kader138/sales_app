@@ -250,7 +250,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("reference_no", "poref"); ?>
-                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $ponumber), 'class="form-control input-tip" id="poref"'); ?>
+                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $ponumber), 'class="form-control input-tip" id="poref" readonly="readonly"'); ?>
                             </div>
                         </div>
                         <?php if ($Owner || $Admin || !$this->session->userdata('warehouse_id')) { ?>

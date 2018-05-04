@@ -253,7 +253,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("reference_no", "slref"); ?>
-                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $slnumber), 'class="form-control input-tip" id="slref"'); ?>
+                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $slnumber), 'class="form-control input-tip" id="slref" readonly="readonly"'); ?>
                             </div>
                         </div>
                         <?php if ($Owner || $Admin || !$this->session->userdata('biller_id')) { ?>

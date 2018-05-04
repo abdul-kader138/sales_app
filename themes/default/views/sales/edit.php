@@ -144,7 +144,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("reference_no", "slref"); ?>
-                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : ''), 'class="form-control input-tip" id="slref" required="required"'); ?>
+                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : ''), 'class="form-control input-tip" id="slref" required="required" readonly="readonly"'); ?>
                             </div>
                         </div>
                         <?php if ($Owner || $Admin || !$this->session->userdata('biller_id')) { ?>
@@ -173,7 +173,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("internal_ref", "internal_ref"); ?>
-                                <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :$inv->internal_ref), 'class="form-control input-tip" id="internal_ref"'); ?>
+                                <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :$inv->internal_ref), 'class="form-control input-tip" readonly="readonly" id="internal_ref"'); ?>
                             </div>
                         </div>
                         <div class="clearfix"></div>

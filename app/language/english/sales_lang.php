@@ -153,4 +153,5 @@ $lang['duplicate_sale']                     = "Duplicate Sale";
 $lang['update_customer_email']              = "Please update customer email address";
 $lang['gst_reg']                            = "GST Reg. No";
 $lang['vat_reg']                            = "VAT Reg. No";
-$lang['internal_ref']                       = "Internal Ref. No";
+$lang['internal_ref']                       = "Customer PO No";
+$lang['internal_ref_exists']                = "Customer PO No already used for Sale Ref. No-";
