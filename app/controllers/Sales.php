@@ -391,6 +391,16 @@ class Sales extends MY_Controller
                 $this->session->set_flashdata('error', lang("insufficient_credit"));
                 redirect($_SERVER["HTTP_REFERER"]);
             }
+
+            //check internal Ref No.
+            if ($internal_ref) {
+                $ref_number = $this->sales_model->getInternalRefID(trim($internal_ref));
+                if($ref_number){
+                    $this->session->set_flashdata('error', lang("internal_ref_exists").$ref_number->reference_no);
+                    redirect($_SERVER["HTTP_REFERER"]);
+                }
+            }
+
             $total = 0;
             $product_tax = 0;
             $order_tax = 0;

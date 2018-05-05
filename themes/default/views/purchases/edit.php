@@ -198,7 +198,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("reference_no", "poref"); ?>
-                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $purchase->reference_no), 'class="form-control input-tip" id="poref" required="required"'); ?>
+                                <?php echo form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $purchase->reference_no), 'class="form-control input-tip" id="poref" required="required" readonly="readonly"'); ?>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -233,7 +233,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang("internal_ref", "internal_ref"); ?>
-                                <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :$inv->internal_ref), 'class="form-control input-tip" id="internal_ref"'); ?>
+                                <?php echo form_input('internal_ref',(isset($_POST['internal_ref']) ? $_POST['internal_ref'] :$inv->internal_ref), 'class="form-control input-tip" id="internal_ref"  readonly="readonly" '); ?>
                             </div>
                         </div>
 
