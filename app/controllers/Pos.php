@@ -371,7 +371,16 @@ class Pos extends MY_Controller
                                 $this->session->set_flashdata('error', lang("amount_greater_than_deposit"));
                                 redirect($_SERVER["HTTP_REFERER"]);
                             }
-                        } 
+                        }
+
+                        // calculate card percentage
+                        $card_charge_percentage=0;
+                        $card_charge=0;
+                        if($_POST['cc_charge'][$r]){
+                            $card_charge=$_POST['cc_charge'][$r];
+                            $card_charge_percentage=(($_POST['amount'][$r] *$card_charge)/100);
+                        }
+
                         if ($_POST['paid_by'][$r] == 'gift_card') {
                             $gc = $this->site->getGiftCardByNO($_POST['paying_gift_card_no'][$r]);
                             $amount_paying = $_POST['amount'][$r] >= $gc->balance ? $gc->balance : $_POST['amount'][$r];
@@ -409,6 +418,8 @@ class Pos extends MY_Controller
                                 'cc_year'      => $_POST['cc_year'][$r],
                                 'cc_type'      => $_POST['cc_type'][$r],
                                 'cc_cvv2'      => $_POST['cc_cvv2'][$r],
+                                'card_charge_percentage'      => $card_charge_percentage,
+                                'card_charge'      => $card_charge,
                                 'created_by'   => $this->session->userdata('user_id'),
                                 'type'         => 'received',
                                 'note'         => $_POST['payment_note'][$r],

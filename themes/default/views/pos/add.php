@@ -659,6 +659,12 @@ echo form_open("pos", $attrib);?>
                         <td><?=lang("balance");?></td>
                         <td class="text-right"><span id="balance">0.00</span></td>
                     </tr>
+                    <tr>
+                        <td><?=lang("total_cc_charge");?></td>
+                        <td class="text-right"><span id="total_cc_charge">0.00</span></td>
+                        <td><?=lang("total_pay_charge");?></td>
+                        <td class="text-right"><span id="total_pay_charge">0.00</span></td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="clearfix"></div>
@@ -1540,33 +1546,38 @@ $(document).ready(function () {
     });
 
     function calculateTotals(obj) {
-        console.log(obj);
         var total_paying = 0;
+        var total_charge = 0;
         var ia = $(".amount");
         var ic = $(".cc_charge");
         $.each(ia, function (i) {
             var tax_amount = 0;
             var this_amount = formatCNum($(this).val() ? $(this).val() : 0);
-            if(ia[0].id){
-                var c_id=ia[0].id;
+            if(ia[i].id){
+                var c_id=ia[i].id;
                 var ar_id=c_id.split('_');
-                var build_id="#cc_charge_"+ar_id[1];
+                var build_id=$("#cc_charge_"+ar_id[1]);
                 var charge=0;
                 $.each(ic, function (i) {
-                console.log(ic[0].id);
-                console.log(build_id);
                     if(build_id.length >0){
-                        if(build_id == "#"+ic[0].id)
+                        if(build_id[0].id == ic[i].id)
                             charge=formatCNum($(this).val() ? $(this).val() : 0);
                     }
                 });
             if(charge){
                 tax_amount= ((this_amount*charge)/100);
+                total_charge+=tax_amount;
             }
             }
-            total_paying += (parseFloat(this_amount)+parseFloat(tax_amount));
+            total_paying += parseFloat(this_amount);
         });
+
+        var twy_val=formatMoney($('#twt').text());
+        twy_val = (parseFloat(twy_val) + parseFloat(total_charge));
+
         $('#total_paying').text(formatMoney(total_paying));
+        $('#total_cc_charge').text(formatMoney(total_charge));
+        $('#total_pay_charge').text(formatMoney(twy_val));
         <?php if ($pos_settings->rounding) {?>
         $('#balance').text(formatMoney(total_paying - round_total));
         $('#balance_' + pi).val(formatDecimal(total_paying - round_total));

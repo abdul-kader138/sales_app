@@ -310,3 +310,5 @@ $lang['gst_reg']                        = "GST Reg. No";
 $lang['vat_reg']                        = "VAT Reg. No";
 $lang['card_charge']                    = "Card Swipe Charge(%)";
 $lang['select_correct_val']             = "Invalid Number";
+$lang['total_cc_charge']                = "Total Card Charge";
+$lang['total_pay_charge']               = "Net Payable";
