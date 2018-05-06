@@ -29,7 +29,7 @@
                             <tr class="row<?= $payment->id ?>">
                                 <td><?= $this->sma->hrld($payment->date); ?></td>
                                 <td><?= $payment->reference_no; ?></td>
-                                <td><?= $this->sma->formatMoney($payment->amount) . ' ' . (($payment->attachment) ? '<a href="' . site_url('welcome/download/' . $payment->attachment) . '"><i class="fa fa-chain"></i></a>' : ''); ?></td>
+                                <td><?= $this->sma->formatMoney($payment->pos_paid) . ' ' . (($payment->attachment) ? '<a href="' . site_url('welcome/download/' . $payment->attachment) . '"><i class="fa fa-chain"></i></a>' : ''); ?></td>
                                 <td><?= lang($payment->paid_by); ?></td>
                                 <td>
                                     <div class="text-center">

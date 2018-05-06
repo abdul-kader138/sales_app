@@ -339,6 +339,10 @@
                         <tfoot>
                         <?php
                         $col = 4;
+                        $card_charges=0;
+                        if($card_charge->card_charge_percentage){
+                            $card_charges=$card_charge->card_charge_percentage;
+                        }
                         if ($Settings->product_serial) {
                             $col++;
                         }
@@ -394,27 +398,30 @@
                         <?php if ($inv->shipping != 0) {
                             echo '<tr><td colspan="' . $col . '" style="text-align:right; padding-right:10px;;">' . lang("shipping") . ' (' . $default_currency->code . ')</td><td style="text-align:right; padding-right:10px;">' . $this->sma->formatMoney($inv->shipping) . '</td></tr>';
                         }
+                        if ($card_charge->card_charge_percentage) {
+                            echo '<tr><td colspan="' . $col . '" style="text-align:right; padding-right:10px;;">' . lang("card_charge") . ' (' . $default_currency->code . ')</td><td style="text-align:right; padding-right:10px;">' . $this->sma->formatMoney($card_charge->card_charge_percentage) . '</td></tr>';
+                        }
                         ?>
                         <tr>
                             <td colspan="<?= $col; ?>"
                                 style="text-align:right; font-weight:bold;"><?= lang("total_amount"); ?>
                                 (<?= $default_currency->code; ?>)
                             </td>
-                            <td style="text-align:right; padding-right:10px; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total) : $inv->grand_total); ?></td>
+                            <td style="text-align:right; padding-right:10px; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total+$card_charges) : ($inv->grand_total+$card_charges)); ?></td>
                         </tr>
                         <tr>
                             <td colspan="<?= $col; ?>"
                                 style="text-align:right; font-weight:bold;"><?= lang("paid"); ?>
                                 (<?= $default_currency->code; ?>)
                             </td>
-                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid); ?></td>
+                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid+$card_charges) : ($inv->paid+$card_charges)); ?></td>
                         </tr>
                         <tr>
                             <td colspan="<?= $col; ?>"
                                 style="text-align:right; font-weight:bold;"><?= lang("balance"); ?>
                                 (<?= $default_currency->code; ?>)
                             </td>
-                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney(($return_sale ? ($inv->grand_total+$return_sale->grand_total) : $inv->grand_total) - ($return_sale ? ($inv->paid+$return_sale->paid) : $inv->paid)); ?></td>
+                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney(($return_sale ? ($inv->grand_total+$return_sale->grand_total +$card_charges) : ($inv->grand_total+$card_charges)) - ($return_sale ? ($inv->paid+$return_sale->paid+$card_charges) : ($inv->paid+$card_charges))); ?></td>
                         </tr>
 
                         </tfoot>
@@ -585,7 +592,7 @@
                                                     echo ' (' . $payment->cheque_no . ')';
                                                 }
                                                 ?></td>
-                                            <td><?= $this->sma->formatMoney($payment->amount); ?></td>
+                                            <td><?= $this->sma->formatMoney($payment->pos_paid); ?></td>
                                             <td><?= $payment->first_name . ' ' . $payment->last_name; ?></td>
                                             <td><?= lang($payment->type); ?></td>
                                         </tr>

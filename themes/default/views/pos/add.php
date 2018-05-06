@@ -376,7 +376,7 @@ echo form_open("pos", $attrib);?>
         <div id="payment-con">
             <?php for ($i = 1; $i <= 5; $i++) {?>
                 <input type="hidden" name="amount[]" id="amount_val_<?=$i?>" value=""/>
-                <input type="hidden" name="cc_charge[]" id="cc_charge_<?=$i?>" value="" />
+                <input type="hidden" name="cc_charg[]" id="cc_charge_val_<?=$i?>" value="" />
                 <input type="hidden" name="balance_amount[]" id="balance_amount_<?=$i?>" value=""/>
                 <input type="hidden" name="paid_by[]" id="paid_by_val_<?=$i?>" value="cash"/>
                 <input type="hidden" name="cc_no[]" id="cc_no_val_<?=$i?>" value=""/>
@@ -665,6 +665,12 @@ echo form_open("pos", $attrib);?>
                         <td><?=lang("total_pay_charge");?></td>
                         <td class="text-right"><span id="total_pay_charge">0.00</span></td>
                     </tr>
+<!--                    <tr>-->
+<!--                        <td></td>-->
+<!--                        <td class="text-right"></td>-->
+<!--                        <td>--><?//=lang("total_bal_charge");?><!--</td>-->
+<!--                        <td class="text-right"><span id="total_bal_charge">0.00</span></td>-->
+<!--                    </tr>-->
                     </tbody>
                 </table>
                 <div class="clearfix"></div>
@@ -1421,6 +1427,12 @@ $(document).ready(function () {
     $('#paymentModal').on('change', '#payment_note_<?=$i?>', function (e) {
         $('#payment_note_val_<?=$i?>').val($(this).val());
     });
+    $('#paymentModal').on('change', '#cc_charge_<?=$i?>', function (e) {
+        console.log('at cc_charge_');
+        console.log($(this).val());
+        $('#cc_charge_val_<?=$i?>').val($(this).val());
+        console.log($('#cc_charge_val_<?=$i?>').val());
+    });
     <?php }
     ?>
 
@@ -1588,8 +1600,11 @@ $(document).ready(function () {
         $('#balance_' + pi).val(formatDecimal(total_paying - gtotal));
         total_paid = total_paying;
         grand_total = gtotal;
-        <?php }
-        ?>
+        <?php }?>
+
+        var tot_bal=formatMoney($('#balance').text());
+        tot_bal = (parseFloat(tot_bal) - parseFloat(total_charge));
+        $('#total_bal_charge').text(formatMoney(tot_bal));
     }
 
     $("#add_item").autocomplete({

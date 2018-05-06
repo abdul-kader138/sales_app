@@ -1327,4 +1327,14 @@ class Pos_model extends CI_Model
         return FALSE;
     }
 
+
+    public function getInvoicePaymentsCardCharge($sale_id)
+    {
+        $q = $this->db->select_sum('card_charge_percentage')->get_where('payments', array('sale_id' => $sale_id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
 }

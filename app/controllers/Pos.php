@@ -90,15 +90,17 @@ class Pos extends MY_Controller
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
-                ->select($this->db->dbprefix('sales') . ".id as id, date, reference_no, biller, customer, (grand_total), paid, FORMAT((grand_total-paid), 2) as balance, sale_status, payment_status, companies.email as cemail")
+                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, (".$this->db->dbprefix('sales') . ".grand_total), ".$this->db->dbprefix('sales') . ".paid, FORMAT((".$this->db->dbprefix('sales') . ".grand_total-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status, companies.email as cemail")
                 ->from('sales')
+//                ->join('payments', 'payments.sale_id=sales.id', 'left')
                 ->join('companies', 'companies.id=sales.customer_id', 'left')
                 ->where('warehouse_id', $warehouse_id)
                 ->group_by('sales.id');
         } else {
             $this->datatables
-                ->select($this->db->dbprefix('sales') . ".id as id, date, reference_no, biller, customer, (grand_total), paid, FORMAT((grand_total-paid), 2) as balance, sale_status, payment_status, companies.email as cemail")
+                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, sum(".$this->db->dbprefix('sales') . ".grand_total), ".$this->db->dbprefix('sales') . ".paid, FORMAT((".$this->db->dbprefix('sales') . ".grand_total-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status,  ".$this->db->dbprefix('companies') . ".email as cemail")
                 ->from('sales')
+//                ->join('payments', 'sales.id=payments.sale_id', 'left')
                 ->join('companies', 'companies.id=sales.customer_id', 'left')
                 ->group_by('sales.id');
         }
@@ -314,12 +316,12 @@ class Pos extends MY_Controller
             $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
 
             // add card charge
-            $cc_charge=0;
-            $cc_charge_percentage=0;
-                if ($this->input->post('cc_charges_1')){
-                    $cc_charge_percentage =$this->input->post('cc_charges_1');
-                    $cc_charge=(($total+$total_tax)*$cc_charge/100);
-                }
+//            $cc_charge=0;
+//            $cc_charge_percentage=0;
+//                if ($this->input->post('cc_charges_1')){
+//                    $cc_charge_percentage =$this->input->post('cc_charges_1');
+//                    $cc_charge=(($total+$total_tax)*$cc_charge/100);
+//                }
 
             $grand_total = $this->sma->formatDecimal(($total + $total_tax +$cc_charge+ $this->sma->formatDecimal($shipping) - $order_discount), 4);
             $rounding = 0;
@@ -376,8 +378,8 @@ class Pos extends MY_Controller
                         // calculate card percentage
                         $card_charge_percentage=0;
                         $card_charge=0;
-                        if($_POST['cc_charge'][$r]){
-                            $card_charge=$_POST['cc_charge'][$r];
+                        if($_POST['cc_charg'][$r]){
+                            $card_charge=$_POST['cc_charg'][$r];
                             $card_charge_percentage=(($_POST['amount'][$r] *$card_charge)/100);
                         }
 
@@ -955,6 +957,7 @@ class Pos extends MY_Controller
         $this->data['biller'] = $this->pos_model->getCompanyByID($biller_id);
         $this->data['customer'] = $this->pos_model->getCompanyByID($customer_id);
         $this->data['payments'] = $this->pos_model->getInvoicePayments($sale_id);
+        $this->data['card_charge'] = $this->pos_model->getInvoicePaymentsCardCharge($sale_id);
         $this->data['pos'] = $this->pos_model->getSetting();
         $this->data['barcode'] = $this->barcode($inv->reference_no, 'code128', 30);
         $this->data['return_sale'] = $inv->return_id ? $this->pos_model->getInvoiceByID($inv->return_id) : NULL;
@@ -1315,6 +1318,13 @@ class Pos extends MY_Controller
             } else {
                 $date = date('Y-m-d H:i:s');
             }
+            $charge=0;
+            $charge_amount=0;
+            if($this->input->post('cc_charge_1')){
+                $charge=$this->input->post('cc_charge_1');
+                $charge_amount=(($this->input->post('amount-paid')*$charge)/100);
+            }
+
             $payment = array(
                 'date'         => $date,
                 'sale_id'      => $this->input->post('sale_id'),
@@ -1331,6 +1341,8 @@ class Pos extends MY_Controller
                 'note'         => $this->input->post('note'),
                 'created_by'   => $this->session->userdata('user_id'),
                 'type'         => 'received',
+                'card_charge'  => $charge,
+                'card_charge_percentage'         => $charge_amount,
             );
 
             if ($_FILES['userfile']['size'] > 0) {

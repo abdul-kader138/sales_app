@@ -241,6 +241,7 @@
         if ($inv->order_tax != 0) {
             echo '<tr><th class="text-left">' . lang("tax") .'(' .  $default_currency->code.')</th><th colspan="100%" class="text-right" class="text-right">' . $this->sma->formatMoney($return_sale ? ($inv->order_tax+$return_sale->order_tax) : $inv->order_tax) . '</th></tr>';
         }
+
         if ($inv->order_discount != 0) {
             echo '<tr><th  style="width: 100px;" colspan="100%" class="text-right">' . lang("order_discount") .'(' .  $default_currency->code.')</th><th  colspan="100%" class="text-right">' . $this->sma->formatMoney($inv->order_discount) . '</th></tr>';
         }
@@ -254,7 +255,14 @@
                 echo '<tr><th style="width: 100px;"  colspan="100%" class="text-right">' . lang("order_discount") .'(' .  $default_currency->code.')</th><th  colspan="100%" class="text-right">' . $this->sma->formatMoney($return_sale->surcharge) . '</th></tr>';
             }
         }
+        if ($card_charge->card_charge_percentage) {
+            echo '<tr><th class="text-left">' . lang("card_charge") .'(' .  $default_currency->code.')</th><th colspan="100%" class="text-right" class="text-right">' . $this->sma->formatMoney($card_charge->card_charge_percentage) . '</th></tr>';
+        }
 
+        $card_charges=0;
+        if($card_charge->card_charge_percentage){
+            $card_charges=$card_charge->card_charge_percentage;
+        }
         if ($pos_settings->rounding || $inv->rounding > 0) {
             ?>
             <tr>
@@ -263,14 +271,14 @@
             </tr>
             <tr>
                 <th style="width: 100px;"><?=lang("grand_total");?>(<?= $default_currency->code; ?>)</th>
-                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total) : ($inv->grand_total + $inv->rounding));?></th>
+                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? (($inv->grand_total + $inv->rounding)+$return_sale->grand_total+$card_charges) : ($inv->grand_total + $inv->rounding+$card_charges));?></th>
             </tr>
         <?php
         } else {
             ?>
             <tr>
                 <th><?=lang("grand_total");?>(<?= $default_currency->code; ?>)</th>
-                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total) : $inv->grand_total);?></th>
+                <th colspan="100%" class="text-right"><?=$this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total+$card_charges) : ($inv->grand_total+$card_charges));?></th>
             </tr>
         <?php
         }
@@ -297,7 +305,7 @@
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid == 0 ? $payment->amount : $payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("change") . ': ' . ($payment->pos_balance > 0 ? $this->sma->formatMoney($payment->pos_balance) : 0) . '</td>';
-            } elseif (($payment->paid_by == 'CC' || $payment->paid_by == 'ppp' || $payment->paid_by == 'stripe') && $payment->cc_no) {
+            } elseif (($payment->paid_by == 'CC' || $payment->paid_by == 'ppp' || $payment->paid_by == 'MasterCard' || $payment->paid_by == 'Amex' ||$payment->paid_by == 'Visa' || $payment->paid_by == 'stripe') && $payment->cc_no) {
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';
@@ -335,7 +343,7 @@
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid == 0 ? $payment->amount : $payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("change") . ': ' . ($payment->pos_balance > 0 ? $this->sma->formatMoney($payment->pos_balance) : 0) . '</td>';
-            } elseif (($payment->paid_by == 'CC' || $payment->paid_by == 'ppp' || $payment->paid_by == 'stripe') && $payment->cc_no) {
+            } elseif (($payment->paid_by == 'CC' || $payment->paid_by == 'ppp' || $payment->paid_by == 'MasterCard' || $payment->paid_by == 'Amex' ||$payment->paid_by == 'Visa' || $payment->paid_by == 'stripe') && $payment->cc_no) {
                 echo '<td>' . lang("paid_by") . ': ' . lang($payment->paid_by) . '</td>';
                 echo '<td>' . lang("amount") . ': ' . $this->sma->formatMoney($payment->pos_paid) . ($payment->return_id ? ' (' . lang('returned') . ')' : '') . '</td>';
                 echo '<td>' . lang("no") . ': ' . 'xxxx xxxx xxxx ' . substr($payment->cc_no, -4) . '</td>';

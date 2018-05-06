@@ -147,6 +147,7 @@ class Sales extends MY_Controller
         $this->data['barcode'] = "<img src='" . site_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
         $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
         $this->data['payments'] = $this->sales_model->getPaymentsForSale($id);
+        $this->data['card_charge'] = $this->sales_model->getInvoicePaymentsCardCharge($id);
         $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
         $this->data['created_by'] = $this->site->getUser($inv->created_by);
         $this->data['updated_by'] = $inv->updated_by ? $this->site->getUser($inv->updated_by) : null;
@@ -179,6 +180,7 @@ class Sales extends MY_Controller
         $this->data['barcode'] = "<img src='" . site_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
         $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
         $this->data['payments'] = $this->sales_model->getPaymentsForSale($id);
+        $this->data['card_charge'] = $this->sales_model->getInvoicePaymentsCardCharge($id);
         $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
         $this->data['user'] = $this->site->getUser($inv->created_by);
         $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);

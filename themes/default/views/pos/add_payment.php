@@ -86,14 +86,9 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <select name="pcc_type" id="pcc_type_1" class="form-control pcc_type"
-                                                placeholder="<?= lang('card_type') ?>">
-                                            <option value="Visa"><?= lang("Visa"); ?></option>
-                                            <option value="MasterCard"><?= lang("MasterCard"); ?></option>
-                                            <option value="Amex"><?= lang("Amex"); ?></option>
-                                            <option value="Discover"><?= lang("Discover"); ?></option>
-                                        </select>
-                                        <!-- <input type="text" id="pcc_type_1" class="form-control" placeholder="<?= lang('card_type') ?>" />-->
+                                        <input name="cc_charge_1" type="text" id="cc_charge_1"
+                                               class="form-control cc_charge"
+                                               placeholder="<?=lang('card_charge')?>"/>
                                     </div>
                                 </div>
                                 <div class="col-md-3">

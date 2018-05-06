@@ -705,7 +705,7 @@ class Sales_model extends CI_Model
 
     public function getPaymentsForSale($sale_id)
     {
-        $this->db->select('payments.date, payments.paid_by, payments.amount, payments.cc_no, payments.cheque_no, payments.reference_no, users.first_name, users.last_name, type')
+        $this->db->select('payments.date, payments.paid_by, payments.amount, payments.cc_no, payments.cheque_no, payments.reference_no, users.first_name, users.last_name, type,payments.pos_paid')
             ->join('users', 'users.id=payments.created_by', 'left');
         $q = $this->db->get_where('payments', array('sale_id' => $sale_id));
         if ($q->num_rows() > 0) {
@@ -965,6 +965,15 @@ class Sales_model extends CI_Model
     public function getInternalRefID($id)
     {
         $q = $this->db->get_where('sales', array('internal_ref' => $id), 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
+
+    public function getInvoicePaymentsCardCharge($sale_id)
+    {
+        $q = $this->db->select_sum('card_charge_percentage')->get_where('payments', array('sale_id' => $sale_id), 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
