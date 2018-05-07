@@ -107,6 +107,7 @@ class Sales extends MY_Controller
         echo $this->datatables->generate();
     }
 
+
     public function modal_view($id = null)
     {
         $this->sma->checkPermissions('index', true);
