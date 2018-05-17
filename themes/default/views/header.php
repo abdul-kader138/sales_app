@@ -711,6 +711,11 @@
                                                                 <i class="fa fa-barcode"></i><span class="text"> <?= lang('products_report'); ?></span>
                                                             </a>
                                                         </li>
+                                                        <li id="reports_products">
+                                                            <a href="<?= site_url('reports/product_details') ?>">
+                                                                <i class="fa fa-filter"></i><span class="text"> <?= lang('product_details_report'); ?></span>
+                                                            </a>
+                                                        </li>
                                                         <li id="reports_adjustments">
                                                             <a href="<?= site_url('reports/adjustments') ?>">
                                                                 <i class="fa fa-filter"></i><span class="text"> <?= lang('adjustments_report'); ?></span>
@@ -1104,6 +1109,15 @@
                                                                     </a>
                                                                 </li>
                                                                 <?php
+                                                            }
+                                                            if ($GP['reports-product-details']) {
+                                                                ?>
+                                                                <li id="reports_products">
+                                                                    <a href="<?= site_url('reports/product_details') ?>">
+                                                                        <i class="fa fa-filter"></i><span class="text"> <?= lang('product_details_report'); ?></span>
+                                                                    </a>
+                                                                </li>
+                                                            <?php
                                                             }
                                                             if ($GP['reports-daily_sales']) {
                                                                 ?>

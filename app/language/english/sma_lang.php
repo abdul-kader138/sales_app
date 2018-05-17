@@ -529,3 +529,5 @@ $lang['product_cost']                        = "Product Cost";
 $lang['product_price']                       = "Product Price";
 $lang['margin']                              = "Margin";
 $lang['insufficient_credit']                 = "Customer doesn't have sufficient credit limit.";
+$lang['product_details_report']              = "Product Details Report";
+$lang['product_details']                     = "Product Details";

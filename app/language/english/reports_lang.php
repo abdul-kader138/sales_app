@@ -98,3 +98,4 @@ $lang['ref_no']                     = "Reference No";
 $lang['ip_address']                 = "IP Address";
 $lang['time']                       = "Time";
 $lang['deposits']                   = "Deposits";
+$lang['um']                         = "UM";
