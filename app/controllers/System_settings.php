@@ -770,6 +770,8 @@ class system_settings extends MY_Controller
                 'products-delete' => $this->input->post('products-delete'),
                 'products-cost' => $this->input->post('products-cost'),
                 'products-price' => $this->input->post('products-price'),
+                'products-reorder_details' => $this->input->post('products-reorder-details'),
+                'products-details_search' => $this->input->post('products-details-search'),
                 'customers-index' => $this->input->post('customers-index'),
                 'customers-edit' => $this->input->post('customers-edit'),
                 'customers-add' => $this->input->post('customers-add'),
@@ -836,7 +838,6 @@ class system_settings extends MY_Controller
                 'reports-expenses' => $this->input->post('reports-expenses'),
                 'reports-daily_purchases' => $this->input->post('reports-daily_purchases'),
                 'reports-monthly_purchases' => $this->input->post('reports-monthly_purchases'),
-                'reports-product-details' => $this->input->post('reports-product-details'),
                 'products-stock_count' => $this->input->post('products-stock_count'),
                 'edit_price' => $this->input->post('edit_price'),
 //                a.kader

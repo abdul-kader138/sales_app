@@ -29,7 +29,7 @@ if ($this->input->post('warehouse')) {
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,
-            'sAjaxSource': '<?= site_url('reports/getProductDetailsReport/?v=1'.$v) ?>',
+            'sAjaxSource': '<?= site_url('products/getProductDetailsReport/?v=1'.$v) ?>',
             'fnServerData': function (sSource, aoData, fnCallback) {
                 aoData.push({
                     "name": "<?= $this->security->get_csrf_token_name() ?>",
@@ -39,7 +39,7 @@ if ($this->input->post('warehouse')) {
             },
             'fnRowCallback': function (nRow, aData, iDisplayIndex) {
             },
-            "aoColumns": [null, null, null, null,null,null,null,null,null],
+            "aoColumns": [null, null, null, null,null,{"mRender": currencyFormat},{"mRender": currencyFormat},{"mRender": getNumber},{"mRender": getNumber}],
             "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
             }
         }).fnSetFilteringDelay().dtFilter([
@@ -120,7 +120,7 @@ if ($this->input->post('warehouse')) {
 
 <div class="box">
 <div class="box-header">
-    <h2 class="blue"><i class="fa-fw fa fa-barcode"></i><?= lang('product_details_report'); ?> <?php
+    <h2 class="blue"><i class="fa-fw fa fa-barcode"></i><?= lang('product_details_search'); ?> <?php
         ?></h2>
 
     <div class="box-icon">
@@ -165,7 +165,7 @@ if ($this->input->post('warehouse')) {
 
             <div id="form">
 
-                <?php echo form_open("reports/product_details"); ?>
+                <?php echo form_open("products/details_search"); ?>
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -282,12 +282,12 @@ if ($this->input->post('warehouse')) {
     $(document).ready(function () {
         $('#pdf').click(function (event) {
             event.preventDefault();
-            window.location.href = "<?=site_url('reports/getProductDetailsReport/pdf/?v=1'.$v)?>";
+            window.location.href = "<?=site_url('products/getProductDetailsReport/pdf/?v=1'.$v)?>";
             return false;
         });
         $('#xls').click(function (event) {
             event.preventDefault();
-            window.location.href = "<?=site_url('reports/getProductDetailsReport/0/xls/?v=1'.$v)?>";
+            window.location.href = "<?=site_url('products/getProductDetailsReport/0/xls/?v=1'.$v)?>";
             return false;
         });
         $('#image').click(function (event) {
