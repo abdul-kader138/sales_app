@@ -414,14 +414,14 @@
                                 style="text-align:right; font-weight:bold;"><?= lang("paid"); ?>
                                 (<?= $default_currency->code; ?>)
                             </td>
-                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid+$card_charges) : ($inv->paid+$card_charges)); ?></td>
+                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->paid+$return_sale->paid) : ($inv->paid)); ?></td>
                         </tr>
                         <tr>
                             <td colspan="<?= $col; ?>"
                                 style="text-align:right; font-weight:bold;"><?= lang("balance"); ?>
                                 (<?= $default_currency->code; ?>)
                             </td>
-                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney(($return_sale ? ($inv->grand_total+$return_sale->grand_total +$card_charges) : ($inv->grand_total+$card_charges)) - ($return_sale ? ($inv->paid+$return_sale->paid+$card_charges) : ($inv->paid+$card_charges))); ?></td>
+                            <td style="text-align:right; font-weight:bold;"><?= $this->sma->formatMoney(($return_sale ? ($inv->grand_total+$return_sale->grand_total +$card_charges) : ($inv->grand_total+$card_charges)) - ($return_sale ? ($inv->paid+$return_sale->paid) : ($inv->paid))); ?></td>
                         </tr>
 
                         </tfoot>

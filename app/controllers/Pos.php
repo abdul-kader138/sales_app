@@ -90,7 +90,7 @@ class Pos extends MY_Controller
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
-                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, (".$this->db->dbprefix('sales') . ".grand_total), ".$this->db->dbprefix('sales') . ".paid, FORMAT((".$this->db->dbprefix('sales') . ".grand_total-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status, companies.email as cemail")
+                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, FORMAT((".$this->db->dbprefix('sales') . ".grand_total+".$this->db->dbprefix('sales') . ".card_charge), 2) as gTotal, FORMAT((".$this->db->dbprefix('sales') . ".paid), 2) as paid, FORMAT(((".$this->db->dbprefix('sales') . ".grand_total + ".$this->db->dbprefix('sales') . ".card_charge)-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status, companies.email as cemail")
                 ->from('sales')
 //                ->join('payments', 'payments.sale_id=sales.id', 'left')
                 ->join('companies', 'companies.id=sales.customer_id', 'left')
@@ -98,7 +98,7 @@ class Pos extends MY_Controller
                 ->group_by('sales.id');
         } else {
             $this->datatables
-                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, sum(".$this->db->dbprefix('sales') . ".grand_total), ".$this->db->dbprefix('sales') . ".paid, FORMAT((".$this->db->dbprefix('sales') . ".grand_total-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status,  ".$this->db->dbprefix('companies') . ".email as cemail")
+                ->select($this->db->dbprefix('sales') . ".id as id, date as dt, reference_no as ref, ".$this->db->dbprefix('sales') . ".biller, ".$this->db->dbprefix('sales') . ".customer, FORMAT((".$this->db->dbprefix('sales') . ".grand_total+".$this->db->dbprefix('sales') . ".card_charge), 2) as gTotal, FORMAT((".$this->db->dbprefix('sales') . ".paid), 2) as paid, FORMAT(((".$this->db->dbprefix('sales') . ".grand_total + ".$this->db->dbprefix('sales') . ".card_charge)-".$this->db->dbprefix('sales') . ".paid), 2) as balance, ".$this->db->dbprefix('sales') . ".sale_status, ".$this->db->dbprefix('sales') . ".payment_status, companies.email as cemail")
                 ->from('sales')
 //                ->join('payments', 'sales.id=payments.sale_id', 'left')
                 ->join('companies', 'companies.id=sales.customer_id', 'left')
@@ -315,56 +315,17 @@ class Pos extends MY_Controller
 
             $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
 
-            // add card charge
-//            $cc_charge=0;
-//            $cc_charge_percentage=0;
-//                if ($this->input->post('cc_charges_1')){
-//                    $cc_charge_percentage =$this->input->post('cc_charges_1');
-//                    $cc_charge=(($total+$total_tax)*$cc_charge/100);
-//                }
-
             $grand_total = $this->sma->formatDecimal(($total + $total_tax +$cc_charge+ $this->sma->formatDecimal($shipping) - $order_discount), 4);
             $rounding = 0;
             if ($this->pos_settings->rounding) {
                 $round_total = $this->sma->roundNumber($grand_total, $this->pos_settings->rounding);
                 $rounding = $this->sma->formatMoney($round_total - $grand_total);
             }
-            $data = array('date'              => $date,
-                          'reference_no'      => $reference,
-                          'customer_id'       => $customer_id,
-                          'customer'          => $customer,
-                          'biller_id'         => $biller_id,
-                          'biller'            => $biller,
-                          'warehouse_id'      => $warehouse_id,
-                          'note'              => $note,
-                          'staff_note'        => $staff_note,
-                          'total'             => $total,
-                          'product_discount'  => $product_discount,
-                          'card_charge'       => $cc_charge,
-                          'card_charge_percentage'       => $cc_charge_percentage,
-                          'order_discount_id' => $order_discount_id,
-                          'order_discount'    => $order_discount,
-                          'total_discount'    => $total_discount,
-                          'product_tax'       => $product_tax,
-                          'order_tax_id'      => $order_tax_id,
-                          'order_tax'         => $order_tax,
-                          'total_tax'         => $total_tax,
-                          'shipping'          => $this->sma->formatDecimal($shipping),
-                          'grand_total'       => $grand_total,
-                          'total_items'       => $total_items,
-                          'sale_status'       => $sale_status,
-                          'payment_status'    => $payment_status,
-                          'payment_term'      => $payment_term,
-                          'rounding'          => $rounding,
-                          'suspend_note'      => $this->input->post('suspend_note'),
-                          'pos'               => 1,
-                          'paid'              => $this->input->post('amount-paid') ? $this->input->post('amount-paid') : 0,
-                          'created_by'        => $this->session->userdata('user_id'),
-            );
 
             if (!$suspend) {
                 $p = isset($_POST['amount']) ? sizeof($_POST['amount']) : 0;
                 $paid = 0;
+                $total_card_charge = 0;
                 for ($r = 0; $r < $p; $r++) {
                     if (isset($_POST['amount'][$r]) && !empty($_POST['amount'][$r]) && isset($_POST['paid_by'][$r]) && !empty($_POST['paid_by'][$r])) {
                         $amount = $this->sma->formatDecimal($_POST['balance_amount'][$r] > 0 ? $_POST['amount'][$r] - $_POST['balance_amount'][$r] : $_POST['amount'][$r]);
@@ -381,16 +342,16 @@ class Pos extends MY_Controller
                         if($_POST['cc_charg'][$r]){
                             $card_charge=$_POST['cc_charg'][$r];
                             $card_charge_percentage=(($_POST['amount'][$r] *$card_charge)/100);
+                            $total_card_charge =$total_card_charge + $card_charge_percentage;
                         }
-
                         if ($_POST['paid_by'][$r] == 'gift_card') {
                             $gc = $this->site->getGiftCardByNO($_POST['paying_gift_card_no'][$r]);
-                            $amount_paying = $_POST['amount'][$r] >= $gc->balance ? $gc->balance : $_POST['amount'][$r];
+                            $amount_paying = ($_POST['amount'][$r] +$card_charge)>= $gc->balance ? $gc->balance : ($_POST['amount'][$r] +$card_charge);
                             $gc_balance = $gc->balance - $amount_paying;
                             $payment[] = array(
                                 'date'         => $date,
                                 // 'reference_no' => $this->site->getReference('pay'),
-                                'amount'       => $amount,
+                                'amount'       => ($amount +$card_charge_percentage),
                                 'paid_by'      => $_POST['paid_by'][$r],
                                 'cheque_no'    => $_POST['cheque_no'][$r],
                                 'cc_no'        => $_POST['paying_gift_card_no'][$r],
@@ -402,7 +363,7 @@ class Pos extends MY_Controller
                                 'created_by'   => $this->session->userdata('user_id'),
                                 'type'         => 'received',
                                 'note'         => $_POST['payment_note'][$r],
-                                'pos_paid'     => $_POST['amount'][$r],
+                                'pos_paid'     => ($_POST['amount'][$r]+$card_charge_percentage),
                                 'pos_balance'  => $_POST['balance_amount'][$r],
                                 'gc_balance'  => $gc_balance,
                                 );
@@ -411,7 +372,7 @@ class Pos extends MY_Controller
                             $payment[] = array(
                                 'date'         => $date,
                                 // 'reference_no' => $this->site->getReference('pay'),
-                                'amount'       => $amount,
+                                'amount'       => ($amount +$card_charge_percentage),
                                 'paid_by'      => $_POST['paid_by'][$r],
                                 'cheque_no'    => $_POST['cheque_no'][$r],
                                 'cc_no'        => $_POST['cc_no'][$r],
@@ -425,7 +386,7 @@ class Pos extends MY_Controller
                                 'created_by'   => $this->session->userdata('user_id'),
                                 'type'         => 'received',
                                 'note'         => $_POST['payment_note'][$r],
-                                'pos_paid'     => $_POST['amount'][$r],
+                                'pos_paid'     => ($_POST['amount'][$r]+$card_charge_percentage),
                                 'pos_balance'  => $_POST['balance_amount'][$r],
                                 );
 
@@ -441,6 +402,39 @@ class Pos extends MY_Controller
             // $this->sma->print_arrays($data, $products, $payment);
         }
 
+
+        $data = array('date'    => $date,
+            'reference_no'      => $reference,
+            'customer_id'       => $customer_id,
+            'customer'          => $customer,
+            'biller_id'         => $biller_id,
+            'biller'            => $biller,
+            'warehouse_id'      => $warehouse_id,
+            'note'              => $note,
+            'staff_note'        => $staff_note,
+            'total'             => $total,
+            'product_discount'  => $product_discount,
+            'card_charge'       => $total_card_charge,
+            'card_charge_percentage'       => $cc_charge_percentage,
+            'order_discount_id' => $order_discount_id,
+            'order_discount'    => $order_discount,
+            'total_discount'    => $total_discount,
+            'product_tax'       => $product_tax,
+            'order_tax_id'      => $order_tax_id,
+            'order_tax'         => $order_tax,
+            'total_tax'         => $total_tax,
+            'shipping'          => $this->sma->formatDecimal($shipping),
+            'grand_total'       => $grand_total,
+            'total_items'       => $total_items,
+            'sale_status'       => $sale_status,
+            'payment_status'    => $payment_status,
+            'payment_term'      => $payment_term,
+            'rounding'          => $rounding,
+            'suspend_note'      => $this->input->post('suspend_note'),
+            'pos'               => 1,
+            'paid'              => $this->input->post('amount-paid') ? $this->input->post('amount-paid') : 0,
+            'created_by'        => $this->session->userdata('user_id'),
+        );
         if ($this->form_validation->run() == TRUE && !empty($products) && !empty($data)) {
             if ($suspend) {
                 if ($this->pos_model->suspendSale($data, $products, $did)) {
