@@ -13,7 +13,9 @@
         } ?></p>
 </footer>
 <?= '</div>'; ?>
+<div class="modal fade in" id="dayReportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true"></div>
 <div class="modal fade in" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true"></div>
+<div class="modal fade in" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true"></div>
 <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 <div class="modal fade in" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true"></div>
 <div id="modal-loading" style="display: none;">

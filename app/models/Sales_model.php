@@ -979,4 +979,27 @@ class Sales_model extends CI_Model
         }
         return FALSE;
     }
+
+//    public function getAllDayEndSales($start_date, $end_date)
+//    {
+//        $this->db->select('sum(sales.grand_total) as pay_val,sum(sales.paid) as pay')
+//            ->join('sale_items as p', 'p.sale_id=sales.id', 'inner');
+//        $q = $this->db->get('sales');
+////        $q = $this->db->get_where('sales',array($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"'),1);
+//        if ($q->num_rows() > 0) {
+//            return $q->row();
+//        }
+//        return FALSE;
+//    }
+    public function getAllDayEndSales($start_date,$end_date){
+        $this->db->select_sum('sales.grand_total');
+        $this->db->select_sum('sales.paid');
+        $this->db->select('sales.date','%d-%b-%Y');
+        $this->db->where($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+        $q = $this->db->get('sales');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+    }
 }

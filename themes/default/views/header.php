@@ -298,6 +298,16 @@
             </a>
         </li>
     <?php } ?>
+    <li class="dropdown">
+        <a class="btn bdarkblue tip" id="attendance" title="<span>Toady End Report</span>"
+           data-placement="bottom" data-html="true" href="<?= site_url('sales/day_end_report') ?>" data-toggle="modal"
+           data-target="#dayReportModal">
+<!--           data-placement="bottom" data-html="true" href="--><?//= site_url('time_scheduler') ?><!--" data-toggle="modal"-->
+<!--           data-target="#attendanceModal">-->
+
+            <i class="fa fa-clock-o"></i>
+        </a>
+    </li>
 </ul>
 </div>
 </div>

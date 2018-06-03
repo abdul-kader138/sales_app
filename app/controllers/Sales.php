@@ -2998,4 +2998,34 @@ class Sales extends MY_Controller
     }
 
 
+
+//    Day End Report
+
+    public function day_end_report() {
+        //$this->sma->checkPermissions();
+
+//        $time_user = $this->session->userdata(self::TIME_SCHEDULER_SESSION_NAME);
+
+//        if (isset($time_user['user']) && (!empty($time_user['user']))) {
+//            $this->time_scheduler_model->setEID($time_user['user']->id);
+//            $this->data['status'] = $this->time_scheduler_model->getStatus();
+//        } else {
+//            $this->data['status'] = false;`
+//        }
+        $this->data['status'] = false;
+        $this->load->view($this->theme . 'sales/day_end_report', $this->data);
+    }
+
+
+    function day_end_sales() {
+        if ($this->input->post('start_date')) {
+            $start_date = $this->sma->fld($this->input->post('start_date'));
+            $end_date = $this->sma->fld($this->input->post('end_date'));
+        }
+        $result = $this->sales_model->getAllDayEndSales($start_date, $end_date);
+
+        if ($result !== false)  echo json_encode($result);
+         else  echo 0;
+        }
+
 }
