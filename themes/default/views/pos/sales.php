@@ -32,7 +32,6 @@
                     balance += parseFloat(aaData[aiDisplay[i]][7]);
                 }
                 var nCells = nRow.getElementsByTagName('th');
-                debugger;
                 nCells[5].innerHTML = currencyFormat(parseFloat(gtotal));
                 nCells[6].innerHTML = currencyFormat(parseFloat(paid));
                 nCells[7].innerHTML = currencyFormat(parseFloat(balance));

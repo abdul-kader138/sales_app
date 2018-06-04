@@ -3023,7 +3023,24 @@ class Sales extends MY_Controller
             $end_date = $this->sma->fld($this->input->post('end_date'));
         }
         $result = $this->sales_model->getAllDayEndSales($start_date, $end_date);
-
+        $cash_result=$this->sales_model->getTodayCashSales($start_date, $end_date);
+        $credit_result=$this->sales_model->getTodayCCSales($start_date, $end_date);
+        $debit_result=$this->sales_model->getTodayDCSales($start_date, $end_date);
+        $visa_result=$this->sales_model->getTodayVisaSales($start_date, $end_date);
+        $amex_result=$this->sales_model->getTodayAmexSales($start_date, $end_date);
+        $mc_result=$this->sales_model->getTodayMasterCardSales($start_date, $end_date);
+        $gift_result=$this->sales_model->getTodayGiftCardSales($start_date, $end_date);
+        $deposit_result=$this->sales_model->getTodayDepositCardSales($start_date, $end_date);
+        $cheque_result=$this->sales_model->getTodayChSales($start_date, $end_date);
+        $result->cash=$cash_result->paid;
+        $result->credit=$credit_result->paid;
+        $result->debit=$debit_result->paid;
+        $result->cheque=$cheque_result->paid;
+        $result->amex=$amex_result->paid;
+        $result->visa=$visa_result->paid;
+        $result->mc=$mc_result->paid;
+        $result->gift=$gift_result->paid;
+        $result->deposit=$deposit_result->paid;
         if ($result !== false)  echo json_encode($result);
          else  echo 0;
         }

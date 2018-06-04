@@ -980,20 +980,9 @@ class Sales_model extends CI_Model
         return FALSE;
     }
 
-//    public function getAllDayEndSales($start_date, $end_date)
-//    {
-//        $this->db->select('sum(sales.grand_total) as pay_val,sum(sales.paid) as pay')
-//            ->join('sale_items as p', 'p.sale_id=sales.id', 'inner');
-//        $q = $this->db->get('sales');
-////        $q = $this->db->get_where('sales',array($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"'),1);
-//        if ($q->num_rows() > 0) {
-//            return $q->row();
-//        }
-//        return FALSE;
-//    }
+
     public function getAllDayEndSales($start_date,$end_date){
         $this->db->select_sum('sales.grand_total');
-        $this->db->select_sum('sales.paid');
         $this->db->select('sales.date','%d-%b-%Y');
         $this->db->where($this->db->dbprefix('sales') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
         $q = $this->db->get('sales');
@@ -1001,5 +990,139 @@ class Sales_model extends CI_Model
             return $q->row();
         }
         return FALSE;
+    }
+
+    public function getTodayCashSales($start_date,$end_date)
+    {
+        $this->db->select('SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'cash');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayCCSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'CC');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayChSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cheques, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'Cheque');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayDCSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'DC');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayAmexSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'Amex');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+    public function getTodayVisaSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'Visa');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayMasterCardSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'MasterCard');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayGiftCardSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'gift_card');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getTodayDepositCardSales($start_date,$end_date)
+    {
+        $this->db->select('COUNT(' . $this->db->dbprefix('payments') . '.id) as total_cc_slips, SUM( COALESCE( grand_total, 0 ) ) AS total, SUM( COALESCE( pos_paid, 0 ) ) AS paid', FALSE)
+            ->join('sales', 'sales.id=payments.sale_id', 'left')
+            ->where('type', 'received')
+            ->where($this->db->dbprefix('payments') . '.date BETWEEN "' . $start_date . '" and "' . $end_date . '"')
+            ->where('paid_by', 'deposit');
+
+        $q = $this->db->get('payments');
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
     }
 }

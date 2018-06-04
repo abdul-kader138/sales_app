@@ -53,20 +53,69 @@
                     <form action="" method="post" role="form">
                         <div class="form-group">
                             <div class="row">
-                                <p class="pull-right">Day End Report Of :> <span id="sDate"></span></p>
+                                <p style="text-align: center;" ">Report Of : <span id="sDate"></span> to <span id="eDate"></span>
+                                <span> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-default no-print pull-right" style="margin-right:15px;" onclick="window.print();">
+                                        <i class="fa fa-print"></i> <?= lang('print'); ?>
+                                    </button></span>
+                                </p>
                                 <table id="fileData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
                                     <tbody>
                                     <tr>
-                                        <td>Total Sale</td>
-                                        <td id="total_sale"></td>
+                                        <td  width="70%"><b>Total Sale</b> </td>
+                                        <td  width="30%" id="total_sale"></td>
                                     </tr>
-                                    <tr>
-                                        <td>Total Paid</td>
-                                        <td id="total_paid"></td>
-                                    </tr>
-
                                     </tbody>
                                 </table>
+
+                                <table id="fileData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
+                                    <tbody>
+                                    <tr>
+                                        <td width="70%">Credit Card Payment</td>
+                                        <td width="30%" id="total_credit"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="70%">Debit Card Payment</td>
+                                        <td  width="30%" id="total_debit"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="70%">Visa Card Payment</td>
+                                        <td width="30%"id="total_visa"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="70%">Master Card Payment</td>
+                                        <td width="30%"id="total_mc"></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="70%"> Amex Payment</td>
+                                        <td width="30%"id="total_amex"></td>
+                                    </tr>
+                                    <tr>
+                                        <td  width="70%">Cheque Payment</td>
+                                        <td  width="30%" id="total_cheque"></td>
+                                    </tr>
+                                    <tr>
+                                        <td  width="70%">Gift Card Payment</td>
+                                        <td  width="30%" id="total_gift"></td>
+                                    </tr>
+                                    <tr>
+                                        <td  width="70%">Deposit Payment</td>
+                                        <td  width="30%" id="total_deposit"></td>
+                                    </tr>
+                                    <tr>
+                                        <td  width="70%"><b>Total Payment</b></td>
+                                        <td  width="30%" id="total_payment"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table id="fileData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
+                                    <tbody>
+                                    <tr>
+                                        <td  width="70%"><b>Total Dues </b></td>
+                                        <td  width="30%" id="total_due"><b></b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
                             </div>
                         </div>
                         <hr/>
@@ -96,38 +145,75 @@
                         $('#time_scheduler_error').addClass('hidden');
                         $('#step1').addClass('hidden');
                         $('#step2').removeClass('hidden');
-                        $('#total_sale').html(respon.grand_total);
-                        $('#total_paid').html(respon.paid);
-                        var inputdate = respon.date;
-                        DateTime date = DateTime.Parse(inputdate);
-                        String newDate = date.ToString("DD-MM-YYYY");
-                        console.log(newDate);
-                        $('#sDate').html(newDate);
+                        //
+                        var end_date = $('#end_date').val();
+                        var start_date = $('#start_date').val();
+                        var str = $('#end_date').val();
+                        if(start_date)var sDate = start_date.substring(1, 10);
+                        if(end_date)var eDate = end_date.substring(1, 10);
+
+                        //
+                        var cash=parseFloat(respon.cash);
+                        var credit=parseFloat(respon.credit);
+                        var debit=parseFloat(respon.debit);
+                        var cheque=parseFloat(respon.cheque);
+                        var amex=parseFloat(respon.amex);
+                        var visa=parseFloat(respon.visa);
+                        var mc=parseFloat(respon.mc);
+                        var gift=parseFloat(respon.gift);
+                        var deposit=parseFloat(respon.deposit);
+                        var total_sale=parseFloat(respon.grand_total);
+                        var total_payment=0.0;
+                        if(total_sale) $('#total_sale').html(total_sale.toFixed(2));
+                        if(cash){
+                            $('#total_cash').html(cash.toFixed(2));
+                            total_payment = total_payment + parseFloat(cash.toFixed(2))
+                        }
+                        if(credit){
+                            $('#total_credit').html(credit.toFixed(2));
+                            total_payment = total_payment + parseFloat(credit.toFixed(2))
+                        }
+                        if(debit){
+                            $('#total_debit').html(debit.toFixed(2));
+                            total_payment = total_payment + parseFloat(debit.toFixed(2))
+                        }
+                        if(cheque){
+                            $('#total_cheque').html(cheque.toFixed(2));
+                            total_payment = total_payment + parseFloat(cheque.toFixed(2))
+                            console.log('go to cheque'+total_payment);
+                        }
+                        if(amex){
+                            $('#total_amex').html(amex.toFixed(2));
+                            total_payment = total_payment+parseFloat(amex.toFixed(2))
+                        }
+                        if(visa){
+                            $('#total_visa').html(visa.toFixed(2));
+                            total_payment =total_payment+parseFloat(visa.toFixed(2))
+                        }
+                        if(mc){
+                            $('#total_mc').html(mc.toFixed(2));
+                            total_payment =total_payment+parseFloat(mc.toFixed(2))
+                            console.log('go to mc'+total_payment);
+                        }
+                        if(gift){
+                            $('#total_gift').html(gift.toFixed(2));
+                            total_payment =total_payment+parseFloat(gift.toFixed(2))
+                        }
+                        if(deposit){
+                            $('#total_deposit').html(deposit.toFixed(2));
+                            total_payment =total_payment+parseFloat(deposit.toFixed(2))
+                        }
+                        if(total_payment){
+                            var total=total_payment.toFixed(2);
+                            $('#total_payment').html(total);
+                        }
+                        var total_dues=(parseFloat(total_sale) - parseFloat(total_payment));
+                        if( total_dues) $('#total_due').text(total_dues.toFixed(2));
+                        if( sDate) $('#sDate').html(sDate);
+                        if( eDate) $('#eDate').html(eDate);
                     }
                 });
             });
-//
-//            $('#sched_logout').click(function() {
-//                $.post('<?php //echo base_url(); ?>//time_scheduler/ajax_logout', {
-//                    '<?php //echo $this->security->get_csrf_token_name(); ?>//':'<?php //echo $this->security->get_csrf_hash(); ?>//'
-//                }, function() {
-//                    $('#step2').addClass('hidden');
-//                    $('#step1').removeClass('hidden');
-//                });
-//            });
-
-//            $('.time-punch-btn').click(function() {
-//                var time_type = $(this).attr('time-punch-type');
-//
-//                $.post('<?php //echo base_url(); ?>//time_scheduler/ajax_punch_time', {
-//                    time_type : time_type,
-//                    '<?php //echo $this->security->get_csrf_token_name(); ?>//':'<?php //echo $this->security->get_csrf_hash(); ?>//'
-//                }, function() {
-//                    refresh();
-//                });
-//            });
-
-//            refresh();
         }
         $("#dayReportModal").on("hidden.bs.modal", function () {
             $('#step2').addClass('hidden');
