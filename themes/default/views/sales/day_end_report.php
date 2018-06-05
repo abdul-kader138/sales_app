@@ -70,6 +70,10 @@
                                 <table id="fileData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
                                     <tbody>
                                     <tr>
+                                        <td width="70%">CashPayment</td>
+                                        <td width="30%" id="total_cash"></td>
+                                    </tr>
+                                    <tr>
                                         <td width="70%">Credit Card Payment</td>
                                         <td width="30%" id="total_credit"></td>
                                     </tr>
@@ -115,7 +119,14 @@
                                     </tr>
                                     </tbody>
                                 </table>
-
+                                <table id="fileData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
+                                    <tbody>
+                                    <tr>
+                                        <td  width="70%"><b>Total Return </b></td>
+                                        <td  width="30%" id="total_return"><b></b></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <hr/>
@@ -163,6 +174,7 @@
                         var gift=parseFloat(respon.gift);
                         var deposit=parseFloat(respon.deposit);
                         var total_sale=parseFloat(respon.grand_total);
+                        var total_return=parseFloat(respon.return);
                         var total_payment=0.0;
                         if(total_sale) $('#total_sale').html(total_sale.toFixed(2));
                         if(cash){
@@ -202,6 +214,10 @@
                         if(deposit){
                             $('#total_deposit').html(deposit.toFixed(2));
                             total_payment =total_payment+parseFloat(deposit.toFixed(2))
+                        }
+                        if(total_return){
+                            var return_amount=total_return.toFixed(2);
+                            $('#total_return').html(return_amount.substring(1));
                         }
                         if(total_payment){
                             var total=total_payment.toFixed(2);

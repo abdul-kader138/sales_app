@@ -3002,16 +3002,6 @@ class Sales extends MY_Controller
 //    Day End Report
 
     public function day_end_report() {
-        //$this->sma->checkPermissions();
-
-//        $time_user = $this->session->userdata(self::TIME_SCHEDULER_SESSION_NAME);
-
-//        if (isset($time_user['user']) && (!empty($time_user['user']))) {
-//            $this->time_scheduler_model->setEID($time_user['user']->id);
-//            $this->data['status'] = $this->time_scheduler_model->getStatus();
-//        } else {
-//            $this->data['status'] = false;`
-//        }
         $this->data['status'] = false;
         $this->load->view($this->theme . 'sales/day_end_report', $this->data);
     }
@@ -3032,6 +3022,7 @@ class Sales extends MY_Controller
         $gift_result=$this->sales_model->getTodayGiftCardSales($start_date, $end_date);
         $deposit_result=$this->sales_model->getTodayDepositCardSales($start_date, $end_date);
         $cheque_result=$this->sales_model->getTodayChSales($start_date, $end_date);
+        $return_result=$this->sales_model->getTodaySalesReturn($start_date, $end_date);
         $result->cash=$cash_result->paid;
         $result->credit=$credit_result->paid;
         $result->debit=$debit_result->paid;
@@ -3041,6 +3032,7 @@ class Sales extends MY_Controller
         $result->mc=$mc_result->paid;
         $result->gift=$gift_result->paid;
         $result->deposit=$deposit_result->paid;
+        $result->return=$return_result->paid;
         if ($result !== false)  echo json_encode($result);
          else  echo 0;
         }
