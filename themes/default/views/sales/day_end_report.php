@@ -74,10 +74,6 @@
                                         <td width="30%" id="total_cash"></td>
                                     </tr>
                                     <tr>
-                                        <td width="70%">Credit Card Payment</td>
-                                        <td width="30%" id="total_credit"></td>
-                                    </tr>
-                                    <tr>
                                         <td width="70%">Debit Card Payment</td>
                                         <td  width="30%" id="total_debit"></td>
                                     </tr>
