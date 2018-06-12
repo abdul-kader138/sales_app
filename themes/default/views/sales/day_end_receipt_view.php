@@ -8,7 +8,7 @@
             <html>
             <head>
                 <meta charset="utf-8">
-                <title><?=$page_title . " " . lang("no") . " " . $inv->id;?></title>
+                <title><?=$page_title . "Day End Report"?></title>
                 <base href="<?=base_url()?>"/>
                 <meta http-equiv="cache-control" content="max-age=0"/>
                 <meta http-equiv="cache-control" content="no-cache"/>
@@ -62,15 +62,8 @@
                             <h3 style="text-transform:uppercase;">Day End Report</h3>
                         </div>
                         <?php
-                        if ($Settings->invoice_view == 1) {
-                            ?>
-                            <div class="col-sm-12 text-center">
-                                <h4 style="font-weight:bold;"><?=lang('tax_invoice');?></h4>
-                            </div>
-                            <?php
-                        }
-                        echo "<p><span class='left'>" .lang("date") . ": " . $this->sma->hrld($inv->date) . "</span><span class='right'>";
-                        echo lang("sale_no_ref") . ": " . $inv->reference_no . "</span>";
+                        echo "<b> Outlet Name" . " : " . $Settings->site_name . "</b></span>";
+                        echo "<p><span class='left'>" .lang("date") . ": " . $result->s_date . " TO ".$result->e_date."</span><span class='right'>";
                         if (!empty($inv->return_sale_ref)) {
                             echo '<span class="left">'.lang("return_ref").': '.$inv->return_sale_ref.'</span>';
                             echo '<span class="right"></span>';
@@ -85,7 +78,7 @@
                             <tbody>
                             <tr>
                                 <td width="70%"><b>Total Sale</b></td>
-                                <td width="30%" id="total_sale"><?php echo $result->grand_total?></td>
+                                <td width="30%" id="total_sale"><b><?php echo number_format($result->grand_total,2);?></b></td>
                             </tr>
                             </tbody>
                         </table>
@@ -103,7 +96,7 @@
                             </tr>
                             <tr>
                                 <td width="70%">Visa Card Payment</td>
-                                <td width="30%" id="total_visa"><?php echo $result->vise?></td>
+                                <td width="30%" id="total_visa"><?php echo $result->visa?></td>
                             </tr>
                             <tr>
                                 <td width="70%">Master Card Payment</td>
@@ -119,7 +112,7 @@
                             </tr>
                             <tr>
                                 <td width="70%">Gift Card Payment</td>
-                                <td width="30%" id="total_gift"></td>
+                                <td width="30%" id="total_gift"><?php echo $result->cheque?></td>
                             </tr>
                             <tr>
                                 <td width="70%">Deposit Payment</td>
@@ -127,7 +120,7 @@
                             </tr>
                             <tr>
                                 <td width="70%"><b>Total Payment</b></td>
-                                <td width="30%" id="total_payment"><?php echo $result->cheque?></td>
+                                <td width="30%" id="total_payment"><b><?php echo $result->total?></b></td>
                             </tr>
                             </tbody>
                         </table>
@@ -137,7 +130,7 @@
                             <tbody>
                             <tr>
                                 <td width="70%"><b>Total Dues </b></td>
-                                <td width="30%" id="total_due"><b></b></td>
+                                <td width="30%" id="total_due"><b><?php echo $result->dues?></b></td>
                             </tr>
                             </tbody>
                         </table>
@@ -152,14 +145,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="order_barcodes text-center">
-                        <?= $this->sma->save_barcode($inv->reference_no, 'code128', 30, false); ?>
-                        <br>
-                        <!--        Print Qrcode
-                                //$this->sma->qrcode('link', urlencode(site_url('sales/view/' . $inv->id)), 1); -->
-                    </div>
-                    <div style="clear:both;"></div>
                 </div>
 
                 <div id="buttons" style="padding-top:10px; text-transform:uppercase;" class="no-print">
@@ -173,62 +158,14 @@
                         </div>
                         <?php
                     } ?>
-                    <?php
-                    if ($modal) {
-                        ?>
-                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
-                                <?php
-                                if ($pos->remote_printing == 1) {
-                                    echo '<button onclick="window.print();" class="btn btn-block btn-primary">'.lang("print").'</button>';
-                                } else {
-                                    echo '<button onclick="return printReceipt()" class="btn btn-block btn-primary">'.lang("print").'</button>';
-                                }
-
-                                ?>
-                            </div>
-                            <div class="btn-group" role="group">
-                                <a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a>
-                            </div>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default" data-dismiss="modal"><?= lang('close'); ?></button>
-                            </div>
-                        </div>
-                        <?php
-                    } else {
-                        ?>
                         <span class="pull-right col-xs-12">
                     <?php
-                    if ($pos->remote_printing == 1) {
                         echo '<button onclick="window.print();" class="btn btn-block btn-primary">'.lang("print").'</button>';
-                    } else {
-                        echo '<button onclick="return printReceipt()" class="btn btn-block btn-primary">'.lang("print").'</button>';
-                        echo '<button onclick="return openCashDrawer()" class="btn btn-block btn-default">'.lang("open_cash_drawer").'</button>';
-                    }
                     ?>
                 </span>
-                        <span class="pull-left col-xs-12"><a class="btn btn-block btn-success" href="#" id="email"><?= lang("email"); ?></a></span>
                         <span class="col-xs-12">
-                    <a class="btn btn-block btn-warning" href="<?= site_url('pos'); ?>"><?= lang("back_to_pos"); ?></a>
+                    <a class="btn btn-block btn-warning" href="<?= site_url('welcome'); ?>">Back To Dashboard</a>
                 </span>
-                        <?php
-                    }
-                    if ($pos->remote_printing == 1) {
-                        ?>
-                        <div style="clear:both;"></div>
-                        <div class="col-xs-12" style="background:#F5F5F5; padding:10px;">
-                            <p style="font-weight:bold;">
-                                Please don't forget to disble the header and footer in browser print settings.
-                            </p>
-                            <p style="text-transform: capitalize;">
-                                <strong>FF:</strong> File &gt; Print Setup &gt; Margin &amp; Header/Footer Make all --blank--
-                            </p>
-                            <p style="text-transform: capitalize;">
-                                <strong>chrome:</strong> Menu &gt; Print &gt; Disable Header/Footer in Option &amp; Set Margins to None
-                            </p>
-                        </div>
-                        <?php
-                    } ?>
                     <div style="clear:both;"></div>
                 </div>
             </div>
@@ -270,6 +207,7 @@
                         });
                         return false;
                     });
+
                 });
 
             </script>

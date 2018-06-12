@@ -54,14 +54,17 @@
                     <form action="" method="post" role="form">
                         <div class="form-group">
                             <div class="row">
-                                <p style="text-align: center;" ">Report Of : <span id="sDate"></span> to <span
+                                <p>Report Of : <span id="sDate"></span> to <span
                                         id="eDate"></span>
                                 <span> &nbsp;&nbsp;<button type="button"
                                                            class="btn btn-xs btn-default no-print pull-right"
-                                                           style="margin-right:15px;" onclick="window.print();">
+                                                           onclick="window.print();">
                                         <i class="fa fa-print"></i> <?= lang('print'); ?>
-                                    </button></span>
-                                <span> <a id="receipt_url">Receipt</a></span>
+                                    </button>&nbsp;
+                                <button type="button"
+                                        class="btn btn-xs btn-default no-print pull-right">
+                                    <i class="fa fa-th"></i> <a id="receipt_url">Receipt view</a>
+                                </button></span>
                                 </p>
                                 <table id="fileData" cellpadding="0" cellspacing="0" border="0"
                                        class="table table-bordered table-hover table-striped"
@@ -175,7 +178,6 @@
                         var base_url=window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
                         base_url = window.location.origin+base_url+'/sales/day_end_receipt_view?start_date='+start_date+'&end_date='+end_date;
                         $("#receipt_url").attr("href", base_url);
-
                         //
                         var cash = parseFloat(respon.cash);
                         var credit = parseFloat(respon.credit);
