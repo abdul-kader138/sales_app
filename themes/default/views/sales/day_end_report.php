@@ -172,8 +172,8 @@
                         var end_date = $('#end_date').val();
                         var start_date = $('#start_date').val();
                         var str = $('#end_date').val();
-                        if (start_date) var sDate = start_date.substring(1, 10);
-                        if (end_date) var eDate = end_date.substring(1, 10);
+                        if (start_date) var sDate = start_date.substring(0, 11);
+                        if (end_date) var eDate = end_date.substring(0, 11);
 
                         var base_url=window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
                         base_url = window.location.origin+base_url+'/sales/day_end_receipt_view?start_date='+start_date+'&end_date='+end_date;

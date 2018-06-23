@@ -62,10 +62,10 @@ if ($this->input->post('end_date')) {
             "fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
                 var gtotal = 0, paid = 0, balance = 0;
                 for (var i = 0; i < aaData.length; i++) {
-                    gtotal += parseFloat(aaData[aiDisplay[i]][5]);
-                    paid += parseFloat(aaData[aiDisplay[i]][6]);
-                    balance += parseFloat(aaData[aiDisplay[i]][7]);
-                }
+                     gtotal += parseFloat(Number(aaData[aiDisplay[i]][5]));
+                     paid += parseFloat(Number(aaData[aiDisplay[i]][6]));
+                     balance += parseFloat(Number(aaData[aiDisplay[i]][7]));
+                   }
                 var nCells = nRow.getElementsByTagName('th');
                 nCells[5].innerHTML = currencyFormat(parseFloat(gtotal));
                 nCells[6].innerHTML = currencyFormat(parseFloat(paid));
