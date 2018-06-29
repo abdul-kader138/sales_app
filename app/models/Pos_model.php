@@ -1337,4 +1337,14 @@ class Pos_model extends CI_Model
         return FALSE;
     }
 
+
+    public function getGiftCardFromPayments($sale_id)
+    {
+        $q = $this->db->get_where("payments", array('sale_id' => $sale_id, 'paid_by'=>'gift_card'));
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+
+        return FALSE;
+    }
 }
