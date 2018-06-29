@@ -65,12 +65,12 @@ class Sales extends MY_Controller
         $pdf_link = anchor('sales/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $return_link = anchor('sales/return_sale/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_sale'));
         $delete_link = "<a href='#' class='po' title='<b>" . lang("delete_sale") . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sales/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_sale') . "</a>";
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sales/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_sale') . "</a>";
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $duplicate_link . '</li>
@@ -194,16 +194,16 @@ class Sales extends MY_Controller
 
         $name = lang("sale") . "_" . str_replace('/', '_', $inv->reference_no) . ".pdf";
         $html = $this->load->view($this->theme . 'sales/pdf', $this->data, true);
-        if (! $this->Settings->barcode_img) {
+        if (!$this->Settings->barcode_img) {
             $html = preg_replace("'\<\?xml(.*)\?\>'", '', $html);
         }
 
         if ($view) {
             $this->load->view($this->theme . 'sales/pdf', $this->data);
         } elseif ($save_bufffer) {
-            return $this->sma->generate_pdf($html, $name, $save_bufffer, $this->data['biller']->invoice_footer,2,null,7);
+            return $this->sma->generate_pdf($html, $name, $save_bufffer, $this->data['biller']->invoice_footer, 2, null, 7);
         } else {
-            $this->sma->generate_pdf($html, $name, false, $this->data['biller']->invoice_footer,2,null,7);
+            $this->sma->generate_pdf($html, $name, false, $this->data['biller']->invoice_footer, 2, null, 7);
         }
     }
 
@@ -229,7 +229,7 @@ class Sales extends MY_Controller
             $this->data['return_sale'] = $inv->return_id ? $this->sales_model->getInvoiceByID($inv->return_id) : NULL;
             $this->data['return_rows'] = $inv->return_id ? $this->sales_model->getAllInvoiceItems($inv->return_id) : NULL;
             $html_data = $this->load->view($this->theme . 'sales/pdf', $this->data, true);
-            if (! $this->Settings->barcode_img) {
+            if (!$this->Settings->barcode_img) {
                 $html_data = preg_replace("'\<\?xml(.*)\?\>'", '', $html_data);
             }
 
@@ -311,10 +311,10 @@ class Sales extends MY_Controller
             $btn_code .= '<div class="clearfix"></div>
     </div>';
             $message = $message . $btn_code;
-            $attachment='';
+            $attachment = '';
 //            $attachment = $this->pdf($id, null, 'S');
-            $attachment_create  = chunk_split(base64_encode($this->creat_sales_xls($id)));
-            if($attachment_create) $attachment='assets/uploads/temp/products.csv';
+            $attachment_create = chunk_split(base64_encode($this->creat_sales_xls($id)));
+            if ($attachment_create) $attachment = 'assets/uploads/temp/products.csv';
         } elseif ($this->input->post('send_email')) {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->session->set_flashdata('error', $this->data['error']);
@@ -390,7 +390,7 @@ class Sales extends MY_Controller
             $quote_id = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
             $internal_ref = $this->input->post('internal_ref') ? $this->input->post('internal_ref') : null;
 
-            if($customer_details->customer_credit_limit <= 0){
+            if ($customer_details->customer_credit_limit <= 0) {
                 $this->session->set_flashdata('error', lang("insufficient_credit"));
                 redirect($_SERVER["HTTP_REFERER"]);
             }
@@ -398,8 +398,8 @@ class Sales extends MY_Controller
             //check internal Ref No.
             if ($internal_ref) {
                 $ref_number = $this->sales_model->getInternalRefID(trim($internal_ref));
-                if($ref_number){
-                    $this->session->set_flashdata('error', lang("internal_ref_exists").$ref_number->reference_no);
+                if ($ref_number) {
+                    $this->session->set_flashdata('error', lang("internal_ref_exists") . $ref_number->reference_no);
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
             }
@@ -440,7 +440,7 @@ class Sales extends MY_Controller
                         $dpos = strpos($discount, $percentage);
                         if ($dpos !== false) {
                             $pds = explode("%", $discount);
-                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float) ($pds[0])) / 100), 4);
+                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float)($pds[0])) / 100), 4);
                         } else {
                             $pr_discount = $this->sma->formatDecimal($discount);
                         }
@@ -528,7 +528,7 @@ class Sales extends MY_Controller
                 $opos = strpos($order_discount_id, $percentage);
                 if ($opos !== false) {
                     $ods = explode("%", $order_discount_id);
-                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float) ($ods[0])) / 100), 4);
+                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float)($ods[0])) / 100), 4);
                 } else {
                     $order_discount = $this->sma->formatDecimal($order_discount_id);
                 }
@@ -550,7 +550,7 @@ class Sales extends MY_Controller
                 $order_tax_id = null;
             }
 
-            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4); 
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $order_discount), 4);
             $data = array('date' => $date,
                 'reference_no' => $reference,
@@ -583,24 +583,23 @@ class Sales extends MY_Controller
             );
 
             //            Validate credit limit if Credit limit exist
-            if($customer_details->customer_credit_limit > 0){
-                $total_amount=0;
-                $sales_amount=0;
-                $total_sales_amount=$this->sales_model->getAllSalesFroCustomer($customer_id);
-                $total_payments_amount=$this->sales_model->getAllPaymentsFroCustomer($customer_id);
-                $total_amount=$total_payments_amount->pay_val +$customer_details->customer_credit_limit + $total_amount;
-                $sales_amount=$total_sales_amount->grand_total +$grand_total + $sales_amount;
-                if($total_amount <= $sales_amount){
+            if ($customer_details->customer_credit_limit > 0) {
+                $total_amount = 0;
+                $sales_amount = 0;
+                $total_sales_amount = $this->sales_model->getAllSalesFroCustomer($customer_id);
+                $total_payments_amount = $this->sales_model->getAllPaymentsFroCustomer($customer_id);
+                $total_amount = $total_payments_amount->pay_val + $customer_details->customer_credit_limit + $total_amount;
+                $sales_amount = $total_sales_amount->grand_total + $grand_total + $sales_amount;
+                if ($total_amount <= $sales_amount) {
                     $this->session->set_flashdata('error', lang("insufficient_credit"));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
             }
 
 
-
             if ($payment_status == 'partial' || $payment_status == 'paid') {
                 if ($this->input->post('paid_by') == 'deposit') {
-                    if ( ! $this->site->check_customer_deposit($customer_id, $this->input->post('amount-paid'))) {
+                    if (!$this->site->check_customer_deposit($customer_id, $this->input->post('amount-paid'))) {
                         $this->session->set_flashdata('error', lang("amount_greater_than_deposit"));
                         redirect($_SERVER["HTTP_REFERER"]);
                     }
@@ -739,9 +738,9 @@ class Sales extends MY_Controller
                     $units = $this->site->getUnitsByBUID($row->base_unit);
                     $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                     $ri = $this->Settings->item_addition ? $row->id : $c;
-                   
-                    $pr[$ri] = array('id' => $c, 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")", 
-                            'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
+
+                    $pr[$ri] = array('id' => $c, 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")",
+                        'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
                     $c++;
                 }
                 $this->data['quote_items'] = json_encode($pr);
@@ -804,7 +803,7 @@ class Sales extends MY_Controller
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
             $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $customer_details = $this->site->getCompanyByID($customer_id);
-            $customer = $customer_details->company != '-'  ? $customer_details->company : $customer_details->name;
+            $customer = $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
             $biller_details = $this->site->getCompanyByID($biller_id);
             $biller = $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
             $note = $this->sma->clear_tags($this->input->post('note'));
@@ -842,7 +841,7 @@ class Sales extends MY_Controller
                         $dpos = strpos($discount, $percentage);
                         if ($dpos !== false) {
                             $pds = explode("%", $discount);
-                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float) ($pds[0])) / 100), 4);
+                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float)($pds[0])) / 100), 4);
                         } else {
                             $pr_discount = $this->sma->formatDecimal($discount);
                         }
@@ -930,7 +929,7 @@ class Sales extends MY_Controller
                 $opos = strpos($order_discount_id, $percentage);
                 if ($opos !== false) {
                     $ods = explode("%", $order_discount_id);
-                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float) ($ods[0])) / 100), 4);
+                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float)($ods[0])) / 100), 4);
                 } else {
                     $order_discount = $this->sma->formatDecimal($order_discount_id);
                 }
@@ -1015,7 +1014,7 @@ class Sales extends MY_Controller
 
             $this->data['inv'] = $this->sales_model->getInvoiceByID($id);
             if ($this->Settings->disable_editing) {
-                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-'.$this->Settings->disable_editing.' days'))) {
+                if ($this->data['inv']->date <= date('Y-m-d', strtotime('-' . $this->Settings->disable_editing . ' days'))) {
                     $this->session->set_flashdata('error', sprintf(lang("sale_x_edited_older_than_x_days"), $this->Settings->disable_editing));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
@@ -1084,8 +1083,8 @@ class Sales extends MY_Controller
                 $units = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri = $this->Settings->item_addition ? $row->id : $c;
-                   
-                $pr[$ri] = array('id' => $c, 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")", 
+
+                $pr[$ri] = array('id' => $c, 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")",
                     'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
                 $c++;
             }
@@ -1148,12 +1147,12 @@ class Sales extends MY_Controller
                 $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' ? $_POST['product_option'][$r] : null;
                 $real_unit_price = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
                 $unit_price = $this->sma->formatDecimal($_POST['unit_price'][$r]);
-                $item_unit_quantity = (0-$_POST['quantity'][$r]);
+                $item_unit_quantity = (0 - $_POST['quantity'][$r]);
                 $item_serial = isset($_POST['serial'][$r]) ? $_POST['serial'][$r] : '';
                 $item_tax_rate = isset($_POST['product_tax'][$r]) ? $_POST['product_tax'][$r] : null;
                 $item_discount = isset($_POST['product_discount'][$r]) ? $_POST['product_discount'][$r] : null;
                 $item_unit = $_POST['product_unit'][$r];
-                $item_quantity = (0-$_POST['product_base_quantity'][$r]);
+                $item_quantity = (0 - $_POST['product_base_quantity'][$r]);
 
                 if (isset($item_code) && isset($real_unit_price) && isset($unit_price) && isset($item_quantity)) {
                     $product_details = $item_type != 'manual' ? $this->sales_model->getProductByCode($item_code) : null;
@@ -1165,7 +1164,7 @@ class Sales extends MY_Controller
                         $dpos = strpos($discount, $percentage);
                         if ($dpos !== false) {
                             $pds = explode("%", $discount);
-                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float) ($pds[0])) / 100), 4);
+                            $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($unit_price)) * (Float)($pds[0])) / 100), 4);
                         } else {
                             $pr_discount = $this->sma->formatDecimal($discount, 4);
                         }
@@ -1246,9 +1245,9 @@ class Sales extends MY_Controller
                         'sale_id' => $id,
                         'product_id' => $item_id,
                         'option_id' => $item_option,
-                        'quantity' => (0-$item_quantity),
+                        'quantity' => (0 - $item_quantity),
                         'warehouse_id' => $sale->warehouse_id,
-                        );
+                    );
 
                     $total += $this->sma->formatDecimal(($item_net_price * $item_unit_quantity), 4);
                 }
@@ -1264,7 +1263,7 @@ class Sales extends MY_Controller
                 $opos = strpos($order_discount_id, $percentage);
                 if ($opos !== false) {
                     $ods = explode("%", $order_discount_id);
-                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float) ($ods[0])) / 100), 4);
+                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float)($ods[0])) / 100), 4);
                 } else {
                     $order_discount = $this->sma->formatDecimal($order_discount_id, 4);
                 }
@@ -1320,7 +1319,7 @@ class Sales extends MY_Controller
                 $payment = array(
                     'date' => $date,
                     'reference_no' => $pay_ref,
-                    'amount' => (0-$this->input->post('amount-paid')),
+                    'amount' => (0 - $this->input->post('amount-paid')),
                     'paid_by' => $this->input->post('paid_by'),
                     'cheque_no' => $this->input->post('cheque_no'),
                     'cc_no' => $this->input->post('pcc_no'),
@@ -1445,7 +1444,8 @@ class Sales extends MY_Controller
 
         if ($this->sales_model->deleteSale($id)) {
             if ($this->input->is_ajax_request()) {
-                echo lang("sale_deleted");die();
+                echo lang("sale_deleted");
+                die();
             }
             $this->session->set_flashdata('message', lang('sale_deleted'));
             redirect('welcome');
@@ -1462,7 +1462,8 @@ class Sales extends MY_Controller
 
         if ($this->sales_model->deleteReturn($id)) {
             if ($this->input->is_ajax_request()) {
-                echo lang("return_sale_deleted");die();
+                echo lang("return_sale_deleted");
+                die();
             }
             $this->session->set_flashdata('message', lang('return_sale_deleted'));
             redirect('welcome');
@@ -1482,7 +1483,7 @@ class Sales extends MY_Controller
 
             if (!empty($_POST['val'])) {
 
-                if(count($_POST['val']) > 1 ){
+                if (count($_POST['val']) > 1) {
                     $this->session->set_flashdata('error', lang("multiple_sale_selected"));
                     redirect($_SERVER["HTTP_REFERER"]);
 
@@ -1517,9 +1518,9 @@ class Sales extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('I1', lang('subtotal'));
 
                     $row = 2;
-                    $id=$_POST['val'];
+                    $id = $_POST['val'];
 //                    foreach ($_POST['val'] as $id) {
-                        $sale = $this->sales_model->getInvoiceByID($id[0]);
+                    $sale = $this->sales_model->getInvoiceByID($id[0]);
 //                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($sale->date));
 //                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale->reference_no);
 //                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale->biller);
@@ -1528,10 +1529,10 @@ class Sales extends MY_Controller
 //                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, lang($sale->paid));
 //                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, lang($sale->payment_status));
 
-                        $sale_items = $this->sales_model->getAllInvoiceItemsWithDetails($id[0]);
+                    $sale_items = $this->sales_model->getAllInvoiceItemsWithDetails($id[0]);
                     foreach ($sale_items as $sale_item) {
                         $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($sale->date));
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row,  $sale->reference_no);
+                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale->reference_no);
                         $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale_item->product_code);
                         $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale_item->product_name);
                         $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale_item->quantity);
@@ -1610,12 +1611,12 @@ class Sales extends MY_Controller
         $edit_link = anchor('sales/edit_delivery/$1', '<i class="fa fa-edit"></i> ' . lang('edit_delivery'), 'data-toggle="modal" data-target="#myModal"');
         $pdf_link = anchor('sales/pdf_delivery/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $delete_link = "<a href='#' class='po' title='<b>" . lang("delete_delivery") . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sales/delete_delivery/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_delivery') . "</a>";
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . site_url('sales/delete_delivery/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_delivery') . "</a>";
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
     <ul class="dropdown-menu pull-right" role="menu">
         <li>' . $detail_link . '</li>
         <li>' . $edit_link . '</li>
@@ -1654,7 +1655,7 @@ class Sales extends MY_Controller
 
         $name = lang("delivery") . "_" . str_replace('/', '_', $deli->do_reference_no) . ".pdf";
         $html = $this->load->view($this->theme . 'sales/pdf_delivery', $this->data, true);
-        if (! $this->Settings->barcode_img) {
+        if (!$this->Settings->barcode_img) {
             $html = preg_replace("'\<\?xml(.*)\?\>'", '', $html);
         }
         if ($view) {
@@ -1729,7 +1730,7 @@ class Sales extends MY_Controller
                     'received_by' => $this->input->post('received_by'),
                     'note' => $this->sma->clear_tags($this->input->post('note')),
                     'created_by' => $this->session->userdata('user_id'),
-                    );
+                );
                 if ($_FILES['document']['size'] > 0) {
                     $this->load->library('upload');
                     $config['upload_path'] = $this->digital_upload_path;
@@ -1969,25 +1970,25 @@ class Sales extends MY_Controller
         $inv = $this->sales_model->getInvoiceByID($payment->sale_id);
         $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
         $customer = $this->site->getCompanyByID($inv->customer_id);
-        if ( ! $customer->email) {
+        if (!$customer->email) {
             $this->sma->send_json(array('msg' => lang("update_customer_email")));
         }
         $this->data['inv'] = $inv;
         $this->data['payment'] = $payment;
-        $this->data['customer'] =$customer;
+        $this->data['customer'] = $customer;
         $this->data['page_title'] = lang("payment_note");
         $html = $this->load->view($this->theme . 'sales/payment_note', $this->data, TRUE);
 
-        $html = str_replace(array('<i class="fa fa-2x">&times;</i>', 'modal-', '<p>&nbsp;</p>', '<p style="border-bottom: 1px solid #666;">&nbsp;</p>', '<p>'.lang("stamp_sign").'</p>'), '', $html);
+        $html = str_replace(array('<i class="fa fa-2x">&times;</i>', 'modal-', '<p>&nbsp;</p>', '<p style="border-bottom: 1px solid #666;">&nbsp;</p>', '<p>' . lang("stamp_sign") . '</p>'), '', $html);
         $html = preg_replace("/<img[^>]+\>/i", '', $html);
         // $html = '<div style="border:1px solid #DDD; padding:10px; margin:10px 0;">'.$html.'</div>';
 
         $this->load->library('parser');
         $parse_data = array(
-            'stylesheet' => '<link href="'.$this->data['assets'].'styles/helpers/bootstrap.min.css" rel="stylesheet"/>',
-            'name' => $customer->company && $customer->company != '-' ? $customer->company :  $customer->name,
+            'stylesheet' => '<link href="' . $this->data['assets'] . 'styles/helpers/bootstrap.min.css" rel="stylesheet"/>',
+            'name' => $customer->company && $customer->company != '-' ? $customer->company : $customer->name,
             'email' => $customer->email,
-            'heading' => lang('payment_note').'<hr>',
+            'heading' => lang('payment_note') . '<hr>',
             'msg' => $html,
             'site_link' => base_url(),
             'site_name' => $this->Settings->site_name,
@@ -2025,7 +2026,7 @@ class Sales extends MY_Controller
             if ($this->input->post('paid_by') == 'deposit') {
                 $sale = $this->sales_model->getInvoiceByID($this->input->post('sale_id'));
                 $customer_id = $sale->customer_id;
-                if ( ! $this->site->check_customer_deposit($customer_id, $this->input->post('amount-paid'))) {
+                if (!$this->site->check_customer_deposit($customer_id, $this->input->post('amount-paid'))) {
                     $this->session->set_flashdata('error', lang("amount_greater_than_deposit"));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
@@ -2116,8 +2117,8 @@ class Sales extends MY_Controller
             if ($this->input->post('paid_by') == 'deposit') {
                 $sale = $this->sales_model->getInvoiceByID($this->input->post('sale_id'));
                 $customer_id = $sale->customer_id;
-                $amount = $this->input->post('amount-paid')-$payment->amount;
-                if ( ! $this->site->check_customer_deposit($customer_id, $amount)) {
+                $amount = $this->input->post('amount-paid') - $payment->amount;
+                if (!$this->site->check_customer_deposit($customer_id, $amount)) {
                     $this->session->set_flashdata('error', lang("amount_greater_than_deposit"));
                     redirect($_SERVER["HTTP_REFERER"]);
                 }
@@ -2216,14 +2217,14 @@ class Sales extends MY_Controller
         $customer = $this->site->getCompanyByID($customer_id);
         $customer_group = $this->site->getCustomerGroupByID($customer->customer_group_id);
         $rows = $this->sales_model->getProductNames($sr, $warehouse_id);
-        $icsg= $this->site->getInterCompanyPriceGroup();
+        $icsg = $this->site->getInterCompanyPriceGroup();
         if ($rows) {
             $c = str_replace(".", "", microtime(true));
             $r = 0;
             foreach ($rows as $row) {
                 unset($row->details, $row->product_details, $row->image, $row->barcode_symbology, $row->cf1, $row->cf2, $row->cf3, $row->cf4, $row->cf5, $row->cf6, $row->supplier1price, $row->supplier2price, $row->cfsupplier3price, $row->supplier4price, $row->supplier5price, $row->supplier1, $row->supplier2, $row->supplier3, $row->supplier4, $row->supplier5, $row->supplier1_part_no, $row->supplier2_part_no, $row->supplier3_part_no, $row->supplier4_part_no, $row->supplier5_part_no);
                 $option = false;
-                $w_qty=$row->quantity;
+                $w_qty = $row->quantity;
                 $row->quantity = 0;
                 $row->item_tax_method = $row->tax_method;
                 $row->qty = 1;
@@ -2274,7 +2275,7 @@ class Sales extends MY_Controller
                 }
                 $row->price = $row->price + (($row->price * $customer_group->percent) / 100);
                 $row->real_unit_price = $row->price;
-                if(trim($customer->price_group_name) === trim($icsg)) $row->real_unit_price = $row->cost;
+                if (trim($customer->price_group_name) === trim($icsg)) $row->real_unit_price = $row->cost;
                 else $row->real_unit_price = $row->price;
                 $row->base_quantity = 1;
                 $row->base_unit = $row->unit;
@@ -2287,11 +2288,11 @@ class Sales extends MY_Controller
                 $units = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
-                $pr[] = array('id' => ($c + $r), 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")", 'category' => $row->category_id, 
-                    'row' => $row, 'w_qty'=>$w_qty,'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
+                $pr[] = array('id' => ($c + $r), 'item_id' => $row->id, 'label' => $row->name . " (" . $row->code . ")", 'category' => $row->category_id,
+                    'row' => $row, 'w_qty' => $w_qty, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options);
                 $r++;
             }
-           
+
             $this->sma->send_json($pr);
         } else {
             $this->sma->send_json(array(array('id' => 0, 'label' => lang('no_match_found'), 'value' => $term)));
@@ -2347,7 +2348,7 @@ class Sales extends MY_Controller
                 'date' => date('Y-m-d H:i:s'),
                 'created_by' => $this->session->userdata('user_id'),
             );
-            $card_data['balance'] = ($this->input->post('amount')+$card->balance);
+            $card_data['balance'] = ($this->input->post('amount') + $card->balance);
             // $card_data['value'] = ($this->input->post('amount')+$card->value);
             if ($this->input->post('expiry')) {
                 $card_data['expiry'] = $this->sma->fld(trim($this->input->post('expiry')));
@@ -2646,7 +2647,7 @@ class Sales extends MY_Controller
             $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days')) : null;
             $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $customer_details = $this->site->getCompanyByID($customer_id);
-            $customer = $customer_details->company != '-'  ? $customer_details->company : $customer_details->name;
+            $customer = $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
             $biller_details = $this->site->getCompanyByID($biller_id);
             $biller = $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
             $note = $this->sma->clear_tags($this->input->post('note'));
@@ -2730,7 +2731,7 @@ class Sales extends MY_Controller
                                     $dpos = strpos($discount, $percentage);
                                     if ($dpos !== false) {
                                         $pds = explode("%", $discount);
-                                        $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($item_net_price)) * (Float) ($pds[0])) / 100), 4);
+                                        $pr_discount = $this->sma->formatDecimal(((($this->sma->formatDecimal($item_net_price)) * (Float)($pds[0])) / 100), 4);
                                     } else {
                                         $pr_discount = $this->sma->formatDecimal($discount);
                                     }
@@ -2828,7 +2829,7 @@ class Sales extends MY_Controller
                 $opos = strpos($order_discount_id, $percentage);
                 if ($opos !== false) {
                     $ods = explode("%", $order_discount_id);
-                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float) ($ods[0])) / 100), 4);
+                    $order_discount = $this->sma->formatDecimal(((($total + $product_tax) * (Float)($ods[0])) / 100), 4);
                 } else {
                     $order_discount = $this->sma->formatDecimal($order_discount_id);
                 }
@@ -2968,27 +2969,28 @@ class Sales extends MY_Controller
                 $this->data['returned'] = TRUE;
             }
             $this->data['modal_js'] = $this->site->modal_js();
-            $this->load->view($this->theme.'sales/update_status', $this->data);
+            $this->load->view($this->theme . 'sales/update_status', $this->data);
 
         }
     }
 
 
-   public function creat_sales_xls($id=null){
+    public function creat_sales_xls($id = null)
+    {
         // Open temp file pointer
         $sale_items = $this->sales_model->getAllInvoiceItemsWithDetailsForMail($id);
         $file = 'assets/uploads/temp/products.csv';
         //Use the function is_file to check if the file already exists or not.
-       if(!is_file($file)) file_put_contents($file);
-       if (!$fp = fopen('assets/uploads/temp/products.csv', 'w+')) return FALSE;
-       fputcsv($fp, array('name','code', 'barcode_symbology', 'unit', 'sale_unit','purchase_unit','cost',
-           'price', 'alert_quantity','tax_rate','tax_method','quantity','discount','min_selling_rice','landing_price'));
-        foreach ($sale_items as $items){
+        if (!is_file($file)) file_put_contents($file);
+        if (!$fp = fopen('assets/uploads/temp/products.csv', 'w+')) return FALSE;
+        fputcsv($fp, array('name', 'code', 'barcode_symbology', 'unit', 'sale_unit', 'purchase_unit', 'cost',
+            'price', 'alert_quantity', 'tax_rate', 'tax_method', 'quantity', 'discount', 'min_selling_rice', 'landing_price'));
+        foreach ($sale_items as $items) {
             $item = array();
-            foreach($items as $val) {
+            foreach ($items as $val) {
                 $item[] = $val;
             }
-        fputcsv($fp, array_values($item));
+            fputcsv($fp, array_values($item));
         }
         // Place stream pointer at beginning
         rewind($fp);
@@ -2998,51 +3000,85 @@ class Sales extends MY_Controller
     }
 
 
-
 //    Day End Report
 
-    public function day_end_report() {
-        //$this->sma->checkPermissions();
-
-//        $time_user = $this->session->userdata(self::TIME_SCHEDULER_SESSION_NAME);
-
-//        if (isset($time_user['user']) && (!empty($time_user['user']))) {
-//            $this->time_scheduler_model->setEID($time_user['user']->id);
-//            $this->data['status'] = $this->time_scheduler_model->getStatus();
-//        } else {
-//            $this->data['status'] = false;`
-//        }
+    public function day_end_report()
+    {
         $this->data['status'] = false;
         $this->load->view($this->theme . 'sales/day_end_report', $this->data);
     }
 
 
-    function day_end_sales() {
+    function day_end_sales()
+    {
         if ($this->input->post('start_date')) {
             $start_date = $this->sma->fld($this->input->post('start_date'));
             $end_date = $this->sma->fld($this->input->post('end_date'));
         }
         $result = $this->sales_model->getAllDayEndSales($start_date, $end_date);
-        $cash_result=$this->sales_model->getTodayCashSales($start_date, $end_date);
-        $credit_result=$this->sales_model->getTodayCCSales($start_date, $end_date);
-        $debit_result=$this->sales_model->getTodayDCSales($start_date, $end_date);
-        $visa_result=$this->sales_model->getTodayVisaSales($start_date, $end_date);
-        $amex_result=$this->sales_model->getTodayAmexSales($start_date, $end_date);
-        $mc_result=$this->sales_model->getTodayMasterCardSales($start_date, $end_date);
-        $gift_result=$this->sales_model->getTodayGiftCardSales($start_date, $end_date);
-        $deposit_result=$this->sales_model->getTodayDepositCardSales($start_date, $end_date);
-        $cheque_result=$this->sales_model->getTodayChSales($start_date, $end_date);
-        $result->cash=$cash_result->paid;
-        $result->credit=$credit_result->paid;
-        $result->debit=$debit_result->paid;
-        $result->cheque=$cheque_result->paid;
-        $result->amex=$amex_result->paid;
-        $result->visa=$visa_result->paid;
-        $result->mc=$mc_result->paid;
-        $result->gift=$gift_result->paid;
-        $result->deposit=$deposit_result->paid;
-        if ($result !== false)  echo json_encode($result);
-         else  echo 0;
+        $cash_result = $this->sales_model->getTodayCashSales($start_date, $end_date);
+        $credit_result = $this->sales_model->getTodayCCSales($start_date, $end_date);
+        $debit_result = $this->sales_model->getTodayDCSales($start_date, $end_date);
+        $visa_result = $this->sales_model->getTodayVisaSales($start_date, $end_date);
+        $amex_result = $this->sales_model->getTodayAmexSales($start_date, $end_date);
+        $mc_result = $this->sales_model->getTodayMasterCardSales($start_date, $end_date);
+        $gift_result = $this->sales_model->getTodayGiftCardSales($start_date, $end_date);
+        $deposit_result = $this->sales_model->getTodayDepositCardSales($start_date, $end_date);
+        $cheque_result = $this->sales_model->getTodayChSales($start_date, $end_date);
+        $return_result = $this->sales_model->getTodaySalesReturn($start_date, $end_date);
+        $result->cash = $cash_result->paid;
+        $result->credit = $credit_result->paid;
+        $result->debit = $debit_result->paid;
+        $result->cheque = $cheque_result->paid;
+        $result->amex = $amex_result->paid;
+        $result->visa = $visa_result->paid;
+        $result->mc = $mc_result->paid;
+        $result->gift = $gift_result->paid;
+        $result->deposit = $deposit_result->paid;
+        $result->return = $return_result->paid;
+        if ($result !== false) echo json_encode($result);
+        else  echo 0;
+    }
+
+    public function day_end_receipt_view($id = null)
+    {
+        $this->sma->checkPermissions('index', true);
+
+        if ($this->input->get('start_date')) {
+            $start_date_new = $this->input->get('start_date');
         }
+        if ($this->input->get('end_date')) {
+            $end_date_new = $this->input->get('end_date');
+        }
+        $start_date = $this->sma->fld($start_date_new);
+        $end_date = $this->sma->fld($end_date_new);
+        $result = $this->sales_model->getAllDayEndSales($start_date, $end_date);
+        $cash_result = $this->sales_model->getTodayCashSales($start_date, $end_date);
+        $credit_result = $this->sales_model->getTodayCCSales($start_date, $end_date);
+        $debit_result = $this->sales_model->getTodayDCSales($start_date, $end_date);
+        $visa_result = $this->sales_model->getTodayVisaSales($start_date, $end_date);
+        $amex_result = $this->sales_model->getTodayAmexSales($start_date, $end_date);
+        $mc_result = $this->sales_model->getTodayMasterCardSales($start_date, $end_date);
+        $gift_result = $this->sales_model->getTodayGiftCardSales($start_date, $end_date);
+        $deposit_result = $this->sales_model->getTodayDepositCardSales($start_date, $end_date);
+        $cheque_result = $this->sales_model->getTodayChSales($start_date, $end_date);
+        $return_result = $this->sales_model->getTodaySalesReturn($start_date, $end_date);
+        $result->cash = number_format($cash_result->paid, 2);
+        $result->credit = number_format($credit_result->paid, 2);
+        $result->debit = number_format($debit_result->paid, 2);
+        $result->cheque = number_format($cheque_result->paid, 2);
+        $result->amex = number_format($amex_result->paid, 2);
+        $result->visa = number_format($visa_result->paid, 2);
+        $result->mc = number_format($mc_result->paid, 2);
+        $result->gift = number_format($gift_result->paid, 2);
+        $result->deposit = number_format($deposit_result->paid, 2);
+        $result->return = number_format($return_result->paid, 2);
+        $result->total=($result->cash+$result->credit+$result->debit+$result->cheque+$result->amex+$result->visa+$result->mc+$result->gift+$result->deposit);
+        $result->dues=(number_format($result->grand_total,2) - number_format($result->total,2));
+        $result->s_date=substr($start_date_new,0,11);
+        $result->e_date=substr($end_date_new,0,11);
+        $this->data['result']=$result;
+        $this->load->view($this->theme . 'sales/day_end_receipt_view', $this->data);
+    }
 
 }
