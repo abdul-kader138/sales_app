@@ -124,7 +124,7 @@
                                        style="margin-bottom: 5px;">
                                     <tbody>
                                     <tr>
-                                        <td width="70%"><b> Unpaid invoices total </b></td>
+                                        <td width="70%"><b> Unpaid Invoices Total </b></td>
                                         <td width="30%" id="total_due"><b></b></td>
                                     </tr>
                                     </tbody>

@@ -129,8 +129,8 @@
                                style="margin-bottom: 5px;">
                             <tbody>
                             <tr>
-                                <td width="70%"><b>Total Dues </b></td>
-                                <td width="30%" id="total_due"><b><?php echo $result->dues?></b></td>
+                                <td width="70%"><b> Unpaid Invoices Total </b></td>
+                                <td width="30%" id="total_due"><b><?php echo round($result->dues,2);?></b></td>
                             </tr>
                             </tbody>
                         </table>
