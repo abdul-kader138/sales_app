@@ -945,6 +945,11 @@ class Pos extends MY_Controller
         if (!$this->session->userdata('view_right')) {
             $this->sma->view_rights($inv->created_by, true);
         }
+        $gift_card=null;
+        if($inv->return_sale_ref){
+            $return_inv = $this->pos_model->getInvoiceById($inv->sale_id);
+            if($return_inv) $gift_card=$this->pos_model->getGiftCardFromPayments($return_inv->id);
+        }
         $this->data['rows'] = $this->pos_model->getAllInvoiceItems($sale_id);
         $biller_id = $inv->biller_id;
         $customer_id = $inv->customer_id;
@@ -954,6 +959,7 @@ class Pos extends MY_Controller
         $this->data['card_charge'] = $this->pos_model->getInvoicePaymentsCardCharge($sale_id);
         $this->data['pos'] = $this->pos_model->getSetting();
         $this->data['barcode'] = $this->barcode($inv->reference_no, 'code128', 30);
+        if($gift_card ) $this->data['gift_barcode'] = $gift_card->cc_no;
         $this->data['return_sale'] = $inv->return_id ? $this->pos_model->getInvoiceByID($inv->return_id) : NULL;
         $this->data['return_rows'] = $inv->return_id ? $this->pos_model->getAllInvoiceItems($inv->return_id) : NULL;
         $this->data['return_payments'] = $this->data['return_sale'] ? $this->pos_model->getInvoicePayments($this->data['return_sale']->id) : NULL;

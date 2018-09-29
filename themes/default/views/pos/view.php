@@ -112,7 +112,7 @@
     echo "<p><span class='left'>" .lang("date") . ": " . $this->sma->hrld($inv->date) . "</span><span class='right'>";
     echo lang("sale_no_ref") . ": " . $inv->reference_no . "</span>";
     if (!empty($inv->return_sale_ref)) {
-        echo '<span class="left">'.lang("return_ref").': '.$inv->return_sale_ref.'</span>';
+        echo '<span class="left"><b>'.lang("return_ref").': '.$inv->return_sale_ref.'</b></span>';
         echo '<span class="right"></span>';
 //        if ($inv->return_id) {
 //            echo ' <a data-target="#myModal2" data-toggle="modal" href="'.site_url('sales/modal_view/'.$inv->return_id).'"><i class="fa fa-external-link no-print"></i>Return Details</a>';
@@ -389,10 +389,16 @@
     <?= $customer->award_points != 0 && $Settings->each_spent > 0 ? '<p class="text-center">'.lang('this_sale').': '.floor(($inv->grand_total/$Settings->each_spent)*$Settings->ca_point)
         .'<br>'.
         lang('total').' '.lang('award_points').': '. $customer->award_points . '</p>' : ''; ?>
+    <?php if($gift_barcode) {?>
+        <div class="order_barcodes text-center">
+            <?= $this->sma->save_barcode($gift_barcode, 'code128', 30, false); ?>
+        </div>
+    <?php } ?>
     <?= $inv->note ? '<p class="text-center">' . $this->sma->decode_html($inv->note) . '</p>' : ''; ?>
     <?= $inv->staff_note ? '<p class="no-print"><strong>' . lang('staff_note') . ':</strong> ' . $this->sma->decode_html($inv->staff_note) . '</p>' : ''; ?>
     <?= $biller->invoice_footer ? '<p class="text-center">'.$this->sma->decode_html($biller->invoice_footer).'</p>' : ''; ?>
     </div>
+
 
     <div class="order_barcodes text-center">
         <?= $this->sma->save_barcode($inv->reference_no, 'code128', 30, false); ?>
