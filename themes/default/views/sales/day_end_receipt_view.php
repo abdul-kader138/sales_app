@@ -180,37 +180,7 @@
                 <?php
             }
             ?>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#email').click(function () {
-                        bootbox.prompt({
-                            title: "<?= lang("email_address"); ?>",
-                            inputType: 'email',
-                            value: "<?= $customer->email; ?>",
-                            callback: function (email) {
-                                if (email != null) {
-                                    $.ajax({
-                                        type: "post",
-                                        url: "<?= site_url('pos/email_receipt') ?>",
-                                        data: {<?= $this->security->get_csrf_token_name(); ?>: "<?= $this->security->get_csrf_hash(); ?>", email: email, id: <?= $inv->id; ?>},
-                                    dataType: "json",
-                                        success: function (data) {
-                                        bootbox.alert({message: data.msg, size: 'small'});
-                                    },
-                                    error: function () {
-                                        bootbox.alert({message: '<?= lang('ajax_request_failed'); ?>', size: 'small'});
-                                        return false;
-                                    }
-                                });
-                                }
-                            }
-                        });
-                        return false;
-                    });
-
-                });
-
-            </script>
+            <script type="text/javascript"></script>
             <?php /* include FCPATH.'themes'.DIRECTORY_SEPARATOR.$Settings->theme.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.'pos'.DIRECTORY_SEPARATOR.'remote_printing.php'; */ ?>
             <?php include 'remote_printing.php'; ?>
             <?php

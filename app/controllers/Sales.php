@@ -583,7 +583,7 @@ class Sales extends MY_Controller
             );
 
             //            Validate credit limit if Credit limit exist
-            if ($customer_details->customer_credit_limit > 0) {
+            if ($customer_details->customer_credit_limit >= 0) {
                 $total_amount = 0;
                 $sales_amount = 0;
                 $total_sales_amount = $this->sales_model->getAllSalesFroCustomer($customer_id);
@@ -893,6 +893,8 @@ class Sales extends MY_Controller
                     $subtotal = (($item_net_price * $item_unit_quantity) + $pr_item_tax);
                     $unit = $this->site->getUnitByID($item_unit);
 
+
+
                     $products[] = array(
                         'product_id' => $item_id,
                         'product_code' => $item_code,
@@ -917,6 +919,7 @@ class Sales extends MY_Controller
                     );
 
                     $total += $this->sma->formatDecimal(($item_net_price * $item_unit_quantity), 4);
+
                 }
             }
             if (empty($products)) {
@@ -1004,6 +1007,21 @@ class Sales extends MY_Controller
             // $this->sma->print_arrays($data, $products);
         }
 
+        //$grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $order_discount), 4);
+
+        //            Validate credit limit if Credit limit exist
+        if ($customer_details->customer_credit_limit >= 0) {
+            $total_amount = 0;
+            $sales_amount = 0;
+            $total_sales_amount = $this->sales_model->getAllSalesFroCustomer($customer_id);
+            $total_payments_amount = $this->sales_model->getAllPaymentsFroCustomer($customer_id);
+            $total_amount = $total_payments_amount->pay_val + $customer_details->customer_credit_limit + $total_amount;
+            $sales_amount = $total_sales_amount->grand_total + $grand_total + $sales_amount;
+            if ($total_amount <= $sales_amount) {
+                $this->session->set_flashdata('error', lang("insufficient_credit"));
+                redirect($_SERVER["HTTP_REFERER"]);
+            }
+        }
         if ($this->form_validation->run() == true && $this->sales_model->updateSale($id, $data, $products)) {
             $this->session->set_userdata('remove_slls', 1);
             $this->session->set_flashdata('message', lang("sale_updated"));
