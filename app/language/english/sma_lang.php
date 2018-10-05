@@ -297,6 +297,7 @@ $lang['import']                             = "Import";
 $lang['note']                               = "Note";
 $lang['grand_total']                        = "Grand Total";
 $lang['download_pdf']                       = "Download as PDF";
+$lang['download_xls']                       = "Download as XLS";
 $lang['no_zero_required']                   = "The %s field is required";
 $lang['no_product_found']                   = "No product found";
 $lang['pending']                            = "Pending";
