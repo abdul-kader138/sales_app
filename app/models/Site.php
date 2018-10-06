@@ -219,7 +219,8 @@ class Site extends CI_Model
                     $prefix = $this->Settings->sales_prefix;
                     break;
                 case 'pos':
-                    $prefix = isset($this->Settings->sales_prefix) ? $this->Settings->sales_prefix . '/POS' : '';
+//                    $prefix = isset($this->Settings->sales_prefix) ? $this->Settings->sales_prefix . '/POS' : '';
+                    $prefix = isset($this->Settings->sales_prefix) ? $this->Settings->sales_prefix . 'POS' : '';
                     break;
                 case 'qu':
                     $prefix = $this->Settings->quote_prefix;
@@ -255,12 +256,15 @@ class Site extends CI_Model
                     $prefix = '';
             }
 
-            $ref_no = (!empty($prefix)) ? $prefix . '/' : '';
+//            $ref_no = (!empty($prefix)) ? $prefix . '/' : '';
+            $ref_no = (!empty($prefix)) ? $prefix . '' : '';
 
             if ($this->Settings->reference_format == 1) {
-                $ref_no .= date('Y') . "/" . sprintf("%04s", $ref->{$field});
+//                $ref_no .= date('Y') . "/" . sprintf("%04s", $ref->{$field});
+                $ref_no .= date('Y')  . sprintf("%04s", $ref->{$field});
             } elseif ($this->Settings->reference_format == 2) {
-                $ref_no .= date('Y') . "/" . date('m') . "/" . sprintf("%04s", $ref->{$field});
+//                $ref_no .= date('Y') . "/" . date('m') . "/" . sprintf("%04s", $ref->{$field});
+                $ref_no .= date('Y')  . date('m') .  sprintf("%04s", $ref->{$field});
             } elseif ($this->Settings->reference_format == 3) {
                 $ref_no .= sprintf("%04s", $ref->{$field});
             } else {

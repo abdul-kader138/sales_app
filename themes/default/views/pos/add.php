@@ -198,6 +198,7 @@ echo form_open("pos", $attrib);?>
             <?php
             echo form_input('customer', (isset($_POST['customer']) ? $_POST['customer'] : ""), 'id="poscustomer" data-placeholder="' . $this->lang->line("select") . ' ' . $this->lang->line("customer") . '" required="required" class="form-control pos-input-tip" style="width:100%;"');
             ?>
+            <input type="hidden" id="credit_limit" value="" />
             <div class="input-group-addon no-print" style="padding: 2px 8px; border-left: 0;">
                 <a href="#" id="toogle-customer-read-attr" class="external">
                     <i class="fa fa-pencil" id="addIcon" style="font-size: 1.2em;"></i>
@@ -1217,6 +1218,25 @@ function widthFunctions(e) {
 }
 $(window).bind("resize", widthFunctions);
 $(document).ready(function () {
+
+//    pull sales history
+
+    function getCreditHistory(){
+        var cn = $("#poscustomer").val();
+        var data_s="";
+        $.ajax({
+            type: "get", async: false,
+            url: site.base_url + "sales/getSalesHistory/" + cn,
+            dataType: "json",
+            success: function (data) {
+               if(data) data_s = data;
+
+            }
+        });
+        return data_s;
+    }
+
+
     $('#view-customer').click(function(){
         $('#myModal').modal({remote: site.base_url + 'customers/view/' + $("input[name=customer]").val()});
         $('#myModal').modal('show');
@@ -1448,7 +1468,20 @@ $(document).ready(function () {
             bootbox.alert('<?=lang('x_total');?>');
             return false;
         }
+
+        var sales_credit_limit=0;
+        var total_sales=0;
+        var sales_data=getCreditHistory();
+        if(sales_data.credit_limit) sales_credit_limit= parseFloat(sales_data.credit_limit);
+        if(sales_data.sales_amount) total_sales= parseFloat(sales_data.sales_amount);
         gtotal = formatDecimal(twt);
+        total_sales += parseFloat(gtotal);
+        if ( sales_credit_limit < total_sales) {
+            bootbox.alert('<?=lang('Customer donot have sufficient credit');?>');
+//            bootbox.alert('<?//=lang('x_total_credit');?>//');
+            return false;
+        }
+
         <?php if ($pos_settings->rounding) {?>
         round_total = roundNumber(gtotal, <?=$pos_settings->rounding?>);
         var rounding = formatDecimal(0 - (gtotal - round_total));
@@ -2114,6 +2147,7 @@ if ( ! $pos_settings->remote_printing) {
                 return false;
             }
         }
+
     </script>
 <?php
 }

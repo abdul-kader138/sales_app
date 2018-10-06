@@ -404,7 +404,14 @@
                         ?>
                         <tr>
                             <td colspan="<?= $col; ?>"
-                                style="text-align:right; font-weight:bold;"><?= lang("total_amount"); ?>
+                                style="text-align:right; font-weight:bold;">Total Amount
+                                (<?= $default_currency->code; ?>)
+                            </td>
+                            <td style="text-align:right; padding-right:10px; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->total+$return_sale->grand_total+$card_charges) : ($inv->total+$card_charges)); ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="<?= $col; ?>"
+                                style="text-align:right; font-weight:bold;">Grand Total
                                 (<?= $default_currency->code; ?>)
                             </td>
                             <td style="text-align:right; padding-right:10px; font-weight:bold;"><?= $this->sma->formatMoney($return_sale ? ($inv->grand_total+$return_sale->grand_total+$card_charges) : ($inv->grand_total+$card_charges)); ?></td>

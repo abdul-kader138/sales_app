@@ -896,7 +896,6 @@ class Sales extends MY_Controller
                     $unit = $this->site->getUnitByID($item_unit);
 
 
-
                     $products[] = array(
                         'product_id' => $item_id,
                         'product_code' => $item_code,
@@ -3093,11 +3092,11 @@ class Sales extends MY_Controller
         $result->gift = number_format($gift_result->paid, 2);
         $result->deposit = number_format($deposit_result->paid, 2);
         $result->return = number_format($return_result->paid, 2);
-        $result->total=($result->cash+$result->credit+$result->debit+$result->cheque+$result->amex+$result->visa+$result->mc+$result->gift+$result->deposit);
-        $result->dues=(number_format($result->grand_total,2) - number_format($result->total,2));
-        $result->s_date=substr($start_date_new,0,11);
-        $result->e_date=substr($end_date_new,0,11);
-        $this->data['result']=$result;
+        $result->total = ($result->cash + $result->credit + $result->debit + $result->cheque + $result->amex + $result->visa + $result->mc + $result->gift + $result->deposit);
+        $result->dues = (number_format($result->grand_total, 2) - number_format($result->total, 2));
+        $result->s_date = substr($start_date_new, 0, 11);
+        $result->e_date = substr($end_date_new, 0, 11);
+        $this->data['result'] = $result;
         $this->load->view($this->theme . 'sales/day_end_receipt_view', $this->data);
     }
 
@@ -3114,56 +3113,69 @@ class Sales extends MY_Controller
         if ($this->input->get('id')) {
             $id = $this->input->get('id');
         }
-            $this->load->library('excel');
-                    $this->excel->setActiveSheetIndex(0);
-                    $this->excel->getActiveSheet()->setTitle(lang('sales'));
-                    $this->excel->getActiveSheet()->SetCellValue('A1', 'name');
-                    $this->excel->getActiveSheet()->SetCellValue('B1', 'code');
-                    $this->excel->getActiveSheet()->SetCellValue('C1', 'barcode_symbology');
-                    $this->excel->getActiveSheet()->SetCellValue('D1', 'unit');
-                    $this->excel->getActiveSheet()->SetCellValue('E1', 'sale_unit');
-                    $this->excel->getActiveSheet()->SetCellValue('F1', 'purchase_unit');
-                    $this->excel->getActiveSheet()->SetCellValue('G1', 'cost');
-                    $this->excel->getActiveSheet()->SetCellValue('H1', 'price');
-                    $this->excel->getActiveSheet()->SetCellValue('I1', 'alert_quantity');
-                    $this->excel->getActiveSheet()->SetCellValue('J1', 'tax_rate');
-                    $this->excel->getActiveSheet()->SetCellValue('K1', 'tax_method');
-                    $this->excel->getActiveSheet()->SetCellValue('L1', 'quantity');
-                    $this->excel->getActiveSheet()->SetCellValue('M1', 'discount');
-                    $this->excel->getActiveSheet()->SetCellValue('N1', 'min_selling_rice');
-                    $this->excel->getActiveSheet()->SetCellValue('O1', 'landing_price');
+        $this->load->library('excel');
+        $this->excel->setActiveSheetIndex(0);
+        $this->excel->getActiveSheet()->setTitle(lang('sales'));
+        $this->excel->getActiveSheet()->SetCellValue('A1', 'name');
+        $this->excel->getActiveSheet()->SetCellValue('B1', 'code');
+        $this->excel->getActiveSheet()->SetCellValue('C1', 'barcode_symbology');
+        $this->excel->getActiveSheet()->SetCellValue('D1', 'unit');
+        $this->excel->getActiveSheet()->SetCellValue('E1', 'sale_unit');
+        $this->excel->getActiveSheet()->SetCellValue('F1', 'purchase_unit');
+        $this->excel->getActiveSheet()->SetCellValue('G1', 'cost');
+        $this->excel->getActiveSheet()->SetCellValue('H1', 'price');
+        $this->excel->getActiveSheet()->SetCellValue('I1', 'alert_quantity');
+        $this->excel->getActiveSheet()->SetCellValue('J1', 'tax_rate');
+        $this->excel->getActiveSheet()->SetCellValue('K1', 'tax_method');
+        $this->excel->getActiveSheet()->SetCellValue('L1', 'quantity');
+        $this->excel->getActiveSheet()->SetCellValue('M1', 'discount');
+        $this->excel->getActiveSheet()->SetCellValue('N1', 'min_selling_rice');
+        $this->excel->getActiveSheet()->SetCellValue('O1', 'landing_price');
 
-                    $row = 2;
-                    $sale_items = $this->sales_model->getAllInvoiceItemsWithDetailsForMail($id);
-                    foreach ($sale_items as $sale_item) {
-                        $this->excel->getActiveSheet()->SetCellValue('A' . $row, $sale_item->product_name);
-                        $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale_item->product_code);
-                        $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale_item->barcode_symbology);
-                        $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale_item->code);
-                        $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale_item->product_unit_code);
-                        $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sale_item->p_unit_code);
-                        $this->excel->getActiveSheet()->SetCellValue('G' . $row, $sale_item->net_unit_price);
-                        $this->excel->getActiveSheet()->SetCellValue('H' . $row, $sale_item->price);
-                        $this->excel->getActiveSheet()->SetCellValue('I' . $row, $sale_item->alert_quantity);
-                        $this->excel->getActiveSheet()->SetCellValue('J' . $row, $sale_item->tax_name);
-                        $this->excel->getActiveSheet()->SetCellValue('K' . $row, $sale_item->tax_method);
-                        $this->excel->getActiveSheet()->SetCellValue('L' . $row, $sale_item->qty);
-                        $this->excel->getActiveSheet()->SetCellValue('M' . $row, $sale_item->discount);
-                        $this->excel->getActiveSheet()->SetCellValue('N' . $row, $sale_item->min_selling_price);
-                        $this->excel->getActiveSheet()->SetCellValue('O' . $row, $sale_item->landing_price);
-                        $row++;
-                    }
+        $row = 2;
+        $sale_items = $this->sales_model->getAllInvoiceItemsWithDetailsForMail($id);
+        foreach ($sale_items as $sale_item) {
+            $this->excel->getActiveSheet()->SetCellValue('A' . $row, $sale_item->product_name);
+            $this->excel->getActiveSheet()->SetCellValue('B' . $row, $sale_item->product_code);
+            $this->excel->getActiveSheet()->SetCellValue('C' . $row, $sale_item->barcode_symbology);
+            $this->excel->getActiveSheet()->SetCellValue('D' . $row, $sale_item->code);
+            $this->excel->getActiveSheet()->SetCellValue('E' . $row, $sale_item->product_unit_code);
+            $this->excel->getActiveSheet()->SetCellValue('F' . $row, $sale_item->p_unit_code);
+            $this->excel->getActiveSheet()->SetCellValue('G' . $row, $sale_item->net_unit_price);
+            $this->excel->getActiveSheet()->SetCellValue('H' . $row, $sale_item->price);
+            $this->excel->getActiveSheet()->SetCellValue('I' . $row, $sale_item->alert_quantity);
+            $this->excel->getActiveSheet()->SetCellValue('J' . $row, $sale_item->tax_name);
+            $this->excel->getActiveSheet()->SetCellValue('K' . $row, $sale_item->tax_method);
+            $this->excel->getActiveSheet()->SetCellValue('L' . $row, $sale_item->qty);
+            $this->excel->getActiveSheet()->SetCellValue('M' . $row, $sale_item->discount);
+            $this->excel->getActiveSheet()->SetCellValue('N' . $row, $sale_item->min_selling_price);
+            $this->excel->getActiveSheet()->SetCellValue('O' . $row, $sale_item->landing_price);
+            $row++;
+        }
 
-                    $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-                    $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                    $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $filename = 'sales_' . date('Y_m_d_H_i_s');
-                        header('Content-Type: application/vnd.ms-excel');
-                        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-                        header('Cache-Control: max-age=0');
+        $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+        $this->excel->getDefaultStyle()->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $filename = 'sales_' . date('Y_m_d_H_i_s');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
+        header('Cache-Control: max-age=0');
 
-                        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
 
-                        return $objWriter->save('php://output');
+        return $objWriter->save('php://output');
     }
+
+
+    public function getSalesHistory($id = null)
+    {
+        $customer_details = $this->site->getCompanyByID($id);
+        $total_sales_amount = $this->sales_model->getAllSalesFroCustomer($id);
+        $total_payments_amount = $this->sales_model->getAllPaymentsFroCustomer($id);
+        $total_amount = $total_payments_amount->pay_val;
+        $sales_amount = $total_sales_amount->grand_total;
+        $rows = array("sales_amount" => $sales_amount, "credit_limit" => $customer_details->customer_credit_limit);
+        $this->sma->send_json($rows);
+    }
+
 }
