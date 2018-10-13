@@ -273,6 +273,10 @@ class Sales_model extends CI_Model
         $cost = $this->site->costing($items);
         // $this->sma->print_arrays($cost);
 
+        // Start Transaction
+        $this->db->trans_strict(True);
+        $this->db->trans_begin();
+
         if ($this->db->insert('sales', $data)) {
             $sale_id = $this->db->insert_id();
             if ($this->site->getReference('so') == $data['reference_no']) {
@@ -355,20 +359,37 @@ class Sales_model extends CI_Model
 
             $this->site->syncQuantity($sale_id);
             $this->sma->update_award_points($data['grand_total'], $data['customer_id'], $data['created_by']);
-            return true;
 
         }
 
-        return false;
+        // check transaction status
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            return false;
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return true;
+        }
+
     }
 
     public function updateSale($id, $data, $items = array())
     {
         $this->resetSaleActions($id, FALSE, TRUE);
 
+        // Start Transaction
+        $this->db->trans_strict(True);
+        $this->db->trans_begin();
+
         if ($data['sale_status'] == 'completed') {
             $cost = $this->site->costing($items);
         }
+
+
 
         // $this->sma->print_arrays($cost);
 
@@ -411,10 +432,20 @@ class Sales_model extends CI_Model
             $this->site->syncSalePayments($id);
             $this->site->syncQuantity($id);
             $this->sma->update_award_points($data['grand_total'], $data['customer_id'], $data['created_by']);
-            return true;
-
         }
-        return false;
+        // check transaction status
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            return false;
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return true;
+        }
+
     }
 
     public function updateStatus($id, $status, $note)
