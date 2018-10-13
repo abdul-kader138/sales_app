@@ -74,7 +74,7 @@
                     ?>
                     <div class="bold">
                         <?= lang('date'); ?>: <?= $this->sma->hrld($inv->date); ?><br>
-                        <?= lang('ref'); ?>: <?= $inv->reference_no; ?><br>
+                        <?= lang("invoice_no"); ?>: <?= $inv->reference_no; ?><br>
                         <?php if (!empty($inv->internal_ref)) {
                             echo '<p style="font-weight:bold;">'. lang("internal_ref").': '. $inv->internal_ref.'</p>';
                         }

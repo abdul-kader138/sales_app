@@ -192,7 +192,7 @@
                 <div class="col-xs-5">
                     <div class="col-xs-2"><i class="fa fa-3x fa-file-text-o padding010 text-muted"></i></div>
                     <div class="col-xs-10">
-                        <h2 class=""><?= lang("ref"); ?>: <?= $inv->reference_no; ?></h2>
+                        <h2 class=""><?= lang("invoice_no"); ?>: <?= $inv->reference_no; ?></h2>
                         <?php if (!empty($inv->internal_ref)) {
                         echo '<p style="font-weight:bold;">'. lang("internal_ref").': '. $inv->internal_ref.'</p>';
                         }

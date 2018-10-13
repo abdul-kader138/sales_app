@@ -156,4 +156,5 @@ $lang['vat_reg']                            = "VAT Reg. No";
 $lang['internal_ref']                       = "Customer PO No";
 $lang['internal_ref_exists']                = "Customer PO No already used for Sale Ref. No-";
 $lang['card_charge']                        = "Card Charge";
-$lang['card_charge']                    = "Card Swipe Charge(%)";
+$lang['card_charge']                        = "Card Swipe Charge(%)";
+$lang['invoice_no']                         = "Invoice No";
