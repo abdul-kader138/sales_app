@@ -445,6 +445,11 @@ $(document).ready(function() {
         $('#form_action').val($(this).attr('data-action'));
         $('#action-form-submit').trigger('click');
     });
+    $('body').on('click', '#export_excel_all', function(e) {
+        e.preventDefault();
+        $('#form_action').val($(this).attr('data-action'));
+        $('#action-form-submit').trigger('click');
+    });
 });
 
 $(document).ready(function() {

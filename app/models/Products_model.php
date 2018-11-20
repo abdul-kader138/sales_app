@@ -1075,4 +1075,18 @@ class Products_model extends CI_Model
         return NULL;
     }
 
+
+    public function getAllProductDetails() {
+        $this->db->select($this->db->dbprefix('products') . '.code, ' . $this->db->dbprefix('products') . '.name, ' . $this->db->dbprefix('categories') . '.code as category_code, cost, price, quantity, alert_quantity')
+            ->join('categories', 'categories.id=products.category_id', 'left');
+        $q = $this->db->get('products');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
+
 }

@@ -3178,4 +3178,111 @@ class Sales extends MY_Controller
         $this->sma->send_json($rows);
     }
 
+
+
+    public function email_pdf($id = null)
+    {
+        $this->sma->checkPermissions(false, true);
+
+        if ($this->input->get('id')) {
+            $id = $this->input->get('id');
+        }
+        $inv = $this->sales_model->getInvoiceByID($id);
+        $this->form_validation->set_rules('to', lang("to") . " " . lang("email"), 'trim|required|valid_email');
+        $this->form_validation->set_rules('subject', lang("subject"), 'trim|required');
+        $this->form_validation->set_rules('cc', lang("cc"), 'trim|valid_emails');
+        $this->form_validation->set_rules('bcc', lang("bcc"), 'trim|valid_emails');
+        $this->form_validation->set_rules('note', lang("message"), 'trim');
+
+        if ($this->form_validation->run() == true) {
+            if (!$this->session->userdata('view_right')) {
+                $this->sma->view_rights($inv->created_by);
+            }
+            $to = $this->input->post('to');
+            $subject = $this->input->post('subject');
+            if ($this->input->post('cc')) {
+                $cc = $this->input->post('cc');
+            } else {
+                $cc = null;
+            }
+            if ($this->input->post('bcc')) {
+                $bcc = $this->input->post('bcc');
+            } else {
+                $bcc = null;
+            }
+            $customer = $this->site->getCompanyByID($inv->customer_id);
+            $biller = $this->site->getCompanyByID($inv->biller_id);
+            $this->load->library('parser');
+            $parse_data = array(
+                'reference_number' => $inv->reference_no,
+                'contact_person' => $customer->name,
+                'company' => $customer->company,
+                'site_link' => base_url(),
+                'site_name' => $this->Settings->site_name,
+                'logo' => '<img src="' . base_url() . 'assets/uploads/logos/' . $biller->logo . '" alt="' . ($biller->company != '-' ? $biller->company : $biller->name) . '"/>',
+            );
+            $msg = $this->input->post('note');
+            $message = $this->parser->parse_string($msg, $parse_data);
+            $paypal = $this->sales_model->getPaypalSettings();
+            $skrill = $this->sales_model->getSkrillSettings();
+            $btn_code = '<div id="payment_buttons" class="text-center margin010">';
+            if ($paypal->active == "1" && $inv->grand_total != "0.00") {
+                if (trim(strtolower($customer->country)) == $biller->country) {
+                    $paypal_fee = $paypal->fixed_charges + ($inv->grand_total * $paypal->extra_charges_my / 100);
+                } else {
+                    $paypal_fee = $paypal->fixed_charges + ($inv->grand_total * $paypal->extra_charges_other / 100);
+                }
+                $btn_code .= '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=' . $paypal->account_email . '&item_name=' . $inv->reference_no . '&item_number=' . $inv->id . '&image_url=' . base_url() . 'assets/uploads/logos/' . $this->Settings->logo . '&amount=' . (($inv->grand_total - $inv->paid) + $paypal_fee) . '&no_shipping=1&no_note=1&currency_code=' . $this->default_currency->code . '&bn=FC-BuyNow&rm=2&return=' . site_url('sales/view/' . $inv->id) . '&cancel_return=' . site_url('sales/view/' . $inv->id) . '&notify_url=' . site_url('payments/paypalipn') . '&custom=' . $inv->reference_no . '__' . ($inv->grand_total - $inv->paid) . '__' . $paypal_fee . '"><img src="' . base_url('assets/images/btn-paypal.png') . '" alt="Pay by PayPal"></a> ';
+
+            }
+            if ($skrill->active == "1" && $inv->grand_total != "0.00") {
+                if (trim(strtolower($customer->country)) == $biller->country) {
+                    $skrill_fee = $skrill->fixed_charges + ($inv->grand_total * $skrill->extra_charges_my / 100);
+                } else {
+                    $skrill_fee = $skrill->fixed_charges + ($inv->grand_total * $skrill->extra_charges_other / 100);
+                }
+                $btn_code .= ' <a href="https://www.moneybookers.com/app/payment.pl?method=get&pay_to_email=' . $skrill->account_email . '&language=EN&merchant_fields=item_name,item_number&item_name=' . $inv->reference_no . '&item_number=' . $inv->id . '&logo_url=' . base_url() . 'assets/uploads/logos/' . $this->Settings->logo . '&amount=' . (($inv->grand_total - $inv->paid) + $skrill_fee) . '&return_url=' . site_url('sales/view/' . $inv->id) . '&cancel_url=' . site_url('sales/view/' . $inv->id) . '&detail1_description=' . $inv->reference_no . '&detail1_text=Payment for the sale invoice ' . $inv->reference_no . ': ' . $inv->grand_total . '(+ fee: ' . $skrill_fee . ') = ' . $this->sma->formatMoney($inv->grand_total + $skrill_fee) . '&currency=' . $this->default_currency->code . '&status_url=' . site_url('payments/skrillipn') . '"><img src="' . base_url('assets/images/btn-skrill.png') . '" alt="Pay by Skrill"></a>';
+            }
+
+            $btn_code .= '<div class="clearfix"></div>
+    </div>';
+            $message = $message . $btn_code;
+
+            $attachment = $this->pdf($id, null, 'S');
+        } elseif ($this->input->post('send_email')) {
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->session->set_flashdata('error', $this->data['error']);
+            redirect($_SERVER["HTTP_REFERER"]);
+        }
+
+        if ($this->form_validation->run() == true && $this->sma->send_email($to, $subject, $message, null, null, $attachment, $cc, $bcc)) {
+            delete_files($attachment);
+            $this->session->set_flashdata('message', lang("email_sent"));
+            redirect("sales");
+        } else {
+
+            if (file_exists('./themes/' . $this->theme . '/views/email_templates/sale.html')) {
+                $sale_temp = file_get_contents('themes/' . $this->theme . '/views/email_templates/sale.html');
+            } else {
+                $sale_temp = file_get_contents('./themes/default/views/email_templates/sale.html');
+            }
+
+            $this->data['subject'] = array('name' => 'subject',
+                'id' => 'subject',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('subject', lang('invoice') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
+            );
+            $this->data['note'] = array('name' => 'note',
+                'id' => 'note',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('note', $sale_temp),
+            );
+            $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+
+            $this->data['id'] = $id;
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->load->view($this->theme . 'sales/email_inv', $this->data);
+        }
+    }
+
 }
