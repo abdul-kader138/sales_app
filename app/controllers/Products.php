@@ -2055,6 +2055,7 @@ class Products extends MY_Controller {
                     $this->excel->getActiveSheet()->SetCellValue('W1', lang('quantity'));
 
                     $row = 2;
+                    $pAmt =0;
                     $product_all = $this->products_model->getAllProductDetails();
                     foreach ($product_all as $product) {
 //                        $product = $this->products_model->getProductDetail($products->id);
@@ -2118,8 +2119,12 @@ class Products extends MY_Controller {
                         $this->excel->getActiveSheet()->SetCellValue('U' . $row, $product->cf5);
                         $this->excel->getActiveSheet()->SetCellValue('V' . $row, $product->cf6);
                         $this->excel->getActiveSheet()->SetCellValue('W' . $row, $quantity);
+                        $pAmt += $quantity;
                         $row++;
                     }
+                $this->excel->getActiveSheet()->getStyle("W" . $row)->getBorders()
+                    ->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
+                $this->excel->getActiveSheet()->SetCellValue('W' . $row, $this->sma->formatDecimal($pAmt));
 
                     $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
                     $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
